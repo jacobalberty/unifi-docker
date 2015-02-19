@@ -2,11 +2,11 @@
 
 ## Supported tags and respective `Dockerfile` links
 
-[`beta` (unifi-beta/Dockerfile)](/unifi-beta/Dockerfile)
+[`beta` (*unifi-beta/Dockerfile*)](https://github.com/jacobalberty/unifi-docker/blob/master/unifi-beta/Dockerfile)
 
-[`rapid`, `latest` (unifi-rapid/Dockerfile)](/unifi-rapid/Dockerfile)
+[`rapid`, `latest` (*unifi-rapid/Dockerfile*)](https://github.com/jacobalberty/unifi-docker/blob/master/unifi-rapid/Dockerfile)
 
-[`stable` (unifi/Dockerfile)](/unifi/Dockerfile)
+[`stable` (*unifi/Dockerfile*)](https://github.com/jacobalberty/unifi-docker/blob/master/unifi/Dockerfile)
 
 ## Description 
 This is a containerized version of the Unifi Access Point controller.

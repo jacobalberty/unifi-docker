@@ -3,7 +3,9 @@
 ## Supported tags and respective `Dockerfile` links
 
 [`beta` (unifi-beta/Dockerfile)](/unifi-beta/Dockerfile)
+
 [`rapid`, `latest` (unifi-rapid/Dockerfile)](/unifi-rapid/Dockerfile)
+
 [`stable` (unifi/Dockerfile)](/unifi/Dockerfile)
 
 ## Description 

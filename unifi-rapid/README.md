@@ -1,5 +1,13 @@
 #docker UniFi
 
+## Supported tags and respective `Dockerfile` links
+
+[`beta`](../unifi-beta/Dockerfile)
+
+[`rapid`, `latest`](./Dockerfile)
+
+[`stable`](../unifi/Dockerfile)
+
 ## Description 
 This is a containerized version of the Unifi Access Point controller.
 I have included tags for beta stable and rapid. Latest points to the rapid version.

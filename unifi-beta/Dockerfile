@@ -15,7 +15,15 @@ RUN apt-get update && apt-get install -qy --force-yes unifi-beta=4.6.0-4611 && a
 
 EXPOSE 8080/tcp 8081/tcp 8443/tcp 8843/tcp 8880/tcp 3478/udp
 
-VOLUME ["/var/lib/unifi"]
-WORKDIR ["/var/lib/unifi"]
+## Uncommenting these allows unifi to run as user nobody but I don't know for sure that all features work so leaving commented out for now
+#RUN chown -R nobody.nogroup /usr/lib/unifi
+#RUN chown -R nobody.nogroup /var/lib/unifi
+#RUN chown -R nobody.nogroup /var/log/unifi
+#RUN chown -R nobody.nogroup /var/run/unifi
+#USER nobody
 
-CMD ["/usr/bin/java", "-Xmx1024M", "-jar", "/usr/lib/unifi/lib/ace.jar", "start"]
+VOLUME ["/var/lib/unifi"]
+WORKDIR /var/lib/unifi
+
+ENTRYPOINT ["/usr/bin/java", "-Xmx1024M", "-jar", "/usr/lib/unifi/lib/ace.jar"]
+CMD ["start"]

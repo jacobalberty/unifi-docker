@@ -11,7 +11,10 @@ RUN echo "deb http://downloads-distro.mongodb.org/repo/debian-sysvinit dist 10ge
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 
-RUN apt-get update && apt-get install -qy --force-yes unifi-rapid=3.2.10-2386 && apt-get clean
+RUN apt-get -q update && \
+    apt-get install -qy --force-yes unifi-rapid=3.2.10-2386 && \
+    apt-get -q clean && \
+    rm -f /var/lib/apt/lists/[!partial]*
 
 EXPOSE 8080/tcp 8081/tcp 8443/tcp 8843/tcp 8880/tcp 3478/udp
 

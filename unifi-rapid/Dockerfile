@@ -1,6 +1,8 @@
 FROM debian:jessie
 MAINTAINER Jacob Alberty <jacob.alberty@foundigital.com>
 
+VOLUME ["/var/lib/unifi"]
+
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN echo "deb http://www.ubnt.com/downloads/unifi/distros/deb/debian debian ubiquiti" \
@@ -14,7 +16,8 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 RUN apt-get -q update && \
     apt-get install -qy --force-yes unifi-rapid=3.2.10-2386 && \
     apt-get -q clean && \
-    rm -f /var/lib/apt/lists/[!partial]*
+    rm -f /var/lib/apt/lists/[!partial]* && \
+    rm -rf /var/lib/unifi/*
 
 EXPOSE 8080/tcp 8081/tcp 8443/tcp 8843/tcp 8880/tcp 3478/udp
 
@@ -25,7 +28,6 @@ EXPOSE 8080/tcp 8081/tcp 8443/tcp 8843/tcp 8880/tcp 3478/udp
 #RUN chown -R nobody.nogroup /var/run/unifi
 #USER nobody
 
-VOLUME ["/var/lib/unifi"]
 WORKDIR /var/lib/unifi
 
 ENTRYPOINT ["/usr/bin/java", "-Xmx1024M", "-jar", "/usr/lib/unifi/lib/ace.jar"]

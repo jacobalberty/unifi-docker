@@ -16,7 +16,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 RUN apt-get -q update && \
     apt-get install -qy --force-yes unifi-beta=4.6.0-4611 && \
     apt-get -q clean && \
-    rm -f /var/lib/apt/lists/[!partial]*
+    rm -rf /var/lib/apt/lists/*
 
 EXPOSE 8080/tcp 8081/tcp 8443/tcp 8843/tcp 8880/tcp 3478/udp
 

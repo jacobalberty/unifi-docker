@@ -14,7 +14,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 
 RUN apt-get -q update && \
-    apt-get install -qy --force-yes unifi-beta=4.6.0-4611 && \
+    apt-get install -qy --force-yes unifi-beta=4.6.3-4850 && \
     apt-get -q clean && \
     rm -rf /var/lib/apt/lists/*
 

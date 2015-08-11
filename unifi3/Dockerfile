@@ -5,7 +5,7 @@ VOLUME ["/var/lib/unifi"]
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN echo "deb http://www.ubnt.com/downloads/unifi/distros/deb/debian debian ubiquiti" \
+RUN echo "deb http://www.ubnt.com/downloads/unifi/debian unifi3 ubiquiti" \
   > /etc/apt/sources.list.d/20ubiquiti.list
 RUN echo "deb http://downloads-distro.mongodb.org/repo/debian-sysvinit dist 10gen" \
   > /etc/apt/sources.list.d/21mongodb.list
@@ -14,7 +14,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 
 RUN apt-get -q update && \
-    apt-get install -qy --force-yes unifi-beta=4.6.3-4850 && \
+    apt-get install -qy --force-yes unifi && \
     apt-get -q clean && \
     rm -rf /var/lib/apt/lists/*
 

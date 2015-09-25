@@ -17,6 +17,12 @@ Use `docker run --net=host -d jacobalberty/unifi:rapid` for the quickest setup
 ### `/var/lib/unifi`
 Configuration data
 
+### `/var/log/unifi`
+Log Files
+
+### `/var/run/unifi`
+Run Information
+
 ## Environment Variables:
 ### `TZ`
 TimeZone. (i.e America/Chicago)

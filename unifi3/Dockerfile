@@ -1,7 +1,7 @@
 FROM debian:jessie
 MAINTAINER Jacob Alberty <jacob.alberty@foundigital.com>
 
-VOLUME ["/var/lib/unifi", "/var/log/unifi", "/var/run/unifi"]
+VOLUME ["/var/lib/unifi", "/var/log/unifi", "/var/run/unifi", "/usr/lib/unifi/work"]
 
 ENV DEBIAN_FRONTEND noninteractive
 

@@ -13,7 +13,7 @@ RUN echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5 ubiquiti" > \
   apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 
 RUN apt-get -q update && \
-  apt-get install -qy --force-yes unifi && \
+  apt-get install -qy --force-yes --no-install-recommends unifi && \
   apt-get -q clean && \
   rm -rf /var/lib/apt/lists/*
 
@@ -21,11 +21,11 @@ RUN ln -s /var/lib/unifi /usr/lib/unifi/data
 EXPOSE 8080/tcp 8081/tcp 8443/tcp 8843/tcp 8880/tcp 3478/udp
 
 ## Uncommenting these allows unifi to run as user nobody but I don't know for sure that all features work so leaving commented out for now
-# RUN chown -R nobody.nogroup /usr/lib/unifi && \
-#    chown -R nobody.nogroup /var/lib/unifi && \
-#    chown -R nobody.nogroup /var/log/unifi && \
-#    chown -R nobody.nogroup /var/run/unifi
-# USER nobody
+#RUN chown -R nobody:nogroup /usr/lib/unifi && \
+#    chown -R nobody:nogroup /var/lib/unifi && \
+#    chown -R nobody:nogroup /var/log/unifi && \
+#    chown -R nobody:nogroup /var/run/unifi
+#USER nobody
 
 WORKDIR /var/lib/unifi
 

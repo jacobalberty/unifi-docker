@@ -49,21 +49,3 @@ TimeZone. (i.e America/Chicago)
 ### 8880/tcp
 
 ### 3478/udp
-
-## Synology
-
-Something weird is going on with Synology and it can't see the correct tags from docker hub. There is a workaround for now from Marco.
-
-```
-You can do a manual pull request on CLI.
-Latest: docker pull jacobalberty/unifi
-Unifi3: docker pull jacobalberty/unifi:Unifi3
-Unifi4: docker pull jacobalberty/unifi:unifi4
-
-Instructions for Synology/DSM6:
-
-SSH into unit w/ admin user/password
-sudo -i
-Enter admin password again
-Run above command, with or without specific tag.
-```

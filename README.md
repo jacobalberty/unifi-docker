@@ -38,14 +38,14 @@ TimeZone. (i.e America/Chicago)
 
 ## Expose:
 
-### 8080/tcp
+### 8080/tcp - Device command/control
 
 ### 8081/tcp
 
-### 8443/tcp
+### 8443/tcp - Web interface + API
 
-### 8843/tcp
+### 8843/tcp - HTTPS portal
 
-### 8880/tcp
+### 8880/tcp - HTTP portal
 
-### 3478/udp
+### 3478/udp - STUN service

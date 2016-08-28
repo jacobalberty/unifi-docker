@@ -38,11 +38,11 @@ TimeZone. (i.e America/Chicago)
 
 ## Expose:
 
-### 8080/tcp
+### 8080/tcp - Device command/control
 
 ### 8081/tcp
 
-### 8443/tcp
+### 8443/tcp - Web interface
 
 ### 8843/tcp
 

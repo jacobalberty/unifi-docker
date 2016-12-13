@@ -49,3 +49,5 @@ TimeZone. (i.e America/Chicago)
 ### 8880/tcp - HTTP portal
 
 ### 3478/udp - STUN service
+
+### 6789/tcp - Speed Test (unifi5 only)

@@ -18,7 +18,7 @@ RUN apt-get -q update && \
   rm -rf /var/lib/apt/lists/*
 
 RUN ln -s /var/lib/unifi /usr/lib/unifi/data
-EXPOSE 8080/tcp 8081/tcp 8443/tcp 8843/tcp 8880/tcp 3478/udp
+EXPOSE 8080/tcp 8081/tcp 8443/tcp 8843/tcp 8880/tcp 3478/udp 67/udp
 
 ## Uncommenting these allows unifi to run as user nobody but I don't know for sure that all features work so leaving commented out for now
 # RUN chown -R nobody.nogroup /usr/lib/unifi && \

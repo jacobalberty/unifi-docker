@@ -2,19 +2,11 @@
 
 ## Description
 
-This is a containerized version of [Ubiqiti Network](https://www.ubnt.com/)'s Unifi Controller.
+This is a containerized version of [Ubiqiti Network](https://www.ubnt.com/)'s Unifi Controller version 5.
 
-Included tags for unifi5, unifi4, stable, unifi3 and oldstable. Latest currently points to the unifi5 version.
+Use `docker run --net=host -d jacobalberty/unifi:unifi5` to run it.
 
-Use `docker run --net=host -d jacobalberty/unifi:latest` for the quickest setup
-
-## Supported tags and respective `Dockerfile` links
-
-[`unifi3`, `oldstable` (_unifi3/Dockerfile_)](https://github.com/jacobalberty/unifi-docker/blob/master/unifi3/Dockerfile)
-
-[`unifi4`, `stable` (_unifi4/Dockerfile_)](https://github.com/jacobalberty/unifi-docker/blob/master/unifi4/Dockerfile)
-
-[`unifi5`, `latest` (_unifi5/Dockerfile_)](https://github.com/jacobalberty/unifi-docker/blob/master/unifi5/Dockerfile)
+Add in `-e TZ='Africa/Johannesburg'` to set the timezone.
 
 ## Volumes:
 
@@ -24,11 +16,11 @@ Configuration data
 
 ### `/var/log/unifi`
 
-Log Files
+Log files
 
 ### `/var/run/unifi`
 
-Run Information
+Run information
 
 ## Environment Variables:
 
@@ -40,8 +32,6 @@ TimeZone. (i.e America/Chicago)
 
 ### 8080/tcp - Device command/control
 
-### 8081/tcp
-
 ### 8443/tcp - Web interface + API
 
 ### 8843/tcp - HTTPS portal
@@ -51,3 +41,35 @@ TimeZone. (i.e America/Chicago)
 ### 3478/udp - STUN service
 
 ### 6789/tcp - Speed Test (unifi5 only)
+
+See [UniFi - Ports Used](https://help.ubnt.com/hc/en-us/articles/218506997-UniFi-Ports-Used)
+
+## Mulit-process container
+
+While micro-service patterns try to avoid running multiple processes in a container, the unifi5 container tries to follow the same process execution model intended by the original debian package and it's init script, while trying to avoid needing to run a full init system.
+
+Essentially, `dump-init` runs a simple shell wrapper script placed at `/usr/local/bin/unifi.sh`. `unifi.sh` executes and waits on the jsvc process which orchestrates running the controller as a service. The wrapper script also traps SIGTERM to issue the appropriate stop command to the unifi java `com.ubnt.ace.Launcher` process in the hopes that it helps keep the shutdown graceful.
+
+Example seen within the container after it was started
+
+```bash
+$  docker exec -it ef081fcf6440 bash
+# ps -e -o pid,ppid,cmd | more
+  PID  PPID CMD
+    1     0 /usr/bin/dumb-init -- /usr/local/bin/unifi.sh
+    7     1 sh /usr/local/bin/unifi.sh
+    9     7 unifi -nodetach -home /usr/lib/jvm/java-8-openjdk-amd64 -classpath /usr/share/java/commons-daemon.jar:/usr/lib/unifi/lib/ace.jar -pidfile /var/run/unifi/unifi.pid -procname unifi -outfile /var/log/unifi/unifi.out.log -errfile /var/log/unifi/unifi.err.log -Dunifi.datadir=/var/lib/unifi -Dunifi.rundir=/var/run/unifi -Dunifi.logdir=/var/log/unifi -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xmx1024M -Xms32M com.ubnt.ace.Launcher start
+   10     9 unifi -nodetach -home /usr/lib/jvm/java-8-openjdk-amd64 -classpath /usr/share/java/commons-daemon.jar:/usr/lib/unifi/lib/ace.jar -pidfile /var/run/unifi/unifi.pid -procname unifi -outfile /var/log/unifi/unifi.out.log -errfile /var/log/unifi/unifi.err.log -Dunifi.datadir=/var/lib/unifi -Dunifi.rundir=/var/run/unifi -Dunifi.logdir=/var/log/unifi -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xmx1024M -Xms32M com.ubnt.ace.Launcher start
+   31    10 /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java -Xmx1024M -XX:ErrorFile=/usr/lib/unifi/data/logs/hs_err_pid<pid>.log -Dapple.awt.UIElement=true -jar /usr/lib/unifi/lib/ace.jar start
+   58    31 bin/mongod --dbpath /usr/lib/unifi/data/db --port 27117 --logappend --logpath logs/mongod.log --nohttpinterface --bind_ip 127.0.0.1
+  108     0 bash
+  116   108 ps -e -o pid,ppid,cmd
+  117   108 [bash]
+```
+
+## TODO
+
+Future work?
+
+- Don't run as root (but Unifi's Debian package does by the way...)
+- Possibly use Debian image with systemd init included (but thus far, I don't know of an official Debian systemd image to base off)

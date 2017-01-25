@@ -10,6 +10,8 @@ MAINTAINER Jacob Alberty <jacob.alberty@foundigital.com>
 ENV DEBIAN_FRONTEND noninteractive \
   container=docker
 
+ENV PKGURL=http://dl.ubnt.com/unifi/5.4.9/unifi_sysvinit_all.deb
+
 # Need backports for openjdk-8
 RUN echo "deb http://httpredir.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/10backports.list && \
   echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5 ubiquiti" > /etc/apt/sources.list.d/20ubiquiti.list && \
@@ -21,9 +23,13 @@ RUN echo "deb http://httpredir.debian.org/debian jessie-backports main" > /etc/a
 
 # Push installing openjdk-8-jre first, so that the unifi package doesn't pull in openjdk-7-jre as a dependency? Else uncomment and just go with openjdk-7.
 RUN apt-get update && \
-  apt-get install -y --no-install-recommends openjdk-8-jre-headless && \
-  apt-get install -y --no-install-recommends unifi && \
-  apt-get clean && \
+  apt-get install -qy curl gdebi-core && \
+  apt-get install -qy --no-install-recommends openjdk-8-jre-headless && \
+  curl -o ./unifi.deb ${PKGURL} && \
+  yes | gdebi ./unifi.deb && \
+  rm -f ./unifi_sysvinit_all.deb && \
+  apt-get purge -qy --auto-remove curl gdebi-core && \
+  apt-get clean -qy && \
   rm -rf /var/lib/apt/lists/*
 
 ADD 'https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64.deb' /tmp/dumb-init_1.2.0_amd64.deb

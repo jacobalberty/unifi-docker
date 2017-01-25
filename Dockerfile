@@ -10,7 +10,7 @@ MAINTAINER Jacob Alberty <jacob.alberty@foundigital.com>
 ENV DEBIAN_FRONTEND noninteractive \
   container=docker
 
-ENV PKGURL=http://dl.ubnt.com/unifi/5.2.9/unifi_sysvinit_all.deb
+ENV PKGURL=http://dl.ubnt.com/unifi/5.3.8/unifi_sysvinit_all.deb
 
 # Need backports for openjdk-8
 RUN echo "deb http://deb.debian.org/debian/ jessie-backports main" > /etc/apt/sources.list.d/10backports.list && \

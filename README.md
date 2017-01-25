@@ -6,7 +6,18 @@ This is a containerized version of [Ubiqiti Network](https://www.ubnt.com/)'s Un
 
 Use `docker run --net=host -d jacobalberty/unifi:unifi5` to run it.
 
-Add in `-e TZ='Africa/Johannesburg'` to set the timezone.
+The following options may be of use:
+
+- Set the timezone with `TZ`
+- Bind mount the `data` and `log` volumes
+
+Example to test with
+
+```bash
+mkdir -p unifi/data
+mkdir -p unifi/logs
+docker run --rm --net=host -e TZ='Africa/Johannesburg' -v ~/unifi/data:/var/lib/unifi -v ~/unifi/logs:/var/log/unifi --name unifi jacobalberty/unifi:unifi5
+```
 
 ## Volumes:
 

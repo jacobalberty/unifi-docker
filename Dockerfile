@@ -13,7 +13,7 @@ ENV DEBIAN_FRONTEND noninteractive \
 ENV PKGURL=http://dl.ubnt.com/unifi/5.4.9/unifi_sysvinit_all.deb
 
 # Need backports for openjdk-8
-RUN echo "deb http://httpredir.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/10backports.list && \
+RUN echo "deb http://deb.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/10backports.list && \
   echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5 ubiquiti" > /etc/apt/sources.list.d/20ubiquiti.list && \
   apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50
   # rather stick to what ubiquity themselves likely test with

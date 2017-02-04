@@ -53,6 +53,8 @@ TimeZone. (i.e America/Chicago)
 
 ### 6789/tcp - Speed Test (unifi5 only)
 
+### 10001/udp - UBNT Discovery
+
 See [UniFi - Ports Used](https://help.ubnt.com/hc/en-us/articles/218506997-UniFi-Ports-Used)
 
 ## Mulit-process container

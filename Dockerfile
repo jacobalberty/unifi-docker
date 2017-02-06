@@ -25,7 +25,9 @@ RUN echo "deb http://deb.debian.org/debian/ jessie-backports main" > /etc/apt/so
 RUN apt-get clean && \
   apt-get update && \
   apt-get install -qy --no-install-recommends curl gdebi-core && \
-  apt-get install -qy --no-install-recommends openjdk-8-jre-headless && \
+  apt-get install -t jessie-backports -qy --no-install-recommends \
+    ca-certificates-java \
+    openjdk-8-jre-headless && \
   curl -o ./unifi.deb ${PKGURL} && \
   yes | gdebi ./unifi.deb && \
   rm -f ./unifi.deb && \

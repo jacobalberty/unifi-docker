@@ -30,7 +30,7 @@ MAINCLASS='com.ubnt.ace.Launcher'
 trap "echo 'Stopping unifi controller service (TERM signal caught).'; ${JSVC} -nodetach -pidfile ${PIDFILE} -stop ${MAINCLASS} stop; exit 0" 1 2 15
 
 # Cleaning /var/run/unifi/* See issue #26, Docker takes care of exlusivity in the container anyway.
-rm -rf /var/run/unifi/*
+rm -f /var/run/unifi/unifi.pid
 
 # keep attached to shell so we can wait on it
 echo 'Starting unifi controller service.'

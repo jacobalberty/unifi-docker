@@ -66,7 +66,9 @@ EXPOSE 6789/tcp 8080/tcp 8443/tcp 8880/tcp 8843/tcp 3478/udp
 #    chown -R nobody:nogroup /var/run/unifi
 #USER nobody
 COPY unifi.sh /usr/local/bin/
+COPY import_cert.sh /usr/local/bin
 RUN chmod +x /usr/local/bin/unifi.sh
+RUN chmod +x /usr/local/bin/import_cert.sh
 
 WORKDIR /var/lib/unifi
 

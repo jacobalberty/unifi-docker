@@ -32,6 +32,11 @@ trap "echo 'Stopping unifi controller service (TERM signal caught).'; ${JSVC} -n
 # Cleaning /var/run/unifi/* See issue #26, Docker takes care of exlusivity in the container anyway.
 rm -f /var/run/unifi/unifi.pid
 
+if [ -d "/var/cert/unifi" ]; then
+  echo 'Cert directory found. Checking Certs'
+  import_cert.sh
+fi
+
 # keep attached to shell so we can wait on it
 echo 'Starting unifi controller service.'
 ${JSVC} -nodetach ${JSVC_OPTS} ${MAINCLASS} start &

@@ -80,6 +80,19 @@ $  docker exec -it ef081fcf6440 bash
   117   108 [bash]
 ```
 
+## Certificate Support
+
+To use custom SSL certs, you must map a volume with the certs to /var/cert/unifi
+
+They should be named:
+```
+cert.pem  # The Certificate
+privkey.pem # Private key for the cert
+chain.pem # full cert chain
+```
+For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA Cert automatically.
+
+
 ## TODO
 
 Future work?

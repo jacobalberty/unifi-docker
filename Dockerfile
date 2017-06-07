@@ -23,7 +23,7 @@ RUN echo "deb http://deb.debian.org/debian/ jessie-backports main" > /etc/apt/so
 
 # Push installing openjdk-8-jre first, so that the unifi package doesn't pull in openjdk-7-jre as a dependency? Else uncomment and just go with openjdk-7.
 RUN mkdir -p /usr/share/man/man1/ && \
-  mkdir -p /var/cache/apt/archives/ && /
+  mkdir -p /var/cache/apt/archives/ && \
   apt-get clean && \
   apt-get update && \
   apt-get install -qy --no-install-recommends curl gdebi-core && \

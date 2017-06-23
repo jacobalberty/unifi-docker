@@ -16,6 +16,7 @@ if [ ! -z "${JVM_INIT_HEAP_SIZE}" ]; then
   JVM_OPTS="${JVM_OPTS} -Xms${JVM_INIT_HEAP_SIZE}"
 fi
 JSVC_OPTS="
+  -Xss1280k
   -home ${JAVA_HOME}
   -classpath /usr/share/java/commons-daemon.jar:${BASEDIR}/lib/ace.jar
   -pidfile ${PIDFILE}

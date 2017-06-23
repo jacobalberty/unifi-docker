@@ -39,6 +39,16 @@ Run information
 
 TimeZone. (i.e America/Chicago)
 
+### `JVM_MAX_THREAD_STACK_SIZE`
+
+used to set max thread stack size for the JVM
+
+Ex:
+
+```--env JVM_MAX_THREAD_STACK_SIZE=1280k```
+
+as a fix for https://community.ubnt.com/t5/UniFi-Routing-Switching/IMPORTANT-Debian-Ubuntu-users-MUST-READ-Updated-06-21/m-p/1968251#M48264
+
 ## Expose:
 
 ### 8080/tcp - Device command/control
@@ -79,6 +89,19 @@ $  docker exec -it ef081fcf6440 bash
   116   108 ps -e -o pid,ppid,cmd
   117   108 [bash]
 ```
+
+## Certificate Support
+
+To use custom SSL certs, you must map a volume with the certs to /var/cert/unifi
+
+They should be named:
+```
+cert.pem  # The Certificate
+privkey.pem # Private key for the cert
+chain.pem # full cert chain
+```
+For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA Cert automatically.
+
 
 ## TODO
 

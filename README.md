@@ -39,6 +39,16 @@ Run information
 
 TimeZone. (i.e America/Chicago)
 
+### `JVM_MAX_THREAD_STACK_SIZE`
+
+used to set max thread stack size for the JVM
+
+Ex:
+
+```--env JVM_MAX_THREAD_STACK_SIZE=1280k```
+
+as a fix for https://community.ubnt.com/t5/UniFi-Routing-Switching/IMPORTANT-Debian-Ubuntu-users-MUST-READ-Updated-06-21/m-p/1968251#M48264
+
 ## Expose:
 
 ### 8080/tcp - Device command/control

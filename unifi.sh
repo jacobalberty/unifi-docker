@@ -23,6 +23,7 @@ if [ ! -z "${JVM_MAX_THREAD_STACK_SIZE}" ]; then
 fi
 
 JSVC_OPTS="
+  -Xss1280k
   -home ${JAVA_HOME}
   -classpath /usr/share/java/commons-daemon.jar:${BASEDIR}/lib/ace.jar
   -pidfile ${PIDFILE}

@@ -1,9 +1,9 @@
-FROM debian:jessie
+# FROM debian:jessie-slim
   # WORKING: ends up being 500MB+
 # FROM openjdk:8-jdk
   # openjdk:8-jdk might sound like a good alternative, currently based on debian jessie, but Docker could switch that to apline some day? It's 600MB+!!
-# FROM debian:jessie-slim
-  # NOT WORKING. seems to cause issues when installing openjdk when update-alternatives tries to link a man page and breaks just because man pages are not installed. `--force-all` might work arround it, but that's a hack... :-/
+FROM debian:jessie-slim
+  # WORKING: work around openjdk issue which expects the man-page directory, failing to configure package if it doesn't
 
 MAINTAINER Jacob Alberty <jacob.alberty@foundigital.com>
 
@@ -22,7 +22,9 @@ RUN echo "deb http://deb.debian.org/debian/ jessie-backports main" > /etc/apt/so
   #apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 
 # Push installing openjdk-8-jre first, so that the unifi package doesn't pull in openjdk-7-jre as a dependency? Else uncomment and just go with openjdk-7.
-RUN apt-get clean && \
+RUN mkdir -p /usr/share/man/man1/ && \
+  mkdir -p /var/cache/apt/archives/ && \
+  apt-get clean && \
   apt-get update && \
   apt-get install -qy --no-install-recommends curl gdebi-core && \
   apt-get install -t jessie-backports -qy --no-install-recommends \
@@ -65,11 +67,13 @@ EXPOSE 6789/tcp 8080/tcp 8443/tcp 8880/tcp 8843/tcp 3478/udp
 #    chown -R nobody:nogroup /var/run/unifi
 #USER nobody
 COPY unifi.sh /usr/local/bin/
+COPY import_cert.sh /usr/local/bin
 RUN chmod +x /usr/local/bin/unifi.sh
+RUN chmod +x /usr/local/bin/import_cert.sh
 
 WORKDIR /var/lib/unifi
 
-# execute controller using JSVC like orignial debian package does
+# execute controller using JSVC like original debian package does
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["/usr/local/bin/unifi.sh"]
 

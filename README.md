@@ -1,5 +1,9 @@
 # unifi-docker
 
+## Important note
+
+UniFi was broken with a kernel update of many popular distributions \(See [UniFi Forum post](https://community.ubnt.com/t5/UniFi-Routing-Switching/IMPORTANT-Debian-Ubuntu-users-MUST-READ-Updated-06-21/m-p/1968251#M48264) for details\). Most distributions have now pushed a fix for the kernel, ideally you would simply update the kernel, if you can not update to a kernel with a fix then this image contains a fix you can activate throught the `JVM_MAX_THREAD_STACK_SIZE` environment variable. An example of how to do this on the docker command line is `--env JVM_MAX_THREAD_STACK_SIZE=1280k`. Depending on your docker stack you may need to pass this environment variable another way, please see the relevant software's documentation for passing environment variables. 
+
 ## Description
 
 This is a containerized version of [Ubiqiti Network](https://www.ubnt.com/)'s Unifi Controller version 5.

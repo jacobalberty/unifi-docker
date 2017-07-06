@@ -1,45 +1,38 @@
-# FROM debian:jessie-slim
-  # WORKING: ends up being 500MB+
-# FROM openjdk:8-jdk
-  # openjdk:8-jdk might sound like a good alternative, currently based on debian jessie, but Docker could switch that to apline some day? It's 600MB+!!
 FROM debian:jessie-slim
   # WORKING: work around openjdk issue which expects the man-page directory, failing to configure package if it doesn't
-
+# FROM debian:stretch-slim
+  # needs minor fixes to get working but results in much larger image
 MAINTAINER Jacob Alberty <jacob.alberty@foundigital.com>
 
-ENV DEBIAN_FRONTEND noninteractive \
-  container=docker
+ARG DEBIAN_FRONTEND=noninteractive
 
-ENV PKGURL=https://dl.ubnt.com/unifi/5.4.18/unifi_sysvinit_all.deb
+ARG PKGURL=https://dl.ubnt.com/unifi/5.5.19/unifi_sysvinit_all.deb
 
 # Need backports for openjdk-8
-RUN echo "deb http://deb.debian.org/debian/ jessie-backports main" > /etc/apt/sources.list.d/10backports.list && \
-  echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5 ubiquiti" > /etc/apt/sources.list.d/20ubiquiti.list && \
-  apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50
-  # rather stick to what ubiquity themselves likely test with
-  #echo "deb http://downloads-distro.mongodb.org/repo/debian-sysvinit dist 10gen" > \
-  #/etc/apt/sources.list.d/21mongodb.list && \
-  #apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+RUN echo "deb http://deb.debian.org/debian/ jessie-backports main" > /etc/apt/sources.list.d/10backports.list \
+ && echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5 ubiquiti" > /etc/apt/sources.list.d/20ubiquiti.list \
+ && apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50
 
 # Push installing openjdk-8-jre first, so that the unifi package doesn't pull in openjdk-7-jre as a dependency? Else uncomment and just go with openjdk-7.
-RUN mkdir -p /usr/share/man/man1/ && \
-  mkdir -p /var/cache/apt/archives/ && \
-  apt-get clean && \
-  apt-get update && \
-  apt-get install -qy --no-install-recommends curl gdebi-core && \
-  apt-get install -t jessie-backports -qy --no-install-recommends \
+RUN mkdir -p /usr/share/man/man1/ \
+ && mkdir -p /var/cache/apt/archives/ \
+ && apt-get update &&  apt-get install -qy --no-install-recommends \
+    curl \
+    gdebi-core \
+ && apt-get install -t jessie-backports -qy --no-install-recommends \
     ca-certificates-java \
-    openjdk-8-jre-headless && \
-  curl -o ./unifi.deb ${PKGURL} && \
-  yes | gdebi ./unifi.deb && \
-  rm -f ./unifi.deb && \
-  apt-get purge -qy --auto-remove curl gdebi-core && \
-  apt-get clean -qy && \
-  rm -rf /var/lib/apt/lists/*
+    openjdk-8-jre-headless \
+ && curl -o ./unifi.deb ${PKGURL} \
+ && yes | gdebi ./unifi.deb \
+ && rm -f ./unifi.deb \
+ && apt-get purge -qy --auto-remove \
+    curl \
+    gdebi-core \
+ && rm -rf /var/lib/apt/lists/*
 
 ADD 'https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64.deb' /tmp/dumb-init_1.2.0_amd64.deb
-RUN  dpkg -i /tmp/dumb-init_*.deb && \
-  rm /tmp/dumb-init_*.deb
+RUN dpkg -i /tmp/dumb-init_*.deb \
+ && rm /tmp/dumb-init_*.deb
 
 ENV BASEDIR=/usr/lib/unifi \
   DATADIR=/var/lib/unifi \
@@ -49,9 +42,9 @@ ENV BASEDIR=/usr/lib/unifi \
   JVM_MAX_HEAP_SIZE=1024M \
   JVM_INIT_HEAP_SIZE=
 
-RUN ln -s ${BASEDIR}/data ${DATADIR} && \
-  ln -s ${BASEDIR}/run ${RUNDIR} && \
-  ln -s ${BASEDIR}/logs ${LOGDIR}
+RUN ln -s ${DATADIR} ${BASEDIR}/data \
+ && ln -s ${RUNDIR} ${BASEDIR}/run \
+ && ln -s ${LOGDIR} ${BASEDIR}/logs
 # Can't use env var, RUN doesn't support them?
 
 VOLUME ["${DATADIR}", "${RUNDIR}", "${LOGDIR}"]

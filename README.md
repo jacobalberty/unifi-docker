@@ -23,6 +23,18 @@ mkdir -p unifi/logs
 docker run --rm --net=host -e TZ='Africa/Johannesburg' -v ~/unifi/data:/var/lib/unifi -v ~/unifi/logs:/var/log/unifi --name unifi jacobalberty/unifi:unifi5
 ```
 
+## Beta users
+
+There is now a new `beta` branch on github to support easier building of betas. This branch does not exist on the docker hub at all,
+you must check it out from github.
+You simply build and pass the build argument `PKGURL` with the url to the .deb file for the appropriate beta you wish to build. I believe
+this will keep closest with the letter and spirit of the beta agreement on the unifi forums while still allowing relatively easy access to the betas.
+This build method is the method I will be using for my own personal home network to test the betas on so it should remain relatively well tested.
+
+If you would like to submit a new feature for the images the beta branch is probably a good one to apply it against as well.
+I will be cleaing up the Dockerfile under beta and gradually pushing out the improvements to the other branches. So any major changes
+should apply cleanly against the `beta` branch.
+
 ## Volumes:
 
 ### `/var/lib/unifi`

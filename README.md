@@ -8,8 +8,6 @@ UniFi was broken with a kernel update of many popular distributions \(See [UniFi
 
 This is a containerized version of [Ubiqiti Network](https://www.ubnt.com/)'s Unifi Controller version 5.
 
-Use `docker run --net=host -d jacobalberty/unifi:unifi5` to run it.
-
 The following options may be of use:
 
 - Set the timezone with `TZ`
@@ -20,8 +18,35 @@ Example to test with
 ```bash
 mkdir -p unifi/data
 mkdir -p unifi/logs
-docker run --rm --net=host -e TZ='Africa/Johannesburg' -v ~/unifi/data:/var/lib/unifi -v ~/unifi/logs:/var/log/unifi --name unifi jacobalberty/unifi:unifi5
+docker run --rm -p 8080:8080 -p 8443:8443 -p 3478:3478 -p 10001:10001 -e TZ='Africa/Johannesburg' -v ~/unifi/data:/var/lib/unifi -v ~/unifi/logs:/var/log/unifi --name unifi jacobalberty/unifi:unifi5
 ```
+## Adopting access points/switches/security gateway
+### Layer 3 adoption
+
+The default example requires some l3 adoption method. You have a couple options to adopt.
+
+#### SSH Adoption
+The quickest one off method is to ssh into the access point and run the following commands
+```
+mca-cli
+set-inform http://<host_ip>:8080/inform
+```
+#### Other options
+
+You can see more options on the (UniFi website)[https://help.ubnt.com/hc/en-us/articles/204909754-UniFi-Layer-3-methods-for-UAP-adoption-and-management]
+
+
+### Layer 2 adoption
+You can also enable layer 2 adoption through one of two methods.
+
+#### host networking
+
+If you launch the container using host networking \(With the `--net=host` parameter on `docker run`\) Layer 2 adoption works as if the controller is installed on the host.
+
+#### Bridge networking
+
+It is possible to configure the macvlan driver to bridge your container to the host's networking adapter. Specific instructions for this container are not yet available but you can read a write-up for docker at http://collabnix.com/docker-17-06-swarm-mode-now-with-macvlan-support/
+
 
 ## Beta users
 

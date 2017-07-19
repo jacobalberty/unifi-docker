@@ -45,6 +45,41 @@ if [ -d "/var/cert/unifi" ]; then
   import_cert.sh
 fi
 
+# Used to generate simple key/value pairs, for example system.properties
+confSet () {
+  file=$1
+  key=$2
+  value=$3
+  if [ "$newfile" != true ] && grep -q "^${key} *=" "$file"; then
+    ekey=$(echo "$key" | sed -e 's/[]\/$*.^|[]/\\&/g')
+    evalue=$(echo "$value" | sed -e 's/[\/&]/\\&/g')
+    sed -i "s/^\(${ekey}\s*=\s*\).*$/\1${evalue}/" "$file"
+  else
+    echo "${key}=${value}" >> "$file"
+  fi
+}
+
+confFile=/var/lib/data/system.properties
+if [ -e "$confFile" ]; then
+  newfile=false
+else
+  newfile=true
+fi
+
+declare -A settings
+
+# Implements issue #30
+if ! [[ -z "$DB_URI" || -z "$STATDB_URI" || -z "$DB_NAME" ]]; then
+  settings["db.mongo.local"]="false"
+  settings["db.mongo.uri"]="$DB_URI"
+  settings["statdb.mongo.uri"]="$STATDB_URI"
+  settings["unifi.db.name"]="$DB_NAME"
+fi
+
+for key in "${!settings[@]}"; do
+  confSet "$confFile" "$key" "${settings[$key]}"
+done
+
 # keep attached to shell so we can wait on it
 echo 'Starting unifi controller service.'
 ${JSVC} -nodetach ${JSVC_OPTS} ${MAINCLASS} start &

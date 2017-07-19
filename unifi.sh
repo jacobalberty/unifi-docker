@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # vars similar to those found in unifi.init
 JSVC=$(command -v jsvc)

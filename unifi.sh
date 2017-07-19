@@ -59,7 +59,7 @@ confSet () {
   fi
 }
 
-confFile=/var/lib/data/system.properties
+confFile=/var/lib/unifi/system.properties
 if [ -e "$confFile" ]; then
   newfile=false
 else

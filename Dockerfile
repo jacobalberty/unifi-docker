@@ -48,17 +48,9 @@ RUN ln -s ${DATADIR} ${BASEDIR}/data \
 # Can't use env var, RUN doesn't support them?
 
 VOLUME ["${DATADIR}", "${RUNDIR}", "${LOGDIR}"]
-# not sure if "/usr/lib/unifi/work" is needed as well?
 
-#EXPOSE 6789/tcp 8080/tcp 8081/tcp 8443/tcp 8843/tcp 8880/tcp 3478/udp
 EXPOSE 6789/tcp 8080/tcp 8443/tcp 8880/tcp 8843/tcp 3478/udp
 
-## Uncommenting these allows unifi to run as user nobody but I don't know for sure that all features #work so leaving commented out for now
-#RUN chown -R nobody:nogroup /usr/lib/unifi && \
-#    chown -R nobody:nogroup /var/lib/unifi && \
-#    chown -R nobody:nogroup /var/log/unifi && \
-#    chown -R nobody:nogroup /var/run/unifi
-#USER nobody
 COPY unifi.sh /usr/local/bin/
 COPY import_cert.sh /usr/local/bin
 RUN chmod +x /usr/local/bin/unifi.sh

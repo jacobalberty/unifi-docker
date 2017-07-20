@@ -8,8 +8,6 @@ UniFi was broken with a kernel update of many popular distributions \(See [UniFi
 
 This is a containerized version of [Ubiqiti Network](https://www.ubnt.com/)'s Unifi Controller version 5.
 
-Use `docker run --net=host -d jacobalberty/unifi:unifi5` to run it.
-
 The following options may be of use:
 
 - Set the timezone with `TZ`
@@ -20,8 +18,47 @@ Example to test with
 ```bash
 mkdir -p unifi/data
 mkdir -p unifi/logs
-docker run --rm --net=host -e TZ='Africa/Johannesburg' -v ~/unifi/data:/var/lib/unifi -v ~/unifi/logs:/var/log/unifi --name unifi jacobalberty/unifi:unifi5
+docker run --rm -p 8080:8080 -p 8443:8443 -p 3478:3478 -p 10001:10001 -e TZ='Africa/Johannesburg' -v ~/unifi/data:/var/lib/unifi -v ~/unifi/logs:/var/log/unifi --name unifi jacobalberty/unifi:unifi5
 ```
+## Adopting access points/switches/security gateway
+### Layer 3 adoption
+
+The default example requires some l3 adoption method. You have a couple options to adopt.
+
+#### SSH Adoption
+The quickest one off method is to ssh into the access point and run the following commands
+```
+mca-cli
+set-inform http://<host_ip>:8080/inform
+```
+#### Other options
+
+You can see more options on the (UniFi website)[https://help.ubnt.com/hc/en-us/articles/204909754-UniFi-Layer-3-methods-for-UAP-adoption-and-management]
+
+
+### Layer 2 adoption
+You can also enable layer 2 adoption through one of two methods.
+
+#### host networking
+
+If you launch the container using host networking \(With the `--net=host` parameter on `docker run`\) Layer 2 adoption works as if the controller is installed on the host.
+
+#### Bridge networking
+
+It is possible to configure the macvlan driver to bridge your container to the host's networking adapter. Specific instructions for this container are not yet available but you can read a write-up for docker at http://collabnix.com/docker-17-06-swarm-mode-now-with-macvlan-support/
+
+
+## Beta users
+
+There is now a new `beta` branch on github to support easier building of betas. This branch does not exist on the docker hub at all,
+you must check it out from github.
+You simply build and pass the build argument `PKGURL` with the url to the .deb file for the appropriate beta you wish to build. I believe
+this will keep closest with the letter and spirit of the beta agreement on the unifi forums while still allowing relatively easy access to the betas.
+This build method is the method I will be using for my own personal home network to test the betas on so it should remain relatively well tested.
+
+If you would like to submit a new feature for the images the beta branch is probably a good one to apply it against as well.
+I will be cleaing up the Dockerfile under beta and gradually pushing out the improvements to the other branches. So any major changes
+should apply cleanly against the `beta` branch.
 
 ## Volumes:
 
@@ -71,7 +108,7 @@ as a fix for https://community.ubnt.com/t5/UniFi-Routing-Switching/IMPORTANT-Deb
 
 See [UniFi - Ports Used](https://help.ubnt.com/hc/en-us/articles/218506997-UniFi-Ports-Used)
 
-## Mulit-process container
+## Multi-process container
 
 While micro-service patterns try to avoid running multiple processes in a container, the unifi5 container tries to follow the same process execution model intended by the original debian package and it's init script, while trying to avoid needing to run a full init system.
 

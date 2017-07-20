@@ -108,7 +108,7 @@ as a fix for https://community.ubnt.com/t5/UniFi-Routing-Switching/IMPORTANT-Deb
 
 See [UniFi - Ports Used](https://help.ubnt.com/hc/en-us/articles/218506997-UniFi-Ports-Used)
 
-## Mulit-process container
+## Multi-process container
 
 While micro-service patterns try to avoid running multiple processes in a container, the unifi5 container tries to follow the same process execution model intended by the original debian package and it's init script, while trying to avoid needing to run a full init system.
 

@@ -7,8 +7,7 @@ FROM debian:jessie-slim
 
 MAINTAINER Jacob Alberty <jacob.alberty@foundigital.com>
 
-ENV DEBIAN_FRONTEND noninteractive \
-  container=docker
+ARG DEBIAN_FRONTEND=noninteractive
 
 ENV PKGURL=https://dl.ubnt.com/unifi/5.3.11/unifi_sysvinit_all.deb
 

@@ -1,5 +1,17 @@
 # unifi-docker
 
+## Supported docker hub tags and respective `Dockerfile` links 
+| Tag | Description |
+| --- | --- |
+| [`latest`, `stable` ](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile ) | Tracks UniFi stable version - 5.4.19 as of 2017-07-17 |
+| [`testing` ](https://github.com/jacobalberty/unifi-docker/blob/testing/Dockerfile ) | Tracks UniFi Testing version - 5.5.19 as of 2017-07-05 |
+| [`oldstable` ](https://github.com/jacobalberty/unifi-docker/blob/oldstable/Dockerfile ) | Tracks UniFi Old Stable version - 5.3.11 as of 2017-06-23 |
+
+
+These tags generally track the UniFi APT repository. That's why despite 5.5.19 being called stable it is still under the testing tag. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `stable candidate` to `stable` instead of waiting for it to hit the repository.
+
+In adition to these tags you may tag specific versions as well, for example `jacobalberty/unifi:5.4.19` will get you unifi 5.4.19 no matter what the current version is.
+
 ## Description
 
 This is a containerized version of [Ubiqiti Network](https://www.ubnt.com/)'s Unifi Controller version 5.

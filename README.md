@@ -1,8 +1,16 @@
 # unifi-docker
 
-## Important note
+## Supported docker hub tags and respective `Dockerfile` links 
+| Tag | Description |
+| --- | --- |
+| [`latest`, `stable` ](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile ) | Tracks UniFi stable version - 5.4.19 as of 2017-07-17 |
+| [`testing` ](https://github.com/jacobalberty/unifi-docker/blob/testing/Dockerfile ) | Tracks UniFi Testing version - 5.5.19 as of 2017-07-05 |
+| [`oldstable` ](https://github.com/jacobalberty/unifi-docker/blob/oldstable/Dockerfile ) | Tracks UniFi Old Stable version - 5.3.11 as of 2017-06-23 |
 
-UniFi was broken with a kernel update of many popular distributions \(See [UniFi Forum post](https://community.ubnt.com/t5/UniFi-Routing-Switching/IMPORTANT-Debian-Ubuntu-users-MUST-READ-Updated-06-21/m-p/1968251#M48264) for details\). Most distributions have now pushed a fix for the kernel, ideally you would simply update the kernel, if you can not update to a kernel with a fix then this image contains a fix you can activate throught the `JVM_MAX_THREAD_STACK_SIZE` environment variable. An example of how to do this on the docker command line is `--env JVM_MAX_THREAD_STACK_SIZE=1280k`. Depending on your docker stack you may need to pass this environment variable another way, please see the relevant software's documentation for passing environment variables. 
+
+These tags generally track the UniFi APT repository. That's why despite 5.5.19 being called stable it is still under the testing tag. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `stable candidate` to `stable` instead of waiting for it to hit the repository.
+
+In adition to these tags you may tag specific versions as well, for example `jacobalberty/unifi:5.4.19` will get you unifi 5.4.19 no matter what the current version is.
 
 ## Description
 

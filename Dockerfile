@@ -2,6 +2,10 @@ FROM arm32v7/debian:jessie-slim
   # WORKING: work around openjdk issue which expects the man-page directory, failing to configure package if it doesn't
 # FROM debian:stretch-slim
   # needs minor fixes to get working but results in much larger image
+COPY bin/ /usr/bin/
+
+RUN [ "cross-build-start" ]
+
 MAINTAINER Jacob Alberty <jacob.alberty@foundigital.com>
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -67,3 +71,4 @@ CMD ["/usr/local/bin/unifi.sh"]
 #ENTRYPOINT ["/usr/bin/java", "-Xmx${JVM_MAX_HEAP_SIZE}", "-jar", "/usr/lib/unifi/lib/ace.jar"]
   # See issue #12 on github: probably want to consider how JSVC handled creating multiple processes, issuing the -stop instraction, etc. Not sure if the above ace.jar class gracefully handles TERM signals.
 #CMD ["start"]
+RUN [ "cross-build-end" ]  

@@ -1,4 +1,4 @@
-FROM debian:jessie-slim
+FROM arm32v7/debian:jessie-slim
   # WORKING: work around openjdk issue which expects the man-page directory, failing to configure package if it doesn't
 # FROM debian:stretch-slim
   # needs minor fixes to get working but results in much larger image
@@ -25,6 +25,7 @@ RUN mkdir -p /usr/share/man/man1/ \
  && curl -o ./unifi.deb ${PKGURL} \
  && yes | gdebi ./unifi.deb \
  && rm -f ./unifi.deb \
+ && rm -f /usr/lib/unifi/lib/native/Linux/armhf/libubnt_webrtc_jni.so \
  && apt-get purge -qy --auto-remove \
     curl \
     gdebi-core \

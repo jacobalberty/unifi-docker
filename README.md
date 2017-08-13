@@ -57,15 +57,37 @@ It is possible to configure the macvlan driver to bridge your container to the h
 
 ## Beta users
 
-There is now a new `beta` branch on github to support easier building of betas. This branch does not exist on the docker hub at all,
-you must check it out from github.
+There is now a new `beta` branch on github to support easier building of betas. This branch does not exist on the docker hub at all, and must be built from the git repository.
 You simply build and pass the build argument `PKGURL` with the url to the .deb file for the appropriate beta you wish to build. I believe
 this will keep closest with the letter and spirit of the beta agreement on the unifi forums while still allowing relatively easy access to the betas.
 This build method is the method I will be using for my own personal home network to test the betas on so it should remain relatively well tested.
 
+
 If you would like to submit a new feature for the images the beta branch is probably a good one to apply it against as well.
 I will be cleaing up the Dockerfile under beta and gradually pushing out the improvements to the other branches. So any major changes
 should apply cleanly against the `beta` branch.
+
+### Building beta using docker build
+The command line is pretty simple
+```
+docker build -t unifi-beta --build-arg PKGURL=https://dl.ubnt.com/unifi/5.5.20/unifi_sysvinit_all.deb "https://github.com/jacobalberty/unifi-docker.git#beta"```
+
+Simply replace the url to the debian package with the version you prefer.
+
+
+### Building beta using docker-compose.yml version 2
+This is just as easy when using version 2 of the docker-compose.yml file format.
+
+Under your containers service definition instead of using `image: jacobalberty/unifi` use the following
+
+```
+        build:
+         context: https://github.com/jacobalberty/unifi-docker.git#beta
+         args:
+          PKGURL: https://dl.ubnt.com/unifi/5.5.20/unifi_sysvinit_all.deb
+```
+
+Once again, simply change PKGURL to point to the package you would like to use.
 
 ## Volumes:
 

@@ -145,24 +145,11 @@ See [UniFi - Ports Used](https://help.ubnt.com/hc/en-us/articles/218506997-UniFi
 
 While micro-service patterns try to avoid running multiple processes in a container, the unifi5 container tries to follow the same process execution model intended by the original debian package and it's init script, while trying to avoid needing to run a full init system.
 
-Essentially, `dump-init` runs a simple shell wrapper script placed at `/usr/local/bin/unifi.sh`. `unifi.sh` executes and waits on the jsvc process which orchestrates running the controller as a service. The wrapper script also traps SIGTERM to issue the appropriate stop command to the unifi java `com.ubnt.ace.Launcher` process in the hopes that it helps keep the shutdown graceful.
+`dumb-init` has now been removed. Instead it is now suggested you include --init in your docker run command line.
+If you are using docker-compose you can accomplish the same by making sure you use version 2.2 of the yml format and add `init: true` to your service definition.
 
-Example seen within the container after it was started
+`unifi.sh` executes and waits on the jsvc process which orchestrates running the controller as a service. The wrapper script also traps SIGTERM to issue the appropriate stop command to the unifi java `com.ubnt.ace.Launcher` process in the hopes that it helps keep the shutdown graceful.
 
-```bash
-$  docker exec -it ef081fcf6440 bash
-# ps -e -o pid,ppid,cmd | more
-  PID  PPID CMD
-    1     0 /usr/bin/dumb-init -- /usr/local/bin/unifi.sh
-    7     1 sh /usr/local/bin/unifi.sh
-    9     7 unifi -nodetach -home /usr/lib/jvm/java-8-openjdk-amd64 -classpath /usr/share/java/commons-daemon.jar:/usr/lib/unifi/lib/ace.jar -pidfile /var/run/unifi/unifi.pid -procname unifi -outfile /var/log/unifi/unifi.out.log -errfile /var/log/unifi/unifi.err.log -Dunifi.datadir=/var/lib/unifi -Dunifi.rundir=/var/run/unifi -Dunifi.logdir=/var/log/unifi -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xmx1024M -Xms32M com.ubnt.ace.Launcher start
-   10     9 unifi -nodetach -home /usr/lib/jvm/java-8-openjdk-amd64 -classpath /usr/share/java/commons-daemon.jar:/usr/lib/unifi/lib/ace.jar -pidfile /var/run/unifi/unifi.pid -procname unifi -outfile /var/log/unifi/unifi.out.log -errfile /var/log/unifi/unifi.err.log -Dunifi.datadir=/var/lib/unifi -Dunifi.rundir=/var/run/unifi -Dunifi.logdir=/var/log/unifi -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xmx1024M -Xms32M com.ubnt.ace.Launcher start
-   31    10 /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java -Xmx1024M -XX:ErrorFile=/usr/lib/unifi/data/logs/hs_err_pid<pid>.log -Dapple.awt.UIElement=true -jar /usr/lib/unifi/lib/ace.jar start
-   58    31 bin/mongod --dbpath /usr/lib/unifi/data/db --port 27117 --logappend --logpath logs/mongod.log --nohttpinterface --bind_ip 127.0.0.1
-  108     0 bash
-  116   108 ps -e -o pid,ppid,cmd
-  117   108 [bash]
-```
 
 ## Certificate Support
 

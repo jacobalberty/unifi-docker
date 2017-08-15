@@ -20,12 +20,13 @@ The following options may be of use:
 - Set the timezone with `TZ`
 - Bind mount the `data` and `log` volumes
 
+It is suggested that you include --init to handle process reaping
 Example to test with
 
 ```bash
 mkdir -p unifi/data
 mkdir -p unifi/logs
-docker run --rm -p 8080:8080 -p 8443:8443 -p 3478:3478 -p 10001:10001 -e TZ='Africa/Johannesburg' -v ~/unifi/data:/var/lib/unifi -v ~/unifi/logs:/var/log/unifi --name unifi jacobalberty/unifi:unifi5
+docker run --rm --init -p 8080:8080 -p 8443:8443 -p 3478:3478 -p 10001:10001 -e TZ='Africa/Johannesburg' -v ~/unifi/data:/var/lib/unifi -v ~/unifi/logs:/var/log/unifi --name unifi jacobalberty/unifi:unifi5
 ```
 ## Adopting access points/switches/security gateway
 ### Layer 3 adoption

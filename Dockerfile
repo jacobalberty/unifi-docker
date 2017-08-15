@@ -31,10 +31,6 @@ RUN mkdir -p /usr/share/man/man1/ \
     gdebi-core \
  && rm -rf /var/lib/apt/lists/*
 
-#ADD 'https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64.deb' /tmp/dumb-init_1.2.0_amd64.deb
-#RUN dpkg -i /tmp/dumb-init_*.deb \
-# && rm /tmp/dumb-init_*.deb
-
 ENV BASEDIR=/usr/lib/unifi \
   DATADIR=/var/lib/unifi \
   RUNDIR=/var/run/unifi \
@@ -60,7 +56,6 @@ RUN chmod +x /usr/local/bin/import_cert.sh
 WORKDIR /var/lib/unifi
 
 # execute controller using JSVC like original debian package does
-#ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["/usr/local/bin/unifi.sh"]
 
 # execute the conroller directly without using the service

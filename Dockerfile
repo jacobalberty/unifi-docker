@@ -29,7 +29,6 @@ RUN mkdir -p /usr/share/man/man1/ \
  && curl -o ./unifi.deb ${PKGURL} \
  && yes | gdebi ./unifi.deb \
  && rm -f ./unifi.deb \
- && rm -f /usr/lib/unifi/lib/native/Linux/armhf/libubnt_webrtc_jni.so \
  && apt-get purge -qy --auto-remove \
     curl \
     gdebi-core \
@@ -39,7 +38,7 @@ ENV BASEDIR=/usr/lib/unifi \
   DATADIR=/var/lib/unifi \
   RUNDIR=/var/run/unifi \
   LOGDIR=/var/log/unifi \
-  JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 \
+  JAVA_HOME=/usr/lib/jvm/java-8-openjdk-armhf \
   JVM_MAX_HEAP_SIZE=1024M \
   JVM_INIT_HEAP_SIZE=
 

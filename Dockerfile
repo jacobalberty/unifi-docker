@@ -35,7 +35,7 @@ ENV BASEDIR=/usr/lib/unifi \
   DATADIR=/var/lib/unifi \
   RUNDIR=/var/run/unifi \
   LOGDIR=/var/log/unifi \
-  JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 \
+  JAVA_HOME=/usr/lib/jvm/java-8-openjdk-armhf \
   JVM_MAX_HEAP_SIZE=1024M \
   JVM_INIT_HEAP_SIZE=
 

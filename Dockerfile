@@ -26,7 +26,6 @@ RUN mkdir -p /usr/share/man/man1/ \
  && yes | gdebi ./unifi.deb \
  && rm -f ./unifi.deb \
  && apt-get purge -qy --auto-remove \
-    curl \
     gdebi-core \
  && rm -rf /var/lib/apt/lists/*
 
@@ -53,6 +52,8 @@ RUN chmod +x /usr/local/bin/unifi.sh
 RUN chmod +x /usr/local/bin/import_cert.sh
 
 WORKDIR /var/lib/unifi
+
+HEALTHCHECK CMD curl -k -L --fail https://localhost:8443 || exit 1
 
 # execute controller using JSVC like original debian package does
 CMD ["/usr/local/bin/unifi.sh"]

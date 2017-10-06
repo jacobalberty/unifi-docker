@@ -5,3 +5,4 @@ install:
   - docker run -d -p 127.0.0.1:8443:8443 --name unifi unifi 
 script:
   - docker ps | grep -q unifi
+  - curl -k -L --fail https://127.0.0.1:8443 || exit 1

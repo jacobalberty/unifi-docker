@@ -1,7 +1,3 @@
-dist: trusty
-apt:
- packages:
-  - libssl1.0.0
 services:
  - docker
 install:

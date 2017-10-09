@@ -1,4 +1,4 @@
-FROM debian:jessie-slim
+FROM debian:stretch-slim
   # WORKING: work around openjdk issue which expects the man-page directory, failing to configure package if it doesn't
 # FROM debian:stretch-slim
   # needs minor fixes to get working but results in much larger image
@@ -8,25 +8,22 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 ARG PKGURL=https://dl.ubnt.com/unifi/5.5.20/unifi_sysvinit_all.deb
 
-# Need backports for openjdk-8
-RUN echo "deb http://deb.debian.org/debian/ jessie-backports main" > /etc/apt/sources.list.d/10backports.list \
- && echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5 ubiquiti" > /etc/apt/sources.list.d/20ubiquiti.list \
- && apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50
-
 # Push installing openjdk-8-jre first, so that the unifi package doesn't pull in openjdk-7-jre as a dependency? Else uncomment and just go with openjdk-7.
 RUN mkdir -p /usr/share/man/man1/ \
- && mkdir -p /var/cache/apt/archives/ \
- && apt-get update &&  apt-get install -qy --no-install-recommends \
+ && apt-get update \
+ && apt-get install -qy --no-install-recommends \
     curl \
-    gdebi-core \
- && apt-get install -t jessie-backports -qy --no-install-recommends \
-    ca-certificates-java \
+    dirmngr \
+    gnupg \
     openjdk-8-jre-headless \
- && curl -o ./unifi.deb ${PKGURL} \
- && yes | gdebi ./unifi.deb \
+ && echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5 ubiquiti" > /etc/apt/sources.list.d/20ubiquiti.list \
+ && apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50 \
+ && curl -o ./unifi.deb "${PKGURL}" \
+ && apt -qy install ./unifi.deb \
+ && apt-get -qy purge --auto-remove \
+    dirmngr \
+    gnupg \
  && rm -f ./unifi.deb \
- && apt-get purge -qy --auto-remove \
-    gdebi-core \
  && rm -rf /var/lib/apt/lists/*
 
 ENV BASEDIR=/usr/lib/unifi \

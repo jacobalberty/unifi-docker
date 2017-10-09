@@ -6,7 +6,7 @@ MAINTAINER Jacob Alberty <jacob.alberty@foundigital.com>
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ARG PKGURL=https://dl.ubnt.com/unifi/5.5.20/unifi_sysvinit_all.deb
+ARG PKGURL=https://dl.ubnt.com/unifi/5.5.24/unifi_sysvinit_all.deb
 
 # Push installing openjdk-8-jre first, so that the unifi package doesn't pull in openjdk-7-jre as a dependency? Else uncomment and just go with openjdk-7.
 RUN mkdir -p /usr/share/man/man1/ \

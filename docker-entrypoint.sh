@@ -1,17 +1,22 @@
 #!/usr/bin/env bash
 
 set_java_home() {
-    # We're assuming openjdk 8 since thats what we install in Dockerfile
-    arch=`dpkg --print-architecture 2>/dev/null`
-    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-${arch}
+    JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/jre/bin/java::")
+    if [ ! -d "${JAVA_HOME}" ]; then
+        # For some reason readlink failed so lets just make some assumptions instead
+        # We're assuming openjdk 8 since thats what we install in Dockerfile
+        arch=`dpkg --print-architecture 2>/dev/null`
+        JAVA_HOME=/usr/lib/jvm/java-8-openjdk-${arch}
+    fi
 }
 exit_handler() {
     echo "Exit signal received, shutting down"
-    ${JSVC} ${JSVC_OPTS} -stop ${MAINCLASS} stop
+    ${JSVC} -nodetach -pidfile ${PIDFILE} -stop ${MAINCLASS} stop
+    echo ${JSVC} -nodetach -pidfile ${PIDFILE} -stop ${MAINCLASS} stop
     for i in `seq 1 10` ; do
         [ -z "$(pgrep -f ${BASEDIR}/lib/ace.jar)" ] && break
         # graceful shutdown
-        [ $i -gt 1 ] && [ -d ${RUNPATH}] && touch ${RUNPATH}/server.stop || true
+        [ $i -gt 1 ] && [ -d ${BASEDIR}/run ] && touch ${BASEDIR}/run/server.stop || true
         # savage shutdown
         [ $i -gt 7 ] && pkill -f ${BASEDIR}/lib/ace.jar || true
         sleep 1
@@ -30,7 +35,6 @@ trap 'kill ${!}; exit_handler' SIGHUP SIGINT SIGQUIT SIGTERM
 
 # vars similar to those found in unifi.init
 JSVC=$(command -v jsvc)
-PIDFILE=/var/run/unifi/unifi.pid
 MONGOPORT=27117
 
 CODEPATH=${BASEDIR}
@@ -49,7 +53,7 @@ JSVC_EXTRA_OPTS=
 
 MONGOLOCK="${DATAPATH}/db/mongod.lock"
 JVM_EXTRA_OPTS="${JVM_EXTRA_OPTS} -Dunifi.datadir=${DATADIR} -Dunifi.logdir=${LOGDIR} -Dunifi.rundir=${RUNDIR}"
-PIDFILE="${RUNDIR}/${NAME}.pid"
+PIDFILE=/var/run/unifi/unifi.pid
 
 if [ ! -z "${JVM_MAX_HEAP_SIZE}" ]; then
   JVM_EXTRA_OPTS="${JVM_EXTRA_OPTS} -Xmx${JVM_MAX_HEAP_SIZE}"

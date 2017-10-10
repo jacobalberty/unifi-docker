@@ -16,6 +16,7 @@ RUN mkdir -p /usr/share/man/man1/ \
     dirmngr \
     gnupg \
     openjdk-8-jre-headless \
+    procps \
  && echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5 ubiquiti" > /etc/apt/sources.list.d/20ubiquiti.list \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50 \
  && curl -o ./unifi.deb "${PKGURL}" \
@@ -29,10 +30,7 @@ RUN mkdir -p /usr/share/man/man1/ \
 ENV BASEDIR=/usr/lib/unifi \
   DATADIR=/var/lib/unifi \
   RUNDIR=/var/run/unifi \
-  LOGDIR=/var/log/unifi \
-  JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 \
-  JVM_MAX_HEAP_SIZE=1024M \
-  JVM_INIT_HEAP_SIZE=
+  LOGDIR=/var/log/unifi
 
 RUN ln -s ${DATADIR} ${BASEDIR}/data \
  && ln -s ${RUNDIR} ${BASEDIR}/run \
@@ -43,9 +41,9 @@ VOLUME ["${DATADIR}", "${RUNDIR}", "${LOGDIR}"]
 
 EXPOSE 6789/tcp 8080/tcp 8443/tcp 8880/tcp 8843/tcp 3478/udp
 
-COPY unifi.sh /usr/local/bin/
+COPY docker-entrypoint.sh /usr/local/bin/
 COPY import_cert.sh /usr/local/bin
-RUN chmod +x /usr/local/bin/unifi.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/import_cert.sh
 
 WORKDIR /var/lib/unifi
@@ -53,7 +51,9 @@ WORKDIR /var/lib/unifi
 HEALTHCHECK CMD curl -k -L --fail https://localhost:8443 || exit 1
 
 # execute controller using JSVC like original debian package does
-CMD ["/usr/local/bin/unifi.sh"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+
+CMD ["unifi"]
 
 # execute the conroller directly without using the service
 #ENTRYPOINT ["/usr/bin/java", "-Xmx${JVM_MAX_HEAP_SIZE}", "-jar", "/usr/lib/unifi/lib/ace.jar"]

@@ -12,7 +12,6 @@ set_java_home() {
 exit_handler() {
     echo "Exit signal received, shutting down"
     ${JSVC} -nodetach -pidfile ${PIDFILE} -stop ${MAINCLASS} stop
-    echo ${JSVC} -nodetach -pidfile ${PIDFILE} -stop ${MAINCLASS} stop
     for i in `seq 1 10` ; do
         [ -z "$(pgrep -f ${BASEDIR}/lib/ace.jar)" ] && break
         # graceful shutdown
@@ -25,7 +24,7 @@ exit_handler() {
     if [ -f ${MONGOLOCK} ]; then
         mongo localhost:${MONGOPORT} --eval "db.getSiblingDB('admin').shutdownServer()" >/dev/null 2>&1
     fi
-
+    exit ${?};
 }
 
 trap 'kill ${!}; exit_handler' SIGHUP SIGINT SIGQUIT SIGTERM

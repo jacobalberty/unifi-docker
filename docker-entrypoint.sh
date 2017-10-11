@@ -80,8 +80,8 @@ MAINCLASS='com.ubnt.ace.Launcher'
 # Cleaning /var/run/unifi/* See issue #26, Docker takes care of exlusivity in the container anyway.
 rm -f /var/run/unifi/unifi.pid
 
-run-parts /usr/local/unifi/init.d
-run-parts /usr/unifi/init.d
+run-parts -v /usr/local/unifi/init.d
+run-parts -v /usr/unifi/init.d
 
 # Used to generate simple key/value pairs, for example system.properties
 confSet () {

@@ -46,9 +46,9 @@ RUN mkdir -p /usr/unifi \
      /usr/unifi/init.d
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY functions /usr/unifi/functions
-COPY import_cert.sh /usr/local/unifi/init.d
+COPY import_cert /usr/unifi/init.d/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
- && chmod +x /usr/local/unifi/init.d/import_cert.sh
+ && chmod +x /usr/unifi/init.d/import_cert
 
 WORKDIR /var/lib/unifi
 

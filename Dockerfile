@@ -41,12 +41,14 @@ VOLUME ["${DATADIR}", "${RUNDIR}", "${LOGDIR}"]
 
 EXPOSE 6789/tcp 8080/tcp 8443/tcp 8880/tcp 8843/tcp 3478/udp
 
-RUN mkdir -p /usr/local/docker/init.d
+RUN mkdir -p /usr/unifi \
+     /usr/local/unifi/init.d \
+     /usr/unifi/init.d
 COPY docker-entrypoint.sh /usr/local/bin/
-COPY functions /usr/local/docker/functions
-COPY import_cert.sh /usr/local/docker/init.d
+COPY functions /usr/unifi/functions
+COPY import_cert.sh /usr/local/unifi/init.d
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
-    && chmod +x /usr/local/docker/init.d/import_cert.sh
+ && chmod +x /usr/local/unifi/init.d/import_cert.sh
 
 WORKDIR /var/lib/unifi
 

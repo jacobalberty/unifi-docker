@@ -5,11 +5,12 @@
 | --- | --- |
 | [`latest`, `stable`, `unifi-5.5` ](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile ) | Tracks UniFi stable version - 5.5.20 as of 2017-07-31 |
 | [`oldstable`, `unifi-5.4` ](https://github.com/jacobalberty/unifi-docker/blob/oldstable/Dockerfile ) | Tracks UniFi Old Stable version - 5.4.19 as of 2017-07-31 |
+| [`sc`](https://github.com/jacobalberty/unifi-docker/blob/sc/Dockerfile) | Tracks UniFi "Stable Candidate", this tag however may not always cleanly upgrade and it is better to track the direct sc tags ie : `5.6.18-sc` instead. |
 
-
-These tags generally track the UniFi APT repository. That's why despite 5.5.19 being called stable it is still under the testing tag. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `stable candidate` to `stable` instead of waiting for it to hit the repository.
+These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `stable candidate` to `stable` instead of waiting for it to hit the repository.
 
 In adition to these tags you may tag specific versions as well, for example `jacobalberty/unifi:5.4.19` will get you unifi 5.4.19 no matter what the current version is.
+Stable candidates now exist both under the `sc` tag and for tags with the extension `-sc` ie `jacobalberty/unifi:5.6.18-sc`. It is advices to use the specific versions as the `sc` tag may jump from 5.6.x to 5.5.x then back to 5.6.x as new stable candidates come out.
 
 ## Description
 
@@ -26,7 +27,7 @@ Example to test with
 ```bash
 mkdir -p unifi/data
 mkdir -p unifi/logs
-docker run --rm --init -p 8080:8080 -p 8443:8443 -p 3478:3478 -p 10001:10001 -e TZ='Africa/Johannesburg' -v ~/unifi/data:/var/lib/unifi -v ~/unifi/logs:/var/log/unifi --name unifi jacobalberty/unifi:unifi5
+docker run --rm --init -p 8080:8080 -p 8443:8443 -p 3478:3478/udp -p 10001:10001/udp -e TZ='Africa/Johannesburg' -v ~/unifi/data:/var/lib/unifi -v ~/unifi/logs:/var/log/unifi --name unifi jacobalberty/unifi:unifi5
 ```
 ## Adopting access points/switches/security gateway
 ### Layer 3 adoption
@@ -150,6 +151,11 @@ If you are using docker-compose you can accomplish the same by making sure you u
 
 `unifi.sh` executes and waits on the jsvc process which orchestrates running the controller as a service. The wrapper script also traps SIGTERM to issue the appropriate stop command to the unifi java `com.ubnt.ace.Launcher` process in the hopes that it helps keep the shutdown graceful.
 
+
+## Init scripts
+
+You may now place init scripts to be launched during the unifi startup in /usr/local/unifi/init.d to perform any 
+actions unique to your unifi setup. An example bash script to set up certificates is in `/usr/unifi/init.d/import.sh`.
 
 ## Certificate Support
 

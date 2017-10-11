@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. /usr/local/docker/functions
+. /usr/unifi/functions
 
 exit_handler() {
     log "Exit signal received, shutting down"
@@ -80,7 +80,8 @@ MAINCLASS='com.ubnt.ace.Launcher'
 # Cleaning /var/run/unifi/* See issue #26, Docker takes care of exlusivity in the container anyway.
 rm -f /var/run/unifi/unifi.pid
 
-run-parts /usr/local/docker/init.d
+run-parts /usr/local/unifi/init.d
+run-parts /usr/unifi/init.d
 
 # Used to generate simple key/value pairs, for example system.properties
 confSet () {

@@ -2,7 +2,7 @@
 
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
-. /usr/local/docker/functions
+. /usr/unifi/functions
 
 if [[ ! -d "/var/cert/unifi" ]]; then
     exit 0

@@ -1,4 +1,4 @@
-FROM debian:jessie-slim
+FROM debian:stretch-slim
   # WORKING: work around openjdk issue which expects the man-page directory, failing to configure package if it doesn't
 # FROM debian:stretch-slim
   # needs minor fixes to get working but results in much larger image
@@ -8,35 +8,29 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 ENV PKGURL=https://dl.ubnt.com/unifi/5.4.19/unifi_sysvinit_all.deb
 
-# Need backports for openjdk-8
-RUN echo "deb http://deb.debian.org/debian/ jessie-backports main" > /etc/apt/sources.list.d/10backports.list \
- && echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5 ubiquiti" > /etc/apt/sources.list.d/20ubiquiti.list \
- && apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50
-
 # Push installing openjdk-8-jre first, so that the unifi package doesn't pull in openjdk-7-jre as a dependency? Else uncomment and just go with openjdk-7.
 RUN mkdir -p /usr/share/man/man1/ \
- && mkdir -p /var/cache/apt/archives/ \
- && apt-get update &&  apt-get install -qy --no-install-recommends \
+ && apt-get update \
+ && apt-get install -qy --no-install-recommends \
     curl \
-    gdebi-core \
- && apt-get install -t jessie-backports -qy --no-install-recommends \
-    ca-certificates-java \
+    dirmngr \
+    gnupg \
     openjdk-8-jre-headless \
- && curl -o ./unifi.deb ${PKGURL} \
- && yes | gdebi ./unifi.deb \
+    procps \
+ && echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5 ubiquiti" > /etc/apt/sources.list.d/20ubiquiti.list \
+ && apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50 \
+ && curl -o ./unifi.deb "${PKGURL}" \
+ && apt -qy install ./unifi.deb \
+ && apt-get -qy purge --auto-remove \
+    dirmngr \
+    gnupg \
  && rm -f ./unifi.deb \
- && apt-get purge -qy --auto-remove \
-    curl \
-    gdebi-core \
  && rm -rf /var/lib/apt/lists/*
 
 ENV BASEDIR=/usr/lib/unifi \
   DATADIR=/var/lib/unifi \
   RUNDIR=/var/run/unifi \
-  LOGDIR=/var/log/unifi \
-  JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 \
-  JVM_MAX_HEAP_SIZE=1024M \
-  JVM_INIT_HEAP_SIZE=
+  LOGDIR=/var/log/unifi
 
 RUN ln -s ${DATADIR} ${BASEDIR}/data \
  && ln -s ${RUNDIR} ${BASEDIR}/run \
@@ -47,15 +41,23 @@ VOLUME ["${DATADIR}", "${RUNDIR}", "${LOGDIR}"]
 
 EXPOSE 6789/tcp 8080/tcp 8443/tcp 8880/tcp 8843/tcp 3478/udp
 
-COPY unifi.sh /usr/local/bin/
-COPY import_cert.sh /usr/local/bin
-RUN chmod +x /usr/local/bin/unifi.sh
-RUN chmod +x /usr/local/bin/import_cert.sh
+RUN mkdir -p /usr/unifi \
+     /usr/local/unifi/init.d \
+     /usr/unifi/init.d
+COPY docker-entrypoint.sh /usr/local/bin/
+COPY functions /usr/unifi/functions
+COPY import_cert /usr/unifi/init.d/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
+ && chmod +x /usr/unifi/init.d/import_cert
 
 WORKDIR /var/lib/unifi
 
+HEALTHCHECK CMD curl -k -L --fail https://localhost:8443 || exit 1
+
 # execute controller using JSVC like original debian package does
-CMD ["/usr/local/bin/unifi.sh"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+
+CMD ["unifi"]
 
 # execute the conroller directly without using the service
 #ENTRYPOINT ["/usr/bin/java", "-Xmx${JVM_MAX_HEAP_SIZE}", "-jar", "/usr/lib/unifi/lib/ace.jar"]

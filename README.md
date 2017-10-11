@@ -168,14 +168,11 @@ If you are using docker-compose you can accomplish the same by making sure you u
 
 `unifi.sh` executes and waits on the jsvc process which orchestrates running the controller as a service. The wrapper script also traps SIGTERM to issue the appropriate stop command to the unifi java `com.ubnt.ace.Launcher` process in the hopes that it helps keep the shutdown graceful.
 
-<<<<<<< HEAD
-=======
 
 ## Init scripts
 
 You may now place init scripts to be launched during the unifi startup in /usr/local/unifi/init.d to perform any 
 actions unique to your unifi setup. An example bash script to set up certificates is in `/usr/unifi/init.d/import.sh`.
->>>>>>> beta
 
 ## Certificate Support
 

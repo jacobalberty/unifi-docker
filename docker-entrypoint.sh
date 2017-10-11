@@ -1,16 +1,9 @@
 #!/usr/bin/env bash
 
-set_java_home() {
-    JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/jre/bin/java::")
-    if [ ! -d "${JAVA_HOME}" ]; then
-        # For some reason readlink failed so lets just make some assumptions instead
-        # We're assuming openjdk 8 since thats what we install in Dockerfile
-        arch=`dpkg --print-architecture 2>/dev/null`
-        JAVA_HOME=/usr/lib/jvm/java-8-openjdk-${arch}
-    fi
-}
+. /usr/local/docker/functions
+
 exit_handler() {
-    echo "Exit signal received, shutting down"
+    log "Exit signal received, shutting down"
     ${JSVC} -nodetach -pidfile ${PIDFILE} -stop ${MAINCLASS} stop
     for i in `seq 1 10` ; do
         [ -z "$(pgrep -f ${BASEDIR}/lib/ace.jar)" ] && break
@@ -87,10 +80,7 @@ MAINCLASS='com.ubnt.ace.Launcher'
 # Cleaning /var/run/unifi/* See issue #26, Docker takes care of exlusivity in the container anyway.
 rm -f /var/run/unifi/unifi.pid
 
-if [ -d "/var/cert/unifi" ]; then
-  echo 'Cert directory found. Checking Certs'
-  import_cert.sh
-fi
+run-parts /usr/local/docker/init.d
 
 # Used to generate simple key/value pairs, for example system.properties
 confSet () {
@@ -129,13 +119,13 @@ done
 
 if [[ "${@}" == "unifi" ]]; then
     # keep attached to shell so we can wait on it
-    echo 'Starting unifi controller service.'
+    log 'Starting unifi controller service.'
     ${JSVC} -nodetach ${JSVC_OPTS} ${MAINCLASS} start &
 
     wait
-    echo "WARN: unifi service process ended without being singaled? Check for errors in ${LOGDIR}." >&2
+    log "WARN: unifi service process ended without being singaled? Check for errors in ${LOGDIR}." >&2
 else
-    echo "Executing: ${@}"
+    log "Executing: ${@}"
     exec ${@}
 fi
 exit 1

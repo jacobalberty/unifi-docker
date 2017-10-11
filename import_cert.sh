@@ -2,9 +2,16 @@
 
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
+. /usr/local/docker/functions
+
+if [[ ! -d "/var/cert/unifi" ]]; then
+    exit 0
+fi
+
+log 'Cert directory found. Checking Certs'
 
 if `md5sum -c /var/cert/unifi/cert.pem.md5 &>/dev/null`; then
-    echo "Cert has not changed, not updating controller."
+    log "Cert has not changed, not updating controller."
     exit 0
 else
     TEMPFILE=$(mktemp)
@@ -35,18 +42,18 @@ Ob8VZRzI9neWagqNdwvYkQsEjgfbKbYK7p2CNTUQ
 -----END CERTIFICATE-----
 _EOF
 
-    echo "Cert has changed, updating controller..."
+    log "Cert has changed, updating controller..."
     md5sum /var/cert/unifi/cert.pem > /var/cert/unifi/cert.pem.md5 
-    echo "Using openssl to prepare certificate..."
+    log "Using openssl to prepare certificate..."
     openssl pkcs12 -export  -passout pass:aircontrolenterprise \
         -in /var/cert/unifi/cert.pem \
         -inkey /var/cert/unifi/privkey.pem \
         -out ${TEMPFILE} -name unifi \
         -CAfile /var/cert/unifi/chain.pem -caname root
-    echo "Removing existing certificate from Unifi protected keystore..."
+    log "Removing existing certificate from Unifi protected keystore..."
     keytool -delete -alias unifi -keystore /usr/lib/unifi/data/keystore \
         -deststorepass aircontrolenterprise
-    echo "Inserting certificate into Unifi keystore..."
+    log "Inserting certificate into Unifi keystore..."
     keytool -trustcacerts -importkeystore \
         -deststorepass aircontrolenterprise \
         -destkeypass aircontrolenterprise \
@@ -55,7 +62,7 @@ _EOF
         -srcstorepass aircontrolenterprise \
         -alias unifi
     rm -f ${TEMPFILE}
-    echo "Importing cert into Unifi database..."
+    log "Importing cert into Unifi database..."
     if [[ ${CERTURI} == *"letsencrypt"* ]]; then
         java -jar /usr/lib/unifi/lib/ace.jar import_cert \
             /var/cert/unifi/cert.pem \
@@ -72,5 +79,5 @@ _EOF
            /var/cert/unifi/cert.pem \
            /var/cert/unifi/chain.pem
     fi
-    echo "Done!"
+    log "Done!"
 fi

@@ -45,6 +45,7 @@ RUN mkdir -p /usr/unifi \
      /usr/local/unifi/init.d \
      /usr/unifi/init.d
 COPY docker-entrypoint.sh /usr/local/bin/
+COPY docker-healthcheck.sh /usr/local/bin/
 COPY functions /usr/unifi/functions
 COPY import_cert /usr/unifi/init.d/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
@@ -52,7 +53,7 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
 
 WORKDIR /var/lib/unifi
 
-HEALTHCHECK CMD curl -k -L --fail https://localhost:8443 || exit 1
+HEALTHCHECK CMD /usr/local/bin/docker-healthcheck.sh || exit 1
 
 # execute controller using JSVC like original debian package does
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]

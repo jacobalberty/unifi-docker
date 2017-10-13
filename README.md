@@ -10,7 +10,7 @@
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `stable candidate` to `stable` instead of waiting for it to hit the repository.
 
 In adition to these tags you may tag specific versions as well, for example `jacobalberty/unifi:5.4.19` will get you unifi 5.4.19 no matter what the current version is.
-Stable candidates now exist both under the `sc` tag and for tags with the extension `-sc` ie `jacobalberty/unifi:5.6.18-sc`. It is advices to use the specific versions as the `sc` tag may jump from 5.6.x to 5.5.x then back to 5.6.x as new stable candidates come out.
+Stable candidates now exist both under the `sc` tag and for tags with the extension `-sc` ie `jacobalberty/unifi:5.6.18-sc`. It is advised to use the specific versions as the `sc` tag may jump from 5.6.x to 5.5.x then back to 5.6.x as new stable candidates come out.
 
 ## Description
 
@@ -74,7 +74,7 @@ should apply cleanly against the `beta` branch.
 The command line is pretty simple:
 
 ```
-docker build -t unifi-beta --build-arg PKGURL=https://dl.ubnt.com/unifi/5.5.20/unifi_sysvinit_all.deb "https://github.com/jacobalberty/unifi-docker.git#beta"
+docker build -t unifi-beta --build-arg PKGURL=https://dl.ubnt.com/unifi/5.5.24/unifi_sysvinit_all.deb "https://github.com/jacobalberty/unifi-docker.git#beta"
 ```
 
 Simply replace the url to the debian package with the version you prefer.
@@ -89,24 +89,7 @@ Under your containers service definition instead of using `image: jacobalberty/u
         build:
          context: https://github.com/jacobalberty/unifi-docker.git#beta
          args:
-          PKGURL: https://dl.ubnt.com/unifi/5.5.20/unifi_sysvinit_all.deb
-```
-
-Once again, simply change PKGURL to point to the package you would like to use.
-
-Simply replace the url to the debian package with the version you prefer.
-
-
-### Building beta using docker-compose.yml version 2
-This is just as easy when using version 2 of the docker-compose.yml file format.
-
-Under your containers service definition instead of using `image: jacobalberty/unifi` use the following:
-
-```
-        build:
-         context: https://github.com/jacobalberty/unifi-docker.git#beta
-         args:
-          PKGURL: https://dl.ubnt.com/unifi/5.5.20/unifi_sysvinit_all.deb
+          PKGURL: https://dl.ubnt.com/unifi/5.5.24/unifi_sysvinit_all.deb
 ```
 
 Once again, simply change PKGURL to point to the package you would like to use.

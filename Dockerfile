@@ -6,7 +6,7 @@ MAINTAINER Jacob Alberty <jacob.alberty@foundigital.com>
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ARG PKGURL=https://dl.ubnt.com/unifi/5.5.24/unifi_sysvinit_all.deb
+ENV PKGURL=https://dl.ubnt.com/unifi/5.5.24/unifi_sysvinit_all.deb
 
 # Push installing openjdk-8-jre first, so that the unifi package doesn't pull in openjdk-7-jre as a dependency? Else uncomment and just go with openjdk-7.
 RUN mkdir -p /usr/share/man/man1/ \
@@ -45,14 +45,16 @@ RUN mkdir -p /usr/unifi \
      /usr/local/unifi/init.d \
      /usr/unifi/init.d
 COPY docker-entrypoint.sh /usr/local/bin/
+COPY docker-healthcheck.sh /usr/local/bin/
 COPY functions /usr/unifi/functions
 COPY import_cert /usr/unifi/init.d/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
- && chmod +x /usr/unifi/init.d/import_cert
+ && chmod +x /usr/unifi/init.d/import_cert \
+ && chmod +x /usr/local/bin/docker-healthcheck.sh
 
 WORKDIR /var/lib/unifi
 
-HEALTHCHECK CMD curl -k -L --fail https://localhost:8443 || exit 1
+HEALTHCHECK CMD /usr/local/bin/docker-healthcheck.sh || exit 1
 
 # execute controller using JSVC like original debian package does
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]

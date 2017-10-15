@@ -2,7 +2,7 @@ services:
  - docker
 install:
   - docker build -t unifi .
-  - docker run -d -p 8443:8443 --name unifi unifi 
+  - docker run -d -p 8443:8443 -e RUNAS_UID0=true --name unifi unifi 
 script:
   - docker ps | grep -q unifi
   - docker logs unifi

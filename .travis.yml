@@ -2,7 +2,7 @@ services:
  - docker
 install:
   - docker build -t unifi .
-  - docker run -d -p 127.0.0.1:8443:8443 --name unifi unifi 
+  - docker run -d -p 8443:8443 --name unifi unifi 
 script:
   - docker ps | grep -q unifi
   - docker logs unifi

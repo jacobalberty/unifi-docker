@@ -117,12 +117,34 @@ fi
 for key in "${!settings[@]}"; do
   confSet "$confFile" "$key" "${settings[$key]}"
 done
+UNIFI_CMD="${JSVC} -nodetach ${JSVC_OPTS} ${MAINCLASS} start"
+
+CUID=$(id -u)
 
 if [[ "${@}" == "unifi" ]]; then
     # keep attached to shell so we can wait on it
     log 'Starting unifi controller service.'
-    ${JSVC} -nodetach ${JSVC_OPTS} ${MAINCLASS} start &
-
+    if [ "${RUNAS_UID0}" == "true" ] || [ "${CUID}" != "0" ]; then
+        if [ "${CUID}" == 0]; then
+            log 'WARNING: Running UniFi in insecure (root) mode'
+        fi
+        ${UNIFI_CMD} &
+    elif [ "${RUNAS_UID0}" == "false" ]; then
+        if [ "${BIND_PRIV}" == "true" ]; then
+            if setcap 'cap_net_bind_service=+ep' "${JAVA_HOME}/jre/bin/java"; then
+                sleep 1
+            else
+                log "ERROR: setcap failed, can not continue"
+                log "ERROR: You may either launch with -e BIND_PRIV=false and only use ports >1024"
+                log "ERROR: or run this container as root with -e RUNAS_UID0=true"
+                exit 1
+            fi
+        fi
+        if [ "$(id unifi -u)" != "${UNIFI_UID}" ] || [ "$(id unifi -g)" != "${UNIFI_GID}" ]; then
+            usermod -u ${UNIFI_UID} unifi && groupmod -g ${UNIFI_GID} unifi
+        fi
+        gosu unifi:unifi ${UNIFI_CMD} &
+    fi
     wait
     log "WARN: unifi service process ended without being singaled? Check for errors in ${LOGDIR}." >&2
 else

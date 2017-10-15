@@ -110,6 +110,25 @@ Run information
 
 ## Environment Variables:
 
+### `BIND_PRIV`
+
+Default: `true`
+
+This is used to enable binding to ports less than 1024 when running the UniFi service
+as a restricted user. On some docker filesystem combinations setcap may not work so you would need to set this to false.
+
+### `RUNAS_UID0`
+
+Default: `false`
+
+This is used to determine whether or not the UniFi service runs as a privileged (root) user.
+
+### `UNIFI_UID` and `UNIFI_GID`
+
+Default: `999` for both
+
+These variables set the UID and GID for the user and group the UniFi service runs as when `RUNAS_UID0` is set to false
+
 ### `TZ`
 
 TimeZone. (i.e America/Chicago)
@@ -172,7 +191,4 @@ For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA 
 
 ## TODO
 
-Future work?
-
-- Don't run as root (but Unifi's Debian package does by the way...)
-- Possibly use Debian image with systemd init included (but thus far, I don't know of an official Debian systemd image to base off)
+This list is empty for now, please (add your suggestions)[https://github.com/jacobalberty/unifi-docker/issues].

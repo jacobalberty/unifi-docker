@@ -8,8 +8,48 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 ARG PKGURL=https://dl.ubnt.com/unifi/5.5.24/unifi_sysvinit_all.deb
 
+ENV BASEDIR=/usr/lib/unifi \
+    DATADIR=/var/lib/unifi \
+    LOGDIR=/var/log/unifi \
+    RUNDIR=/var/run/unifi \
+    GOSU_VERSION=1.10 \
+    BIND_PRIV=true \
+    RUNAS_UID0=false \
+    UNIFI_GID=999 \
+    UNIFI_UID=999
+
+# Install gosu
+# https://github.com/tianon/gosu/blob/master/INSTALL.md
+# This should be integrated with the main run because it duplicates a lot of the steps there
+# but for now while shoehorning gosu in it is seperate
+RUN set -ex \
+    && fetchDeps=' \
+        ca-certificates \
+        dirmngr \
+        gpg \
+        wget \
+    ' \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends $fetchDeps \
+    && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
+    && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
+    && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc" \
+# verify the signature
+    && export GNUPGHOME="$(mktemp -d)" \
+    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
+    && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
+    && rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
+    && chmod +x /usr/local/bin/gosu \
+# verify that the binary works
+    && gosu nobody true \
+    && apt-get purge -y --auto-remove $fetchDeps \
+    && rm -rf /var/lib/apt/lists/*
+
+
 # Push installing openjdk-8-jre first, so that the unifi package doesn't pull in openjdk-7-jre as a dependency? Else uncomment and just go with openjdk-7.
 RUN mkdir -p /usr/share/man/man1/ \
+ && groupadd -r unifi -g $UNIFI_GID \
+ && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \
  && apt-get update \
  && apt-get install -qy --no-install-recommends \
     curl \
@@ -17,6 +57,7 @@ RUN mkdir -p /usr/share/man/man1/ \
     gnupg \
     openjdk-8-jre-headless \
     procps \
+    libcap2-bin \
  && echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5 ubiquiti" > /etc/apt/sources.list.d/20ubiquiti.list \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50 \
  && curl -o ./unifi.deb "${PKGURL}" \
@@ -27,15 +68,9 @@ RUN mkdir -p /usr/share/man/man1/ \
  && rm -f ./unifi.deb \
  && rm -rf /var/lib/apt/lists/*
 
-ENV BASEDIR=/usr/lib/unifi \
-  DATADIR=/var/lib/unifi \
-  RUNDIR=/var/run/unifi \
-  LOGDIR=/var/log/unifi
-
 RUN ln -s ${DATADIR} ${BASEDIR}/data \
  && ln -s ${RUNDIR} ${BASEDIR}/run \
  && ln -s ${LOGDIR} ${BASEDIR}/logs
-# Can't use env var, RUN doesn't support them?
 
 VOLUME ["${DATADIR}", "${RUNDIR}", "${LOGDIR}"]
 

@@ -125,7 +125,7 @@ if [[ "${@}" == "unifi" ]]; then
     # keep attached to shell so we can wait on it
     log 'Starting unifi controller service.'
     if [ "${RUNAS_UID0}" == "true" ] || [ "${CUID}" != "0" ]; then
-        if [ "${CUID}" == 0]; then
+        if [ "${CUID}" == 0 ]; then
             log 'WARNING: Running UniFi in insecure (root) mode'
         fi
         ${UNIFI_CMD} &

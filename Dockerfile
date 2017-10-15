@@ -43,6 +43,7 @@ RUN set -ex \
 # verify that the binary works
     && gosu nobody true \
     && apt-get purge -y --auto-remove $fetchDeps \
+    && chown -R unifi:unifi /usr/lib/unifi \
     && rm -rf /var/lib/apt/lists/*
 
 

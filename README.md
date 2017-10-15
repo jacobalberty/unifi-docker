@@ -143,6 +143,25 @@ Ex:
 
 as a fix for https://community.ubnt.com/t5/UniFi-Routing-Switching/IMPORTANT-Debian-Ubuntu-users-MUST-READ-Updated-06-21/m-p/1968251#M48264
 
+### External MongoDB environment variables
+These variables are used to implement support for an 
+(external MongoDB server)[https://community.ubnt.com/t5/UniFi-Wireless/External-MongoDB-Server/td-p/1305297] and must all be 
+set in order for this feature to work.
+Once all are set then the configuration file value for `db.mongo.local` will automatically be set to `false`.
+
+### `DB_URI`
+
+Maps to `db.mongo.uri`.
+
+### `STATDB_URI`
+
+Maps to `statdb.mongo.uri`.
+
+### `DB_NAME`
+
+Maps to `unifi.db.name`.
+
+
 ## Expose:
 
 ### 8080/tcp - Device command/control

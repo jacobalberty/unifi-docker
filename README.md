@@ -42,7 +42,7 @@ set-inform http://<host_ip>:8080/inform
 ```
 #### Other options
 
-You can see more options on the (UniFi website)[https://help.ubnt.com/hc/en-us/articles/204909754-UniFi-Layer-3-methods-for-UAP-adoption-and-management]
+You can see more options on the [UniFi website](https://help.ubnt.com/hc/en-us/articles/204909754-UniFi-Layer-3-methods-for-UAP-adoption-and-management)
 
 
 ### Layer 2 adoption
@@ -145,7 +145,7 @@ as a fix for https://community.ubnt.com/t5/UniFi-Routing-Switching/IMPORTANT-Deb
 
 ### External MongoDB environment variables
 These variables are used to implement support for an 
-(external MongoDB server)[https://community.ubnt.com/t5/UniFi-Wireless/External-MongoDB-Server/td-p/1305297] and must all be 
+[external MongoDB server](https://community.ubnt.com/t5/UniFi-Wireless/External-MongoDB-Server/td-p/1305297) and must all be 
 set in order for this feature to work.
 Once all are set then the configuration file value for `db.mongo.local` will automatically be set to `false`.
 
@@ -210,4 +210,4 @@ For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA 
 
 ## TODO
 
-This list is empty for now, please (add your suggestions)[https://github.com/jacobalberty/unifi-docker/issues].
+This list is empty for now, please [add your suggestions](https://github.com/jacobalberty/unifi-docker/issues).

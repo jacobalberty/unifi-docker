@@ -1,5 +1,16 @@
 # unifi-docker
 
+## MAJOR CHANGES INCOMING
+
+The next major update to this container will default to running UniFi as a non root user. 
+If you would like to continue to running as a root user then simply add the environment variable `RUNAS_UID0`
+with the value `true` to your container configuration. It is preffered you set ownership of your unifi data and logs
+to the proper uid/gid (default is 999/999) and run as a restricted user.
+
+
+The [beta readme](https://github.com/jacobalberty/unifi-docker/blob/beta/README.md#environment-variables)
+has more details on the changes.
+
 ## Supported docker hub tags and respective `Dockerfile` links 
 | Tag | Description |
 | --- | --- |

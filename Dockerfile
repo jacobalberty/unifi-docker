@@ -43,7 +43,6 @@ RUN set -ex \
 # verify that the binary works
     && gosu nobody true \
     && apt-get purge -y --auto-remove $fetchDeps \
-    && chown -R unifi:unifi /usr/lib/unifi \
     && rm -rf /var/lib/apt/lists/*
 
 
@@ -67,6 +66,7 @@ RUN mkdir -p /usr/share/man/man1/ \
     dirmngr \
     gnupg \
  && rm -f ./unifi.deb \
+ && chown -R unifi:unifi /usr/lib/unifi \
  && rm -rf /var/lib/apt/lists/*
 
 RUN ln -s ${DATADIR} ${BASEDIR}/data \

@@ -60,7 +60,7 @@ RUN mkdir -p /usr/share/man/man1/ \
     libcap2-bin \
  && echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5 ubiquiti" > /etc/apt/sources.list.d/20ubiquiti.list \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50 \
- && curl -o ./unifi.deb "${PKGURL}" \
+ && curl -L -o ./unifi.deb "${PKGURL}" \
  && apt -qy install ./unifi.deb \
  && apt-get -qy purge --auto-remove \
     dirmngr \

@@ -1,5 +1,22 @@
 # unifi-docker
 
+## Important PSA: Key Reinstallation Attacks via serious weaknesses in WPA2
+
+Please make sure you update to the [latest firmware](https://community.ubnt.com/t5/UniFi-Updates-Blog/FIRMWARE-3-9-3-7537-for-UAP-USW-has-been-released/ba-p/2099365).
+You may need to do a ["custom update"](https://help.ubnt.com/hc/en-us/articles/204910064-UniFi-Changing-the-Firmware-of-a-UniFi-Device) if 3.9.3 isn't offered as an upgrade for your devices yet.
+For more details on the attack see the [krack website](https://www.krackattacks.com/).
+
+## MAJOR CHANGES INCOMING
+
+The next major update to this container will default to running UniFi as a non root user. 
+If you would like to continue to running as a root user then simply add the environment variable `RUNAS_UID0`
+with the value `true` to your container configuration. It is preffered you set ownership of your unifi data and logs
+to the proper uid/gid (default is 999/999) and run as a restricted user.
+
+
+The [beta readme](https://github.com/jacobalberty/unifi-docker/blob/beta/README.md#environment-variables)
+has more details on the changes.
+
 ## Supported docker hub tags and respective `Dockerfile` links 
 | Tag | Description |
 | --- | --- |
@@ -42,7 +59,7 @@ set-inform http://<host_ip>:8080/inform
 ```
 #### Other options
 
-You can see more options on the (UniFi website)[https://help.ubnt.com/hc/en-us/articles/204909754-UniFi-Layer-3-methods-for-UAP-adoption-and-management]
+You can see more options on the [UniFi website](https://help.ubnt.com/hc/en-us/articles/204909754-UniFi-Layer-3-methods-for-UAP-adoption-and-management)
 
 
 ### Layer 2 adoption
@@ -96,19 +113,75 @@ Once again, simply change PKGURL to point to the package you would like to use.
 
 ## Volumes:
 
-### `/var/lib/unifi`
+### `/unifi`
+This is a single monolithic volume that contains several subdirectories, you can do a single volume for everything
+or break up your old volumes into the subdirectories
 
-Configuration data
+#### `/unifi/data`
+Old: `/var/lib/unifi`
 
-### `/var/log/unifi`
+This contains your UniFi configuration data.
 
-Log files
+#### `/unifi/log`
+old: `/var/log/unifi`
+
+This contains UniFi log files
+
+#### `/unifi/cert`
+old: `/var/cert/unifi`
+
+To use custom SSL certs, you must map a volume with the certs to /unifi/cert
+
+They should be named: 
+```
+cert.pem  # The Certificate
+privkey.pem # Private key for the cert
+chain.pem # full cert chain
+```
+For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA Cert automatically.
+
+#### `/unifi/init.d`
+
+This is an entirely new volume.
+You can place scripts you want to launch every time the container starts in here
 
 ### `/var/run/unifi`
 
-Run information
+Run information, in general you will not need to touch this volume. It is there to ensure
+UniFi has a place to write its PID files
+
+
+### Legacy volumes
+
+These are no longer actually volumes, rather they exist for legacy compatibility.
+You are urged to move to the new volumes ASAP.
+
+#### `/var/lib/unifi`
+New name: `/unifi/data`
+
+#### `/var/log/unifi`
+New name: `/unifi/log`
 
 ## Environment Variables:
+
+### `BIND_PRIV`
+
+Default: `true`
+
+This is used to enable binding to ports less than 1024 when running the UniFi service
+as a restricted user. On some docker filesystem combinations setcap may not work so you would need to set this to false.
+
+### `RUNAS_UID0`
+
+Default: `false`
+
+This is used to determine whether or not the UniFi service runs as a privileged (root) user.
+
+### `UNIFI_UID` and `UNIFI_GID`
+
+Default: `999` for both
+
+These variables set the UID and GID for the user and group the UniFi service runs as when `RUNAS_UID0` is set to false
 
 ### `TZ`
 
@@ -123,6 +196,25 @@ Ex:
 ```--env JVM_MAX_THREAD_STACK_SIZE=1280k```
 
 as a fix for https://community.ubnt.com/t5/UniFi-Routing-Switching/IMPORTANT-Debian-Ubuntu-users-MUST-READ-Updated-06-21/m-p/1968251#M48264
+
+### External MongoDB environment variables
+These variables are used to implement support for an 
+[external MongoDB server](https://community.ubnt.com/t5/UniFi-Wireless/External-MongoDB-Server/td-p/1305297) and must all be 
+set in order for this feature to work.
+Once all are set then the configuration file value for `db.mongo.local` will automatically be set to `false`.
+
+### `DB_URI`
+
+Maps to `db.mongo.uri`.
+
+### `STATDB_URI`
+
+Maps to `statdb.mongo.uri`.
+
+### `DB_NAME`
+
+Maps to `unifi.db.name`.
+
 
 ## Expose:
 
@@ -159,7 +251,7 @@ actions unique to your unifi setup. An example bash script to set up certificate
 
 ## Certificate Support
 
-To use custom SSL certs, you must map a volume with the certs to /var/cert/unifi
+To use custom SSL certs, you must map a volume with the certs to /unifi/cert
 
 They should be named:
 ```
@@ -172,7 +264,4 @@ For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA 
 
 ## TODO
 
-Future work?
-
-- Don't run as root (but Unifi's Debian package does by the way...)
-- Possibly use Debian image with systemd init included (but thus far, I don't know of an official Debian systemd image to base off)
+This list is empty for now, please [add your suggestions](https://github.com/jacobalberty/unifi-docker/issues).

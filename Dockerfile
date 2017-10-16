@@ -17,7 +17,7 @@ ENV BASEDIR=/usr/lib/unifi \
     OLOGDIR=/var/log/unifi \
     GOSU_VERSION=1.10 \
     BIND_PRIV=true \
-    RUNAS_UID0=false \
+    RUNAS_UID0=true \
     UNIFI_GID=999 \
     UNIFI_UID=999
 

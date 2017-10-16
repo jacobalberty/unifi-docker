@@ -9,9 +9,12 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG PKGURL=https://dl.ubnt.com/unifi/5.5.24/unifi_sysvinit_all.deb
 
 ENV BASEDIR=/usr/lib/unifi \
-    DATADIR=/var/lib/unifi \
-    LOGDIR=/var/log/unifi \
+    DATADIR=/unifi/data \
+    LOGDIR=/unifi/log \
+    CERTDIR=/unifi/cert \
     RUNDIR=/var/run/unifi \
+    ODATADIR=/var/lib/unifi \
+    OLOGDIR=/var/log/unifi \
     GOSU_VERSION=1.10 \
     BIND_PRIV=true \
     RUNAS_UID0=false \
@@ -77,9 +80,13 @@ RUN mkdir -p /usr/share/man/man1/ \
 
 RUN ln -s ${DATADIR} ${BASEDIR}/data \
  && ln -s ${RUNDIR} ${BASEDIR}/run \
- && ln -s ${LOGDIR} ${BASEDIR}/logs
+ && ln -s ${LOGDIR} ${BASEDIR}/logs \
+ && ln -s ${DATADIR} ${ODATADIR} \
+ && ln -s ${LOGDIR} ${OLOGDIR} \
+ && mkdir -p /var/cert ${CERTDIR} \
+ && ln -s ${CERTDIR} /var/cert/unifi
 
-VOLUME ["${DATADIR}", "${RUNDIR}", "${LOGDIR}"]
+VOLUME ["/unifi", "${RUNDIR}"]
 
 EXPOSE 6789/tcp 8080/tcp 8443/tcp 8880/tcp 8843/tcp 3478/udp
 

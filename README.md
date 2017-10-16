@@ -96,17 +96,54 @@ Once again, simply change PKGURL to point to the package you would like to use.
 
 ## Volumes:
 
-### `/var/lib/unifi`
+### `/unifi`
+This is a single monolithic volume that contains several subdirectories, you can do a single volume for everything
+or break up your old volumes into the subdirectories
 
-Configuration data
+#### `/unifi/data`
+Old: `/var/lib/unifi`
 
-### `/var/log/unifi`
+This contains your UniFi configuration data.
 
-Log files
+#### `/unifi/log`
+old: `/var/log/unifi`
+
+This contains UniFi log files
+
+#### `/unifi/cert`
+old: `/var/cert/unifi`
+
+To use custom SSL certs, you must map a volume with the certs to /unifi/cert
+
+They should be named: 
+```
+cert.pem  # The Certificate
+privkey.pem # Private key for the cert
+chain.pem # full cert chain
+```
+For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA Cert automatically.
+
+#### `/unifi/init.d`
+
+This is an entirely new volume.
+You can place scripts you want to launch every time the container starts in here
 
 ### `/var/run/unifi`
 
-Run information
+Run information, in general you will not need to touch this volume. It is there to ensure
+UniFi has a place to write its PID files
+
+
+### Legacy volumes
+
+These are no longer actually volumes, rather they exist for legacy compatibility.
+You are urged to move to the new volumes ASAP.
+
+#### `/var/lib/unifi`
+New name: `/unifi/data`
+
+#### `/var/log/unifi`
+New name: `/unifi/log`
 
 ## Environment Variables:
 
@@ -197,7 +234,7 @@ actions unique to your unifi setup. An example bash script to set up certificate
 
 ## Certificate Support
 
-To use custom SSL certs, you must map a volume with the certs to /var/cert/unifi
+To use custom SSL certs, you must map a volume with the certs to /unifi/cert
 
 They should be named:
 ```

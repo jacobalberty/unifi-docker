@@ -83,6 +83,10 @@ rm -f /var/run/unifi/unifi.pid
 run-parts /usr/local/unifi/init.d
 run-parts /usr/unifi/init.d
 
+if [ -d "/unifi/init.d" ]; then
+    run-parts "/unifi/init.d"
+fi
+
 # Used to generate simple key/value pairs, for example system.properties
 confSet () {
   file=$1

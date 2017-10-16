@@ -1,6 +1,6 @@
 # unifi-docker
 
-## Important PSA regarding wpa security
+## Important PSA: Key Reinstallation Attacks via serious weaknesses in WPA2
 
 Please make sure you update to the [latest firmware](https://community.ubnt.com/t5/UniFi-Updates-Blog/FIRMWARE-3-9-3-7537-for-UAP-USW-has-been-released/ba-p/2099365).
 You may need to do a ["custom update"](https://help.ubnt.com/hc/en-us/articles/204910064-UniFi-Changing-the-Firmware-of-a-UniFi-Device) if 3.9.3 isn't offered as an upgrade for your devices yet.

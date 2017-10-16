@@ -4,7 +4,7 @@ PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 . /usr/unifi/functions
 
-if [[ ! -d "${CERTDIR}" ]]; then
+if [[ ! -d "${CERTDIR}" || ! -f "${CERTDIR}/cert.pem" ]]; then
     exit 0
 fi
 

@@ -6,7 +6,7 @@ MAINTAINER Jacob Alberty <jacob.alberty@foundigital.com>
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ARG PKGURL=https://dl.ubnt.com/unifi/5.5.24/unifi_sysvinit_all.deb
+ARG PKGURL=https://dl.ubnt.com/unifi/5.6.19-17e4cda571/unifi_sysvinit_all.deb
 
 ENV BASEDIR=/usr/lib/unifi \
     DATADIR=/unifi/data \
@@ -81,6 +81,7 @@ RUN mkdir -p /usr/share/man/man1/ \
 RUN ln -s ${DATADIR} ${BASEDIR}/data \
  && ln -s ${RUNDIR} ${BASEDIR}/run \
  && ln -s ${LOGDIR} ${BASEDIR}/logs \
+ && rm -rf {$ODATADIR} ${OLOGDIR} \
  && ln -s ${DATADIR} ${ODATADIR} \
  && ln -s ${LOGDIR} ${OLOGDIR} \
  && mkdir -p /var/cert ${CERTDIR} \

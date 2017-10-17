@@ -78,7 +78,9 @@ RUN mkdir -p /usr/share/man/man1/ \
  && chown -R unifi:unifi /usr/lib/unifi \
  && rm -rf /var/lib/apt/lists/*
 
-RUN ln -s ${DATADIR} ${BASEDIR}/data \
+RUN rm -rf ${ODATADIR} ${OLOGDIR} \
+ && mkdir -p ${DATADIR} ${LOGDIR} \
+ && ln -s ${DATADIR} ${BASEDIR}/data \
  && ln -s ${RUNDIR} ${BASEDIR}/run \
  && ln -s ${LOGDIR} ${BASEDIR}/logs \
  && rm -rf {$ODATADIR} ${OLOGDIR} \
@@ -102,7 +104,7 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
  && chmod +x /usr/unifi/init.d/import_cert \
  && chmod +x /usr/local/bin/docker-healthcheck.sh
 
-WORKDIR /var/lib/unifi
+WORKDIR /unifi
 
 HEALTHCHECK CMD /usr/local/bin/docker-healthcheck.sh || exit 1
 

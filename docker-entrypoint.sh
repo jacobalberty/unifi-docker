@@ -45,7 +45,6 @@ ENABLE_UNIFI=yes
 JVM_EXTRA_OPTS="-cwd /usr/lib/unifi"
 JSVC_EXTRA_OPTS=
 
-log "${LOGDIR}"
 MONGOLOCK="${DATAPATH}/db/mongod.lock"
 JVM_EXTRA_OPTS="${JVM_EXTRA_OPTS} -Dunifi.datadir=${DATADIR} -Dunifi.logdir=${LOGDIR} -Dunifi.rundir=${RUNDIR}"
 PIDFILE=/var/run/unifi/unifi.pid

@@ -6,4 +6,4 @@ if [ -f "${SYSPROPS_FILE}" ]; then
 fi
 PORT=${SYSPROPS_PORT:-8443}
 
-curl -k -L --fail https://localhost:${PORT}
+curl -kILs --fail https://localhost:${PORT}

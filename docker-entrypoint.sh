@@ -34,15 +34,18 @@ DATALINK=${BASEDIR}/data
 LOGLINK=${BASEDIR}/logs
 RUNLINK=${BASEDIR}/run
 
+DIRS="${RUNDIR}"
+
 JAVA_ENTROPY_GATHER_DEVICE=
 JVM_MAX_HEAP_SIZE=1024M
 JVM_INIT_HEAP_SIZE=
 UNIFI_JVM_EXTRA_OPTS=
 
 ENABLE_UNIFI=yes
-JVM_EXTRA_OPTS=
+JVM_EXTRA_OPTS="-cwd /usr/lib/unifi"
 JSVC_EXTRA_OPTS=
 
+log "${LOGDIR}"
 MONGOLOCK="${DATAPATH}/db/mongod.lock"
 JVM_EXTRA_OPTS="${JVM_EXTRA_OPTS} -Dunifi.datadir=${DATADIR} -Dunifi.logdir=${LOGDIR} -Dunifi.rundir=${RUNDIR}"
 PIDFILE=/var/run/unifi/unifi.pid
@@ -145,8 +148,15 @@ if [[ "${@}" == "unifi" ]]; then
             fi
         fi
         if [ "$(id unifi -u)" != "${UNIFI_UID}" ] || [ "$(id unifi -g)" != "${UNIFI_GID}" ]; then
+            log "INFO: Changing 'unifi' UID to '${UNIFI_UID}' and GID to '${UNIFI_GID}'"
             usermod -u ${UNIFI_UID} unifi && groupmod -g ${UNIFI_GID} unifi
         fi
+        # Using a loop here so I can check more directories easily later
+        for dir in ${DIRS}; do
+            if [ "$(stat -c '%u' "${dir}")" != "${UNIFI_UID}" ]; then
+                chown -R "${UNIFI_UID}:${UNIFI_GID}" "${dir}"
+            fi
+        done
         gosu unifi:unifi ${UNIFI_CMD} &
     fi
     wait

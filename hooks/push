@@ -1,0 +1,21 @@
+#!/bin/bash
+git_ref_type() {
+
+    if git show-ref -q --verify "refs/heads/$1" 2>/dev/null; then
+        echo "branch"
+    elif git show-ref -q --verify "refs/tags/$1" 2>/dev/null; then
+        echo "tag"
+    elif git show-ref -q --verify "refs/remote/$1" 2>/dev/null; then
+        echo "remote"
+    elif git rev-parse --verify "$1^{commit}" >/dev/null 2>&1; then
+        echo "hash"
+    else
+        echo "unknown"
+    fi
+    return 0
+}
+
+if [ $(git_ref_type "${SOURCE_BRANCH}") == "tag" ]; then
+    git tag $IMAGE_NAME $SOURCE_COMMIT
+    docker push $SOURCE_COMMIT
+fi

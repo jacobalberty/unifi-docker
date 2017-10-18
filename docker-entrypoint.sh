@@ -34,7 +34,7 @@ DATALINK=${BASEDIR}/data
 LOGLINK=${BASEDIR}/logs
 RUNLINK=${BASEDIR}/run
 
-DIRS="${RUNDIR}"
+DIRS="${RUNDIR} ${LOGDIR}"
 
 JAVA_ENTROPY_GATHER_DEVICE=
 JVM_MAX_HEAP_SIZE=1024M
@@ -148,7 +148,7 @@ if [[ "${@}" == "unifi" ]]; then
         fi
         if [ "$(id unifi -u)" != "${UNIFI_UID}" ] || [ "$(id unifi -g)" != "${UNIFI_GID}" ]; then
             log "INFO: Changing 'unifi' UID to '${UNIFI_UID}' and GID to '${UNIFI_GID}'"
-            usermod -u ${UNIFI_UID} unifi && groupmod -g ${UNIFI_GID} unifi
+            usermod -o -u ${UNIFI_UID} unifi && groupmod -o -g ${UNIFI_GID} unifi
         fi
         # Using a loop here so I can check more directories easily later
         for dir in ${DIRS}; do

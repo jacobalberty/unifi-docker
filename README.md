@@ -1,5 +1,22 @@
 # unifi-docker
 
+## Important PSA: Key Reinstallation Attacks via serious weaknesses in WPA2
+
+Please make sure you update to the [latest firmware](https://community.ubnt.com/t5/UniFi-Updates-Blog/FIRMWARE-3-9-3-7537-for-UAP-USW-has-been-released/ba-p/2099365).
+You may need to do a ["custom update"](https://help.ubnt.com/hc/en-us/articles/204910064-UniFi-Changing-the-Firmware-of-a-UniFi-Device) if 3.9.3 isn't offered as an upgrade for your devices yet.
+For more details on the attack see the [krack website](https://www.krackattacks.com/).
+
+## MAJOR CHANGES INCOMING
+
+The next major update to this container will default to running UniFi as a non root user. 
+If you would like to continue to running as a root user then simply add the environment variable `RUNAS_UID0`
+with the value `true` to your container configuration. It is preffered you set ownership of your unifi data and logs
+to the proper uid/gid (default is 999/999) and run as a restricted user.
+
+
+The [beta readme](https://github.com/jacobalberty/unifi-docker/blob/beta/README.md#environment-variables)
+has more details on the changes.
+
 ## Supported docker hub tags and respective `Dockerfile` links 
 | Tag | Description |
 | --- | --- |

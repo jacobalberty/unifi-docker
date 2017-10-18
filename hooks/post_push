@@ -1,4 +1,9 @@
 #!/bin/bash
+
+tag_branch() {
+    docker tag "${IMAGE_NAME}" "${DOCKER_REPO}:$1"
+    docker push "${DOCKER_REPO}:$1"
+}
 git_ref_type() {
 
     if git show-ref -q --verify "refs/heads/$1" 2>/dev/null; then
@@ -16,6 +21,5 @@ git_ref_type() {
 }
 
 if [ $(git_ref_type "${SOURCE_BRANCH}") == "tag" ]; then
-    docker tag "${IMAGE_NAME}" "${DOCKER_REPO}:${SOURCE_BRANCH}-${SOURCE_COMMIT}"
-    docker push "${DOCKER_REPO}:${SOURCE_BRANCH}-${SOURCE_COMMIT}"
+    tag_branch "${SOURCE_BRANCH}-$(git rev-parse HEAD | cut -b-8)"
 fi

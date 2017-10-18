@@ -19,7 +19,7 @@ has more details on the changes.
 ## Supported docker hub tags and respective `Dockerfile` links 
 | Tag | Description |
 | --- | --- |
-| [`latest`, `stable`, `unifi-5.5` ](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.5.20 as of 2017-07-31 |
+| [`latest`, `stable`, `unifi-5.5` ](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.5.24 as of 2017-10-11 |
 | [`oldstable`, `unifi-5.4` ](https://github.com/jacobalberty/unifi-docker/blob/oldstable/Dockerfile) | Tracks UniFi Old Stable version - 5.4.19 as of 2017-07-31 |
 | [`sc`](https://github.com/jacobalberty/unifi-docker/blob/sc/Dockerfile) | Tracks UniFi "Stable Candidate", The latest stable candidate may flip between the two branches maintained by Ubuiqiti so it is advised you tag off of the version you want directly instead of the `sc` tag. |
 

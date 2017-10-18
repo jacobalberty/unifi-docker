@@ -16,6 +16,6 @@ git_ref_type() {
 }
 
 if [ $(git_ref_type "${SOURCE_BRANCH}") == "tag" ]; then
-    docker tag $IMAGE_NAME $DOCKER_REPO:$SOURCE_COMMIT
-    docker push $DOCKER_REPO:$SOURCE_COMMIT
+    docker tag "${IMAGE_NAME}" "${DOCKER_REPO}:${SOURCE_BRANCH}-${SOURCE_COMMIT}"
+    docker push "${DOCKER_REPO}:${SOURCE_BRANCH}-${SOURCE_COMMIT}"
 fi

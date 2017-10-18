@@ -2,8 +2,7 @@
 
 ## Important PSA: Key Reinstallation Attacks via serious weaknesses in WPA2
 
-Please make sure you update to the [latest firmware](https://community.ubnt.com/t5/UniFi-Updates-Blog/FIRMWARE-3-9-3-7537-for-UAP-USW-has-been-released/ba-p/2099365).
-You may need to do a ["custom update"](https://help.ubnt.com/hc/en-us/articles/204910064-UniFi-Changing-the-Firmware-of-a-UniFi-Device) if 3.9.3 isn't offered as an upgrade for your devices yet.
+Please make sure you update the firmware on your access points, the KRACK vulnerability is a fairly major vulnerability in your wireless security. Ubiquiti has [an article with details on what devices need updates and how to update them](https://help.ubnt.com/hc/en-us/articles/115013737328).
 For more details on the attack see the [krack website](https://www.krackattacks.com/).
 
 ## MAJOR CHANGES INCOMING
@@ -20,9 +19,14 @@ has more details on the changes.
 ## Supported docker hub tags and respective `Dockerfile` links 
 | Tag | Description |
 | --- | --- |
-| [`latest`, `stable`, `unifi-5.5` ](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile ) | Tracks UniFi stable version - 5.5.20 as of 2017-07-31 |
-| [`oldstable`, `unifi-5.4` ](https://github.com/jacobalberty/unifi-docker/blob/oldstable/Dockerfile ) | Tracks UniFi Old Stable version - 5.4.19 as of 2017-07-31 |
-| [`sc`](https://github.com/jacobalberty/unifi-docker/blob/sc/Dockerfile) | Tracks UniFi "Stable Candidate", this tag however may not always cleanly upgrade and it is better to track the direct sc tags ie : `5.6.18-sc` instead. |
+| [`latest`, `stable`, `unifi-5.5` ](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.5.20 as of 2017-07-31 |
+| [`oldstable`, `unifi-5.4` ](https://github.com/jacobalberty/unifi-docker/blob/oldstable/Dockerfile) | Tracks UniFi Old Stable version - 5.4.19 as of 2017-07-31 |
+| [`sc`](https://github.com/jacobalberty/unifi-docker/blob/sc/Dockerfile) | Tracks UniFi "Stable Candidate", The latest stable candidate may flip between the two branches maintained by Ubuiqiti so it is advised you tag off of the version you want directly instead of the `sc` tag. |
+
+### Latest Stable Candidate tags
+| Version | Latest Tag |
+| --- | --- |
+| 5.6.x | [`5.6.19-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.6.19-sc/Dockerfile) |
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `stable candidate` to `stable` instead of waiting for it to hit the repository.
 
@@ -43,8 +47,8 @@ Example to test with
 
 ```bash
 mkdir -p unifi/data
-mkdir -p unifi/logs
-docker run --rm --init -p 8080:8080 -p 8443:8443 -p 3478:3478/udp -p 10001:10001/udp -e TZ='Africa/Johannesburg' -v ~/unifi/data:/var/lib/unifi -v ~/unifi/logs:/var/log/unifi --name unifi jacobalberty/unifi:unifi5
+mkdir -p unifi/log
+docker run --rm --init -p 8080:8080 -p 8443:8443 -p 3478:3478/udp -p 10001:10001/udp -e TZ='Africa/Johannesburg' -v ~/unifi:/unifi --name unifi jacobalberty/unifi:stable
 ```
 ## Adopting access points/switches/security gateway
 ### Layer 3 adoption

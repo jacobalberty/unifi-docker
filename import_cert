@@ -14,6 +14,13 @@ if `md5sum -c ${CERTDIR}/cert.pem.md5 &>/dev/null`; then
     log "Cert has not changed, not updating controller."
     exit 0
 else
+    if [ ! -e "${DATADIR}/keystore" ]; then
+        log "WARN: Missing keystore, creating a new one"
+        keytool -genkey -keyalg RSA -alias unifi -keystore ${DATADIR}/keystore \
+            -storepass aircontrolenterprise -keypass aircontrolenterprise -validity 1825 \
+            -keysize 4096 -dname "cn=UniFi"
+    fi
+
     TEMPFILE=$(mktemp)
     TMPLIST="${TEMPFILE}"
     CERTTEMPFILE=$(mktemp)

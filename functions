@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+log() {
+    echo "$(date +"[%Y-%m-%d %T,%3N]") <docker-entrypoint> $*"
+}
+
+set_java_home() {
+    JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/jre/bin/java::")
+    if [ ! -d "${JAVA_HOME}" ]; then
+        # For some reason readlink failed so lets just make some assumptions instead
+        # We're assuming openjdk 8 since thats what we install in Dockerfile
+        arch=`dpkg --print-architecture 2>/dev/null`
+        JAVA_HOME=/usr/lib/jvm/java-8-openjdk-${arch}
+    fi
+}
+
+instPkg() {
+    for pkg in $*; do
+        if [ $(dpkg-query -W -f='${Status}' "${pkg}" 2>/dev/null | grep -c "ok installed") -eq 0 ];
+        then
+            apt-get -qy install "${pkg}";
+        fi
+    done
+}

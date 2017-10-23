@@ -1,0 +1,25 @@
+#!/bin/bash
+
+tag_branch() {
+    docker tag "${IMAGE_NAME}" "${DOCKER_REPO}:$1"
+    docker push "${DOCKER_REPO}:$1"
+}
+git_ref_type() {
+
+    if git show-ref -q --verify "refs/heads/$1" 2>/dev/null; then
+        echo "branch"
+    elif git show-ref -q --verify "refs/tags/$1" 2>/dev/null; then
+        echo "tag"
+    elif git show-ref -q --verify "refs/remote/$1" 2>/dev/null; then
+        echo "remote"
+    elif git rev-parse --verify "$1^{commit}" >/dev/null 2>&1; then
+        echo "hash"
+    else
+        echo "unknown"
+    fi
+    return 0
+}
+
+if [ $(git_ref_type "${SOURCE_BRANCH}") == "tag" ]; then
+    tag_branch "${SOURCE_BRANCH}-$(git rev-parse HEAD | cut -b-8)"
+fi

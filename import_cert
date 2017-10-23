@@ -2,14 +2,21 @@
 
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
+. /usr/unifi/functions
 
-if `md5sum -c /var/cert/unifi/cert.pem.md5 &>/dev/null`; then
-    echo "Cert has not changed, not updating controller."
+if [[ ! -d "${CERTDIR}" || ! -f "${CERTDIR}/cert.pem" ]]; then
+    exit 0
+fi
+
+log 'Cert directory found. Checking Certs'
+
+if `md5sum -c ${CERTDIR}/cert.pem.md5 &>/dev/null`; then
+    log "Cert has not changed, not updating controller."
     exit 0
 else
     TEMPFILE=$(mktemp)
     CERTTEMPFILE=$(mktemp)
-    CERTURI=$(openssl x509 -noout -ocsp_uri -in /var/cert/unifi/cert.pem)
+    CERTURI=$(openssl x509 -noout -ocsp_uri -in ${CERTDIR}/cert.pem)
     # Identrust cross-signed CA cert needed by the java keystore for import.
     # Can get original here: https://www.identrust.com/certificates/trustid/root-download-x3.html
     cat > ${CERTTEMPFILE} <<'_EOF'
@@ -35,42 +42,42 @@ Ob8VZRzI9neWagqNdwvYkQsEjgfbKbYK7p2CNTUQ
 -----END CERTIFICATE-----
 _EOF
 
-    echo "Cert has changed, updating controller..."
-    md5sum /var/cert/unifi/cert.pem > /var/cert/unifi/cert.pem.md5 
-    echo "Using openssl to prepare certificate..."
+    log "Cert has changed, updating controller..."
+    md5sum ${CERTDIR}/cert.pem > ${CERTDIR}/cert.pem.md5 
+    log "Using openssl to prepare certificate..."
     openssl pkcs12 -export  -passout pass:aircontrolenterprise \
-        -in /var/cert/unifi/cert.pem \
-        -inkey /var/cert/unifi/privkey.pem \
+        -in ${CERTDIR}/cert.pem \
+        -inkey ${CERTDIR}/privkey.pem \
         -out ${TEMPFILE} -name unifi \
-        -CAfile /var/cert/unifi/chain.pem -caname root
-    echo "Removing existing certificate from Unifi protected keystore..."
-    keytool -delete -alias unifi -keystore /usr/lib/unifi/data/keystore \
+        -CAfile ${CERTDIR}/chain.pem -caname root
+    log "Removing existing certificate from Unifi protected keystore..."
+    keytool -delete -alias unifi -keystore ${DATADIR}/keystore \
         -deststorepass aircontrolenterprise
-    echo "Inserting certificate into Unifi keystore..."
+    log "Inserting certificate into Unifi keystore..."
     keytool -trustcacerts -importkeystore \
         -deststorepass aircontrolenterprise \
         -destkeypass aircontrolenterprise \
-        -destkeystore /usr/lib/unifi/data/keystore \
+        -destkeystore ${DATADIR}/keystore \
         -srckeystore ${TEMPFILE} -srcstoretype PKCS12 \
         -srcstorepass aircontrolenterprise \
         -alias unifi
     rm -f ${TEMPFILE}
-    echo "Importing cert into Unifi database..."
+    log "Importing cert into Unifi database..."
     if [[ ${CERTURI} == *"letsencrypt"* ]]; then
         java -jar /usr/lib/unifi/lib/ace.jar import_cert \
-            /var/cert/unifi/cert.pem \
-            /var/cert/unifi/chain.pem \
+            ${CERTDIR}/cert.pem \
+            ${CERTDIR}/chain.pem \
             ${CERTTEMPFILE}
         rm -f ${CERTTEMPFILE}
-    elif [ -f "/var/cert/unifi/ca.pem" ]; then
+    elif [ -f "${CERTDIR}/ca.pem" ]; then
         java -jar /usr/lib/unifi/lib/ace.jar import_cert \
-            /var/cert/unifi/cert.pem \
-            /var/cert/unifi/chain.pem \
-            /var/cert/unifi/ca.pem
+            ${CERTDIR}/cert.pem \
+            ${CERTDIR}/chain.pem \
+            ${CERTDIR}/ca.pem
     else
         java -jar /usr/lib/unifi/lib/ace.jar import_cert \
-           /var/cert/unifi/cert.pem \
-           /var/cert/unifi/chain.pem
+           ${CERTDIR}/cert.pem \
+           ${CERTDIR}/chain.pem
     fi
-    echo "Done!"
+    log "Done!"
 fi

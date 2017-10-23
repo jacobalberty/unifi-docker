@@ -5,6 +5,9 @@ install:
 before_script:
   - sudo apt-get --yes --no-install-recommends install binfmt-support qemu-user-static
   - echo ':arm:M::\x7fELF\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/bin/qemu-arm-static:' | sudo tee -a /proc/sys/fs/binfmt_misc/register
+  - docker run -d -p 8443:8443 -e RUNAS_UID0=true --name unifi unifi 
 script:
   - docker run -d -p 127.0.0.1:8443:8443 --name unifi unifi 
   - docker ps | grep -q unifi
+  - docker logs unifi
+  - sleep 10 && curl -kILs --fail https://127.0.0.1:8443 || exit 1

@@ -5,22 +5,20 @@
 Please make sure you update the firmware on your access points, the KRACK vulnerability is a fairly major vulnerability in your wireless security. Ubiquiti has [an article with details on what devices need updates and how to update them](https://help.ubnt.com/hc/en-us/articles/115013737328).
 For more details on the attack see the [krack website](https://www.krackattacks.com/).
 
-## MAJOR CHANGES INCOMING
+## Run as non root user
 
-The next major update to this container will default to running UniFi as a non root user. 
-If you would like to continue to running as a root user then simply add the environment variable `RUNAS_UID0`
-with the value `true` to your container configuration. It is preffered you set ownership of your unifi data and logs
-to the proper uid/gid (default is 999/999) and run as a restricted user.
+It is suggested you start running this as a non root user. The default right now is to run as root but if you set the environment
+variable RUNAS_UID0 to false then the image will run as a special unfi user with the uid/gid 999/999. You should ideally set
+your data and logs to owned by the proper gid. The [environment variables section](https://github.com/jacobalberty/unifi-docker/blob/master/README.md#environment-variables)
+has more details. At some point in the future this feature may default to on and I personally run all of my own containers with it on. So 
+turning it on for your own containers will help prevent any surprises.
 
-
-The [beta readme](https://github.com/jacobalberty/unifi-docker/blob/beta/README.md#environment-variables)
-has more details on the changes.
 
 ## Supported docker hub tags and respective `Dockerfile` links 
 | Tag | Description |
 | --- | --- |
-| [`latest`, `stable`, `unifi-5.5` ](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.5.20 as of 2017-07-31 |
-| [`oldstable`, `unifi-5.4` ](https://github.com/jacobalberty/unifi-docker/blob/oldstable/Dockerfile) | Tracks UniFi Old Stable version - 5.4.19 as of 2017-07-31 |
+| [`latest`, `stable`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.6.19 as of 2017-10-23 |
+| [`oldstable`, `unifi-5.4`](https://github.com/jacobalberty/unifi-docker/blob/oldstable/Dockerfile) | Tracks UniFi Old Stable version - 5.4.19 as of 2017-07-31 |
 | [`sc`](https://github.com/jacobalberty/unifi-docker/blob/sc/Dockerfile) | Tracks UniFi "Stable Candidate", The latest stable candidate may flip between the two branches maintained by Ubuiqiti so it is advised you tag off of the version you want directly instead of the `sc` tag. |
 
 ### Latest Stable Candidate tags

@@ -34,7 +34,7 @@ DATALINK=${BASEDIR}/data
 LOGLINK=${BASEDIR}/logs
 RUNLINK=${BASEDIR}/run
 
-DIRS="${RUNDIR} ${LOGDIR}"
+DIRS="${RUNDIR} ${LOGDIR} ${DATADIR}"
 
 JAVA_ENTROPY_GATHER_DEVICE=
 JVM_MAX_HEAP_SIZE=1024M
@@ -130,6 +130,14 @@ CUID=$(id -u)
 if [[ "${@}" == "unifi" ]]; then
     # keep attached to shell so we can wait on it
     log 'Starting unifi controller service.'
+    for dir in "${DATADIR}" "${LOGDIR}"; do
+        if [ ! -d "${dir}" ]; then
+            if [ "${UNSAFE_IO}" == "true" ]; then
+                rm -rf "${dir}"
+            fi
+            mkdir -p "${dir}"
+        fi
+    done
     if [ "${RUNAS_UID0}" == "true" ] || [ "${CUID}" != "0" ]; then
         if [ "${CUID}" == 0 ]; then
             log 'WARNING: Running UniFi in insecure (root) mode'

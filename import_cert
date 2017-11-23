@@ -14,8 +14,17 @@ if `md5sum -c ${CERTDIR}/cert.pem.md5 &>/dev/null`; then
     log "Cert has not changed, not updating controller."
     exit 0
 else
+    if [ ! -e "${DATADIR}/keystore" ]; then
+        log "WARN: Missing keystore, creating a new one"
+        keytool -genkey -keyalg RSA -alias unifi -keystore ${DATADIR}/keystore \
+            -storepass aircontrolenterprise -keypass aircontrolenterprise -validity 1825 \
+            -keysize 4096 -dname "cn=UniFi"
+    fi
+
     TEMPFILE=$(mktemp)
+    TMPLIST="${TEMPFILE}"
     CERTTEMPFILE=$(mktemp)
+    TMPLIST+=" ${CERTTEMPFILE}"
     CERTURI=$(openssl x509 -noout -ocsp_uri -in ${CERTDIR}/cert.pem)
     # Identrust cross-signed CA cert needed by the java keystore for import.
     # Can get original here: https://www.identrust.com/certificates/trustid/root-download-x3.html
@@ -45,11 +54,22 @@ _EOF
     log "Cert has changed, updating controller..."
     md5sum ${CERTDIR}/cert.pem > ${CERTDIR}/cert.pem.md5 
     log "Using openssl to prepare certificate..."
-    openssl pkcs12 -export  -passout pass:aircontrolenterprise \
+    if [[ "${CERTURI}" == *"letsencrypt"* ]]; then
+        CHAIN=$(mktemp)
+        TMPLIST+=" ${TEMPFILE}"
+        cat "${CERTTEMPFILE}" "${CERTDIR}/chain.pem"  >> "${CHAIN}"
+    elif [[ -f "${CERTDIR}/ca.pem" ]]; then
+        CHAIN=$(mktemp)
+        TMPLIST+=" ${TEMPFILE}"
+        cat "${CERTDIR}/ca.pem" "${CERTDIR}/chain.pem" >> "${CHAIN}"
+    else
+        CHAIN="${CERTDIR}/chain.pem"
+    fi
+   openssl pkcs12 -export  -passout pass:aircontrolenterprise \
         -in ${CERTDIR}/cert.pem \
         -inkey ${CERTDIR}/privkey.pem \
         -out ${TEMPFILE} -name unifi \
-        -CAfile ${CERTDIR}/chain.pem -caname root
+        -CAfile "${CHAIN}" -caname root
     log "Removing existing certificate from Unifi protected keystore..."
     keytool -delete -alias unifi -keystore ${DATADIR}/keystore \
         -deststorepass aircontrolenterprise
@@ -61,23 +81,9 @@ _EOF
         -srckeystore ${TEMPFILE} -srcstoretype PKCS12 \
         -srcstorepass aircontrolenterprise \
         -alias unifi
-    rm -f ${TEMPFILE}
-    log "Importing cert into Unifi database..."
-    if [[ ${CERTURI} == *"letsencrypt"* ]]; then
-        java -jar /usr/lib/unifi/lib/ace.jar import_cert \
-            ${CERTDIR}/cert.pem \
-            ${CERTDIR}/chain.pem \
-            ${CERTTEMPFILE}
-        rm -f ${CERTTEMPFILE}
-    elif [ -f "${CERTDIR}/ca.pem" ]; then
-        java -jar /usr/lib/unifi/lib/ace.jar import_cert \
-            ${CERTDIR}/cert.pem \
-            ${CERTDIR}/chain.pem \
-            ${CERTDIR}/ca.pem
-    else
-        java -jar /usr/lib/unifi/lib/ace.jar import_cert \
-           ${CERTDIR}/cert.pem \
-           ${CERTDIR}/chain.pem
-    fi
+    log "Cleaning up temp files"
+    for file in ${TMPLIST}; do
+        rm -f "${file}"
+    done
     log "Done!"
 fi

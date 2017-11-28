@@ -1,10 +1,5 @@
 # unifi-docker
 
-## Important PSA: Key Reinstallation Attacks via serious weaknesses in WPA2
-
-Please make sure you update the firmware on your access points, the KRACK vulnerability is a fairly major vulnerability in your wireless security. Ubiquiti has [an article with details on what devices need updates and how to update them](https://help.ubnt.com/hc/en-us/articles/115013737328).
-For more details on the attack see the [krack website](https://www.krackattacks.com/).
-
 ## Run as non root user
 
 It is suggested you start running this as a non root user. The default right now is to run as root but if you set the environment
@@ -17,14 +12,14 @@ turning it on for your own containers will help prevent any surprises.
 ## Supported docker hub tags and respective `Dockerfile` links 
 | Tag | Description |
 | --- | --- |
-| [`latest`, `stable`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.6.19 as of 2017-10-23 |
-| [`oldstable`, `unifi-5.4`](https://github.com/jacobalberty/unifi-docker/blob/oldstable/Dockerfile) | Tracks UniFi Old Stable version - 5.4.19 as of 2017-07-31 |
+| [`latest`, `stable`, `5.6`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.6.22 as of 2017-11-09 |
+| [`oldstable`, `5.5`](https://github.com/jacobalberty/unifi-docker/blob/oldstable/Dockerfile) | Tracks UniFi Old Stable version - 5.5.24 as of 2017-11-13 |
 | [`sc`](https://github.com/jacobalberty/unifi-docker/blob/sc/Dockerfile) | Tracks UniFi "Stable Candidate", The latest stable candidate may flip between the two branches maintained by Ubuiqiti so it is advised you tag off of the version you want directly instead of the `sc` tag. |
 
 ### Latest Stable Candidate tags
 | Version | Latest Tag |
 | --- | --- |
-| 5.6.x | [`5.6.19-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.6.19-sc/Dockerfile) |
+| 5.6.x | [`5.6.24-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.6.24-sc/Dockerfile) |
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `stable candidate` to `stable` instead of waiting for it to hit the repository.
 

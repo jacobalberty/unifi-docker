@@ -6,7 +6,7 @@ MAINTAINER Jacob Alberty <jacob.alberty@foundigital.com>
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ENV PKGURL=https://dl.ubnt.com/unifi/5.6.24-e2998a5aab/unifi_sysvinit_all.deb
+ENV PKGURL=https://dl.ubnt.com/unifi/5.6.26-f6a8a26e43/unifi_sysvinit_all.deb
 
 ENV BASEDIR=/usr/lib/unifi \
     DATADIR=/unifi/data \

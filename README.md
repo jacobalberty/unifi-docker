@@ -170,9 +170,9 @@ This is used to enable binding to ports less than 1024 when running the UniFi se
 
 ### `RUNAS_UID0`
 
-Default: `false`
+Default: `true`
 
-This is used to determine whether or not the UniFi service runs as a privileged (root) user.
+This is used to determine whether or not the UniFi service runs as a privileged (root) user. The default value is `true` but it is recommended to use `false` instead.
 
 ### `UNIFI_UID` and `UNIFI_GID`
 

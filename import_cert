@@ -4,13 +4,13 @@ PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 . /usr/unifi/functions
 
-if [[ ! -d "${CERTDIR}" || ! -f "${CERTDIR}/cert.pem" ]]; then
+if [[ ! -d "${CERTDIR}" || ! -f "${CERTDIR}/${CERTNAME}" ]]; then
     exit 0
 fi
 
 log 'Cert directory found. Checking Certs'
 
-if `md5sum -c "${CERTDIR}/cert.pem.md5" &>/dev/null`; then
+if `md5sum -c "${CERTDIR}/${CERTNAME}.md5" &>/dev/null`; then
     log "Cert has not changed, not updating controller."
     exit 0
 else
@@ -25,7 +25,7 @@ else
     TMPLIST="${TEMPFILE}"
     CERTTEMPFILE=$(mktemp)
     TMPLIST+=" ${CERTTEMPFILE}"
-    CERTURI=$(openssl x509 -noout -ocsp_uri -in "${CERTDIR}/cert.pem")
+    CERTURI=$(openssl x509 -noout -ocsp_uri -in "${CERTDIR}/${CERTNAME}")
     # Identrust cross-signed CA cert needed by the java keystore for import.
     # Can get original here: https://www.identrust.com/certificates/trustid/root-download-x3.html
     cat > "${CERTTEMPFILE}" <<'_EOF'
@@ -52,16 +52,19 @@ Ob8VZRzI9neWagqNdwvYkQsEjgfbKbYK7p2CNTUQ
 _EOF
 
     log "Cert has changed, updating controller..."
-    md5sum "${CERTDIR}/cert.pem" > "${CERTDIR}/cert.pem.md5"
+    md5sum "${CERTDIR}/${CERTNAME}" > "${CERTDIR}/${CERTNAME}.md5"
     log "Using openssl to prepare certificate..."
     CHAIN=$(mktemp)
     TMPLIST+=" ${CHAIN}"
-    if [[ "${CERTURI}" == *"letsencrypt"* ]]; then
-        cat "${CERTTEMPFILE}" "${CERTDIR}/chain.pem" "${CERTDIR}/cert.pem"  >> "${CHAIN}"
+
+    if [[ "${CERTURI}" == *"letsencrypt"* && "$CERT_IS_CHAIN" == "true" ]]; then
+        cat "${CERTTEMPFILE}" "${CERTDIR}/${CERTNAME}" >> "${CHAIN}"
+    elif [[ "${CERTURI}" == *"letsencrypt"* ]]; then
+        cat "${CERTTEMPFILE}" "${CERTDIR}/chain.pem" "${CERTDIR}/${CERTNAME}" >> "${CHAIN}"
     elif [[ -f "${CERTDIR}/ca.pem" ]]; then
-        cat "${CERTDIR}/ca.pem" "${CERTDIR}/chain.pem" "${CERTDIR}/cert.pem" >> "${CHAIN}"
+        cat "${CERTDIR}/ca.pem" "${CERTDIR}/chain.pem" "${CERTDIR}/${CERTNAME}" >> "${CHAIN}"
     else
-        cat "${CERTDIR}/chain.pem" "${CERTDIR}/cert.pem" >> "${CHAIN}"
+        cat "${CERTDIR}/chain.pem" "${CERTDIR}/${CERTNAME}" >> "${CHAIN}"
     fi
    openssl pkcs12 -export  -passout pass:aircontrolenterprise \
         -in "${CHAIN}" \

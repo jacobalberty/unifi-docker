@@ -6,7 +6,7 @@ MAINTAINER Jacob Alberty <jacob.alberty@foundigital.com>
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ENV PKGURL=https://dl.ubnt.com/unifi/5.6.22/unifi_sysvinit_all.deb
+ARG PKGURL=https://dl.ubnt.com/unifi/5.6.26/unifi_sysvinit_all.deb
 
 ENV BASEDIR=/usr/lib/unifi \
     DATADIR=/unifi/data \
@@ -15,6 +15,8 @@ ENV BASEDIR=/usr/lib/unifi \
     RUNDIR=/var/run/unifi \
     ODATADIR=/var/lib/unifi \
     OLOGDIR=/var/log/unifi \
+    CERTNAME=cert.pem \
+    CERT_IS_CHAIN=false \
     GOSU_VERSION=1.10 \
     BIND_PRIV=true \
     RUNAS_UID0=true \

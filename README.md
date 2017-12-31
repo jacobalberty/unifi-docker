@@ -129,15 +129,7 @@ old: `/var/cert/unifi`
 
 To use custom SSL certs, you must map a volume with the certs to /unifi/cert
 
-They should be named:
-
-```shell
-cert.pem  # The Certificate
-privkey.pem # Private key for the cert
-chain.pem # full cert chain
-```
-
-For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA Cert automatically.
+For more information regarding the naming of the certificates, see [Certificate Support](#certificate-support).
 
 #### `/unifi/init.d`
 
@@ -256,7 +248,9 @@ privkey.pem # Private key for the cert
 chain.pem # full cert chain
 ```
 
-For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA Cert automatically.
+If your certificate has a different name, you can set the environment variable `CERTNAME` to the name of your certificate, e.g. `CERTNAME=my-cert.pem`.
+
+For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA Cert automatically. In case your letsencrypt cert is already the chained certificate, you can set the `CERT_IS_CHAIN` environment variable to `true`, e.g. `CERT_IS_CHAIN=true`. This option also works together with a custom `CERTNAME`.
 
 ## TODO
 

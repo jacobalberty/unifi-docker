@@ -58,13 +58,13 @@ _EOF
     TMPLIST+=" ${CHAIN}"
 
     if [[ "${CERTURI}" == *"letsencrypt"* && "$CERT_IS_CHAIN" == "true" ]]; then
-        cat "${CERTTEMPFILE}" "${CERTDIR}/${CERTNAME}" >> "${CHAIN}"
+        awk 1 "${CERTTEMPFILE}" "${CERTDIR}/${CERTNAME}" >> "${CHAIN}"
     elif [[ "${CERTURI}" == *"letsencrypt"* ]]; then
-        cat "${CERTTEMPFILE}" "${CERTDIR}/chain.pem" "${CERTDIR}/${CERTNAME}" >> "${CHAIN}"
+        awk 1 "${CERTTEMPFILE}" "${CERTDIR}/chain.pem" "${CERTDIR}/${CERTNAME}" >> "${CHAIN}"
     elif [[ -f "${CERTDIR}/ca.pem" ]]; then
-        cat "${CERTDIR}/ca.pem" "${CERTDIR}/chain.pem" "${CERTDIR}/${CERTNAME}" >> "${CHAIN}"
+        awk 1 "${CERTDIR}/ca.pem" "${CERTDIR}/chain.pem" "${CERTDIR}/${CERTNAME}" >> "${CHAIN}"
     else
-        cat "${CERTDIR}/chain.pem" "${CERTDIR}/${CERTNAME}" >> "${CHAIN}"
+        awk 1 "${CERTDIR}/chain.pem" "${CERTDIR}/${CERTNAME}" >> "${CHAIN}"
     fi
    openssl pkcs12 -export  -passout pass:aircontrolenterprise \
         -in "${CHAIN}" \

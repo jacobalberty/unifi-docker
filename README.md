@@ -1,5 +1,12 @@
 # unifi-docker
 
+## Fake Ubiquiti Device Discovery Tool discovered on the Chrome Web Store
+From [the announcement](https://community.ubnt.com/t5/Ubiquiti-Announcements-and-News/Fake-Ubiquiti-Device-Discovery-Tool-discovered-on-the-Chrome-Web/ba-p/2204367) for details
+
+```
+It has come to our attention that there recently was a fake Chrome Extension listed in the Google Chrome Web Store, pretending to be our Ubiquiti Device Discovery Tool. Not only was it fake, but it is also harmful. At the time of writing, the fake extension has been removed. One thing to keep in mind is that our Chrome App cannot be found by searching the Chrome Web Store due to changes on Google's end. 
+```
+
 ## Run as non-root User
 
 It is suggested you start running this as a non root user. The default right now is to run as root but if you set the environment variable RUNAS_UID0 to false then the image will run as a special unfi user with the uid/gid 999/999. You should ideally set your data and logs to owned by the proper gid. The [environment variables section](https://github.com/jacobalberty/unifi-docker/blob/master/README.md#environment-variables) has more details. At some point in the future this feature may default to on and I personally run all of my own containers with it on. So turning it on for your own containers will help prevent any surprises.

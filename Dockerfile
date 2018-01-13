@@ -1,6 +1,6 @@
 FROM ubuntu:xenial
 
-MAINTAINER Jacob Alberty <jacob.alberty@foundigital.com>
+LABEL maintainer="Jacob Alberty <jacob.alberty@foundigital.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 

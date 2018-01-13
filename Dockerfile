@@ -1,7 +1,5 @@
-FROM debian:stretch-slim
-  # WORKING: work around openjdk issue which expects the man-page directory, failing to configure package if it doesn't
-# FROM debian:stretch-slim
-  # needs minor fixes to get working but results in much larger image
+FROM ubuntu:xenial
+
 MAINTAINER Jacob Alberty <jacob.alberty@foundigital.com>
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -30,8 +28,6 @@ ENV BASEDIR=/usr/lib/unifi \
 RUN set -ex \
     && fetchDeps=' \
         ca-certificates \
-        dirmngr \
-        gpg \
         wget \
     ' \
     && apt-get update \
@@ -64,8 +60,6 @@ RUN mkdir -p /usr/share/man/man1/ \
  && apt-get update \
  && apt-get install -qy --no-install-recommends \
     curl \
-    dirmngr \
-    gnupg \
     openjdk-8-jre-headless \
     procps \
     libcap2-bin \
@@ -73,9 +67,6 @@ RUN mkdir -p /usr/share/man/man1/ \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50 \
  && curl -L -o ./unifi.deb "${PKGURL}" \
  && apt -qy install ./unifi.deb \
- && apt-get -qy purge --auto-remove \
-    dirmngr \
-    gnupg \
  && rm -f ./unifi.deb \
  && chown -R unifi:unifi /usr/lib/unifi \
  && rm -rf /var/lib/apt/lists/*

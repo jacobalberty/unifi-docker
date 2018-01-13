@@ -1,16 +1,14 @@
 FROM arm32v7/ubuntu:xenial
-  # WORKING: work around openjdk issue which expects the man-page directory, failing to configure package if it doesn't
-# FROM debian:stretch-slim
-  # needs minor fixes to get working but results in much larger image
+
 COPY bin/ /usr/bin/
 
 RUN [ "cross-build-start" ]
 
-MAINTAINER Jacob Alberty <jacob.alberty@foundigital.com>
+LABEL maintainer="Jacob Alberty <jacob.alberty@foundigital.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ENV PKGURL=https://dl.ubnt.com/unifi/5.6.29/unifi_sysvinit_all.deb
+ARG PKGURL=https://dl.ubnt.com/unifi/5.6.29/unifi_sysvinit_all.deb
 
 ENV BASEDIR=/usr/lib/unifi \
     DATADIR=/unifi/data \
@@ -34,8 +32,6 @@ ENV BASEDIR=/usr/lib/unifi \
 RUN set -ex \
     && fetchDeps=' \
         ca-certificates \
-        dirmngr \
-        gnupg2 \
         wget \
     ' \
     && apt-get update \
@@ -50,9 +46,9 @@ RUN set -ex \
                             keyserver.ubuntu.com \
                             hkp://keyserver.ubuntu.com:80 \
                             pgp.mit.edu) ; do \
-        gpg2 --keyserver "$server" --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && break || : ; \
+        gpg --keyserver "$server" --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && break || : ; \
     done \
-    && gpg2 --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
+    && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
     && rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc \
     && chmod +x /usr/local/bin/gosu \
     && apt-get purge -y --auto-remove $fetchDeps \
@@ -66,8 +62,6 @@ RUN mkdir -p /usr/share/man/man1/ \
  && apt-get update \
  && apt-get install -qy --no-install-recommends \
     curl \
-    dirmngr \
-    gnupg \
     openjdk-8-jre-headless \
     procps \
     libcap2-bin \
@@ -75,9 +69,6 @@ RUN mkdir -p /usr/share/man/man1/ \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50 \
  && curl -L -o ./unifi.deb "${PKGURL}" \
  && apt -qy install ./unifi.deb \
- && apt-get --allow-remove-essential -qy purge --auto-remove \
-    dirmngr \
-    gnupg \
  && rm -f ./unifi.deb \
  && chown -R unifi:unifi /usr/lib/unifi \
  && rm -rf /var/lib/apt/lists/*

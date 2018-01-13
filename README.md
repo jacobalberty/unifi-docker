@@ -4,7 +4,7 @@
 
 It is suggested you start running this as a non root user. The default right now is to run as root but if you set the environment variable RUNAS_UID0 to false then the image will run as a special unfi user with the uid/gid 999/999. You should ideally set your data and logs to owned by the proper gid. The [environment variables section](https://github.com/jacobalberty/unifi-docker/blob/master/README.md#environment-variables) has more details. At some point in the future this feature may default to on and I personally run all of my own containers with it on. So turning it on for your own containers will help prevent any surprises.
 
-## Supported Docker Bub Tags and Respective `Dockerfile` Links
+## Supported Docker Hub Tags and Respective `Dockerfile` Links
 
 | Tag | Description |
 |-----|-------------|

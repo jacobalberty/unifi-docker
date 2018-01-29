@@ -79,18 +79,14 @@ It is possible to configure the `macvlan` driver to bridge your container to the
 
 ## Beta Users
 
-There is now a new `beta` branch on github to support easier building of betas. This branch does not exist on the docker hub at all, and must be built from the git repository. You simply build and pass the build argument `PKGURL` with the url to the .deb file for the appropriate beta you wish to build. I believe this will keep closest with the letter and spirit of the beta agreement on the unifi forums while still allowing relatively easy access to the betas. This build method is the method I will be using for my own personal home network to test the betas on so it should remain relatively well tested.
+The `beta` image has been updated to support package installation at run time. With this change you can now install the beta releases on more systems, such as Synology. This should open up access to the beta program for more users of this docker image.
 
 
 If you would like to submit a new feature for the images the beta branch is probably a good one to apply it against as well. I will be cleaing up the Dockerfile under beta and gradually pushing out the improvements to the other branches. So any major changes should apply cleanly against the `beta` branch.
 
-### Building Beta Using Docker Build
+### Installing Beta Builds On The Command Line
 
-The command line is pretty simple:
-
-```shell
-docker build -t unifi-beta --build-arg PKGURL=https://dl.ubnt.com/unifi/5.5.24/unifi_sysvinit_all.deb "https://github.com/jacobalberty/unifi-docker.git#beta"
-```
+Using the Beta build is pretty easy, just use the `jacobalberty/unifi:beta` image and add `-e PKGURL=https://dl.ubnt.com/unifi/5.6.30/unifi_sysvinit_all.deb` to your usual command line.
 
 Simply replace the url to the debian package with the version you prefer.
 
@@ -102,9 +98,8 @@ This is just as easy when using version 2 of the docker-compose.yml file format.
 Under your containers service definition instead of using `image: jacobalberty/unifi` use the following:
 
 ```shell
-        build:
-         context: https://github.com/jacobalberty/unifi-docker.git#beta
-         args:
+        image: jacobalberty/unifi:beta
+         environment:
           PKGURL: https://dl.ubnt.com/unifi/5.5.24/unifi_sysvinit_all.deb
 ```
 

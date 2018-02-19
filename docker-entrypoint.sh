@@ -2,6 +2,10 @@
 
 . /usr/unifi/functions
 
+if [ -x /usr/local/bin/docker-build.sh ]; then
+    /usr/local/bin/docker-build.sh "${PKGURL}"
+fi
+
 exit_handler() {
     log "Exit signal received, shutting down"
     ${JSVC} -nodetach -pidfile ${PIDFILE} -stop ${MAINCLASS} stop

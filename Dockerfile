@@ -1,8 +1,6 @@
-FROM debian:stretch-slim
-  # WORKING: work around openjdk issue which expects the man-page directory, failing to configure package if it doesn't
-# FROM debian:stretch-slim
-  # needs minor fixes to get working but results in much larger image
-MAINTAINER Jacob Alberty <jacob.alberty@foundigital.com>
+FROM ubuntu:xenial
+
+LABEL maintainer="Jacob Alberty <jacob.alberty@foundigital.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -30,8 +28,6 @@ ENV BASEDIR=/usr/lib/unifi \
 RUN set -ex \
     && fetchDeps=' \
         ca-certificates \
-        dirmngr \
-        gpg \
         wget \
     ' \
     && apt-get update \
@@ -56,55 +52,29 @@ RUN set -ex \
     && apt-get purge -y --auto-remove $fetchDeps \
     && rm -rf /var/lib/apt/lists/*
 
-
-# Push installing openjdk-8-jre first, so that the unifi package doesn't pull in openjdk-7-jre as a dependency? Else uncomment and just go with openjdk-7.
-RUN mkdir -p /usr/share/man/man1/ \
- && groupadd -r unifi -g $UNIFI_GID \
- && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \
- && apt-get update \
- && apt-get install -qy --no-install-recommends \
-    curl \
-    dirmngr \
-    gnupg \
-    openjdk-8-jre-headless \
-    procps \
-    libcap2-bin \
- && echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5 ubiquiti" > /etc/apt/sources.list.d/20ubiquiti.list \
- && apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50 \
- && curl -L -o ./unifi.deb "${PKGURL}" \
- && apt -qy install ./unifi.deb \
- && apt-get -qy purge --auto-remove \
-    dirmngr \
-    gnupg \
- && rm -f ./unifi.deb \
- && chown -R unifi:unifi /usr/lib/unifi \
- && rm -rf /var/lib/apt/lists/*
-
-RUN rm -rf ${ODATADIR} ${OLOGDIR} \
- && mkdir -p ${DATADIR} ${LOGDIR} \
- && ln -s ${DATADIR} ${BASEDIR}/data \
- && ln -s ${RUNDIR} ${BASEDIR}/run \
- && ln -s ${LOGDIR} ${BASEDIR}/logs \
- && rm -rf {$ODATADIR} ${OLOGDIR} \
- && ln -s ${DATADIR} ${ODATADIR} \
- && ln -s ${LOGDIR} ${OLOGDIR} \
- && mkdir -p /var/cert ${CERTDIR} \
- && ln -s ${CERTDIR} /var/cert/unifi
-
-VOLUME ["/unifi", "${RUNDIR}"]
-
-EXPOSE 6789/tcp 8080/tcp 8443/tcp 8880/tcp 8843/tcp 3478/udp
-
 RUN mkdir -p /usr/unifi \
      /usr/local/unifi/init.d \
      /usr/unifi/init.d
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY docker-healthcheck.sh /usr/local/bin/
+COPY docker-build.sh /usr/local/bin/
 COPY functions /usr/unifi/functions
 COPY import_cert /usr/unifi/init.d/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
  && chmod +x /usr/unifi/init.d/import_cert \
- && chmod +x /usr/local/bin/docker-healthcheck.sh
+ && chmod +x /usr/local/bin/docker-healthcheck.sh \
+ && chmod +x /usr/local/bin/docker-build.sh
+
+# Push installing openjdk-8-jre first, so that the unifi package doesn't pull in openjdk-7-jre as a dependency? Else uncomment and just go with openjdk-7.
+RUN set -ex \
+ && mkdir -p /usr/share/man/man1/ \
+ && groupadd -r unifi -g $UNIFI_GID \
+ && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \
+ && /usr/local/bin/docker-build.sh "${PKGURL}"
+
+VOLUME ["/unifi", "${RUNDIR}"]
+
+EXPOSE 6789/tcp 8080/tcp 8443/tcp 8880/tcp 8843/tcp 3478/udp
 
 WORKDIR /unifi
 

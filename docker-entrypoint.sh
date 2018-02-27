@@ -8,7 +8,7 @@ fi
 
 exit_handler() {
     log "Exit signal received, shutting down"
-    ${JSVC} -nodetach -pidfile ${PIDFILE} -stop ${MAINCLASS} stop
+    java -jar ${BASEDIR}/lib/ace.jar stop
     for i in `seq 1 10` ; do
         [ -z "$(pgrep -f ${BASEDIR}/lib/ace.jar)" ] && break
         # graceful shutdown
@@ -30,7 +30,6 @@ trap 'kill ${!}; exit_handler' SIGHUP SIGINT SIGQUIT SIGTERM
 
 
 # vars similar to those found in unifi.init
-JSVC=$(command -v jsvc)
 MONGOPORT=27117
 
 CODEPATH=${BASEDIR}
@@ -46,8 +45,7 @@ JVM_INIT_HEAP_SIZE=
 UNIFI_JVM_EXTRA_OPTS=
 
 ENABLE_UNIFI=yes
-JVM_EXTRA_OPTS="-cwd /usr/lib/unifi"
-JSVC_EXTRA_OPTS=
+JVM_EXTRA_OPTS=""
 
 MONGOLOCK="${DATAPATH}/db/mongod.lock"
 JVM_EXTRA_OPTS="${JVM_EXTRA_OPTS} -Dunifi.datadir=${DATADIR} -Dunifi.logdir=${LOGDIR} -Dunifi.rundir=${RUNDIR}"
@@ -67,21 +65,9 @@ fi
 
 
 JVM_OPTS="${JVM_EXTRA_OPTS}
+  -Xmx1024M
   -Djava.awt.headless=true
   -Dfile.encoding=UTF-8"
-
-
-JSVC_OPTS="
-  -home ${JAVA_HOME}
-  -classpath /usr/share/java/commons-daemon.jar:${BASEDIR}/lib/ace.jar
-  -pidfile ${PIDFILE}
-  -procname unifi
-  -outfile ${LOGDIR}/unifi.out.log
-  -errfile ${LOGDIR}/unifi.err.log
-  ${JVM_OPTS}"
-
-# One issue might be no cron and lograte, causing the log volume to become bloated over time! Consider `-keepstdin` and `-errfile &2` options for JSVC.
-MAINCLASS='com.ubnt.ace.Launcher'
 
 # Cleaning /var/run/unifi/* See issue #26, Docker takes care of exlusivity in the container anyway.
 rm -f /var/run/unifi/unifi.pid
@@ -127,7 +113,7 @@ fi
 for key in "${!settings[@]}"; do
   confSet "$confFile" "$key" "${settings[$key]}"
 done
-UNIFI_CMD="${JSVC} -nodetach ${JSVC_OPTS} ${MAINCLASS} start"
+UNIFI_CMD="java ${JVM_OPTS} -jar ${BASEDIR}/lib/ace.jar start"
 
 CUID=$(id -u)
 

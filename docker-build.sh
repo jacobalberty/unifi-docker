@@ -18,7 +18,7 @@ apt-get update
 echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5 ubiquiti" > /etc/apt/sources.list.d/20ubiquiti.list
 apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50
 curl -L -o ./unifi.deb "${1}"
-apt -qy install mongodb-org ./unifi.deb
+apt -qy install ./unifi.deb
 rm -f ./unifi.deb
 chown -R unifi:unifi /usr/lib/unifi
 rm -rf /var/lib/apt/lists/*

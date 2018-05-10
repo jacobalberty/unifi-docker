@@ -39,7 +39,7 @@ RUNLINK=${BASEDIR}/run
 
 DIRS="${RUNDIR} ${LOGDIR} ${DATADIR}"
 
-JVM_MAX_HEAP_SIZEx=${JVM_MAX_HEAP_SIZE:-1024M}
+JVM_MAX_HEAP_SIZE=${JVM_MAX_HEAP_SIZE:-1024M}
 #JVM_INIT_HEAP_SIZE=
 
 JVM_EXTRA_OPTS=""
@@ -53,8 +53,8 @@ MONGOLOCK="${DATAPATH}/db/mongod.lock"
 JVM_EXTRA_OPTS="${JVM_EXTRA_OPTS} -Dunifi.datadir=${DATADIR} -Dunifi.logdir=${LOGDIR} -Dunifi.rundir=${RUNDIR}"
 PIDFILE=/var/run/unifi/unifi.pid
 
-if [ ! -z "${JVM_MAX_HEAP_SIZEx}" ]; then
-  JVM_EXTRA_OPTS="${JVM_EXTRA_OPTS} -Xmx${JVM_MAX_HEAP_SIZEx}"
+if [ ! -z "${JVM_MAX_HEAP_SIZE}" ]; then
+  JVM_EXTRA_OPTS="${JVM_EXTRA_OPTS} -Xmx${JVM_MAX_HEAP_SIZE}"
 fi
 
 if [ ! -z "${JVM_INIT_HEAP_SIZE}" ]; then
@@ -67,7 +67,6 @@ fi
 
 
 JVM_OPTS="${JVM_EXTRA_OPTS}
-  -Xmx1024M
   -Djava.awt.headless=true
   -Dfile.encoding=UTF-8"
 

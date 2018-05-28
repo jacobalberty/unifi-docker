@@ -103,6 +103,22 @@ fi
 
 declare -A settings
 
+h2mb() {
+  awkcmd='
+    /[0-9]$/{print $1/1024/1024;next};
+    /[mM]$/{printf "%u\n", $1;next};
+    /[kK]$/{printf "%u\n", $1/1024;next}
+    /[gG]$/{printf "%u\n", $1*1024;next}
+  '
+  echo $1 | awk "${awkcmd}"
+}
+
+if ! [[ -z "$LOTSOFDEVICES" ]]; then
+  settings["unifi.G1GC.enabled"]="true"
+  settings["unifi.xms"]="$(h2mb $JVM_INIT_HEAP_SIZE)"
+  settings["unifi.xmx"]="$(h2mb ${JVM_MAX_HEAP_SIZE:-1024M})"
+fi
+
 # Implements issue #30
 if ! [[ -z "$DB_URI" || -z "$STATDB_URI" || -z "$DB_NAME" ]]; then
   settings["db.mongo.local"]="false"

@@ -16,6 +16,12 @@ if `md5sum -c "${CERTDIR}/${CERTNAME}.md5" &>/dev/null`; then
 else
     if [ ! -e "${DATADIR}/keystore" ]; then
         log "WARN: Missing keystore, creating a new one"
+
+        if [ ! -d "${DATADIR}" ]; then
+            log "Missing data directory, creating..."
+            mkdir "${DATADIR}"
+        fi
+
         keytool -genkey -keyalg RSA -alias unifi -keystore "${DATADIR}/keystore" \
             -storepass aircontrolenterprise -keypass aircontrolenterprise -validity 1825 \
             -keysize 4096 -dname "cn=UniFi"

@@ -4,11 +4,12 @@
 
 It is suggested you start running this as a non root user. The default right now is to run as root but if you set the environment variable RUNAS_UID0 to false then the image will run as a special unfi user with the uid/gid 999/999. You should ideally set your data and logs to owned by the proper gid. The [environment variables section](https://github.com/jacobalberty/unifi-docker/blob/master/README.md#environment-variables) has more details. At some point in the future this feature may default to on and I personally run all of my own containers with it on. So turning it on for your own containers will help prevent any surprises.
 
-## Supported Docker Bub Tags and Respective `Dockerfile` Links
+## Supported Docker Hub Tags and Respective `Dockerfile` Links
 
 | Tag | Description |
 |-----|-------------|
-| [`latest`, `stable`, `5.6`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.6.26 as of 2017-12-08 |
+| [`latest`, `stable`, `5.7`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.7.23 as of 2018-04-16 |
+| [`lts`, `5.6`](https://github.com/jacobalberty/unifi-docker/blob/lts/Dockerfile) | Tracks UniFi LTS stable version - 5.6.37 as of 2018-04-16 |
 | [`oldstable`, `5.5`](https://github.com/jacobalberty/unifi-docker/blob/oldstable/Dockerfile) | Tracks UniFi Old Stable version - 5.5.24 as of 2017-11-13 |
 | [`sc`](https://github.com/jacobalberty/unifi-docker/blob/sc/Dockerfile) | Tracks UniFi "Stable Candidate", The latest stable candidate may flip between the two branches maintained by Ubuiqiti so it is advised you tag off of the version you want directly instead of the `sc` tag. |
 
@@ -16,7 +17,9 @@ It is suggested you start running this as a non root user. The default right now
 
 | Version | Latest Tag |
 |---------|------------|
-| 5.6.x   | [`5.6.29-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.6.29-sc/Dockerfile) |
+| 5.6.x   | [`5.6.39-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.6.39-sc/Dockerfile) |
+| 5.7.x   | [`5.7.28-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.7.28-sc/Dockerfile) |
+| 5.8.x   | [`5.8.21-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.8.21-sc/Dockerfile) |
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `stable candidate` to `stable` instead of waiting for it to hit the repository.
 
@@ -74,18 +77,14 @@ It is possible to configure the `macvlan` driver to bridge your container to the
 
 ## Beta Users
 
-There is now a new `beta` branch on github to support easier building of betas. This branch does not exist on the docker hub at all, and must be built from the git repository. You simply build and pass the build argument `PKGURL` with the url to the .deb file for the appropriate beta you wish to build. I believe this will keep closest with the letter and spirit of the beta agreement on the unifi forums while still allowing relatively easy access to the betas. This build method is the method I will be using for my own personal home network to test the betas on so it should remain relatively well tested.
+The `beta` image has been updated to support package installation at run time. With this change you can now install the beta releases on more systems, such as Synology. This should open up access to the beta program for more users of this docker image.
 
 
 If you would like to submit a new feature for the images the beta branch is probably a good one to apply it against as well. I will be cleaing up the Dockerfile under beta and gradually pushing out the improvements to the other branches. So any major changes should apply cleanly against the `beta` branch.
 
-### Building Beta Using Docker Build
+### Installing Beta Builds On The Command Line
 
-The command line is pretty simple:
-
-```shell
-docker build -t unifi-beta --build-arg PKGURL=https://dl.ubnt.com/unifi/5.5.24/unifi_sysvinit_all.deb "https://github.com/jacobalberty/unifi-docker.git#beta"
-```
+Using the Beta build is pretty easy, just use the `jacobalberty/unifi:beta` image and add `-e PKGURL=https://dl.ubnt.com/unifi/5.6.30/unifi_sysvinit_all.deb` to your usual command line.
 
 Simply replace the url to the debian package with the version you prefer.
 
@@ -97,9 +96,8 @@ This is just as easy when using version 2 of the docker-compose.yml file format.
 Under your containers service definition instead of using `image: jacobalberty/unifi` use the following:
 
 ```shell
-        build:
-         context: https://github.com/jacobalberty/unifi-docker.git#beta
-         args:
+        image: jacobalberty/unifi:beta
+         environment:
           PKGURL: https://dl.ubnt.com/unifi/5.5.24/unifi_sysvinit_all.deb
 ```
 

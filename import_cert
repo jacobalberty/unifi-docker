@@ -74,7 +74,7 @@ _EOF
     fi
    openssl pkcs12 -export  -passout pass:aircontrolenterprise \
         -in "${CHAIN}" \
-        -inkey "${CERTDIR}/privkey.pem" \
+        -inkey "${CERTDIR}/${CERT_PRIVATE_NAME}" \
         -out "${TEMPFILE}" -name unifi
     log "Removing existing certificate from Unifi protected keystore..."
     keytool -delete -alias unifi -keystore "${DATADIR}/keystore" \

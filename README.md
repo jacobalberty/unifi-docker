@@ -246,7 +246,7 @@ privkey.pem # Private key for the cert
 chain.pem # full cert chain
 ```
 
-If your certificate has a different name, you can set the environment variable `CERTNAME` to the name of your certificate, e.g. `CERTNAME=my-cert.pem`.
+If your certificate or private key have different names, you can set the environment variables `CERTNAME` and `CERT_PRIVATE_NAME` to the name of your certificate/private key, e.g. `CERTNAME=my-cert.pem` and `CERT_PRIVATE_NAME=my-privkey.pem`.
 
 For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA Cert automatically. In case your letsencrypt cert is already the chained certificate, you can set the `CERT_IS_CHAIN` environment variable to `true`, e.g. `CERT_IS_CHAIN=true`. This option also works together with a custom `CERTNAME`.
 

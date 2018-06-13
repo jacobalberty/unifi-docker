@@ -39,13 +39,15 @@ RUNLINK=${BASEDIR}/run
 
 DIRS="${RUNDIR} ${LOGDIR} ${DATADIR}"
 
-JAVA_ENTROPY_GATHER_DEVICE=
-JVM_MAX_HEAP_SIZE=1024M
-JVM_INIT_HEAP_SIZE=
-UNIFI_JVM_EXTRA_OPTS=
+JVM_MAX_HEAP_SIZE=${JVM_MAX_HEAP_SIZE:-1024M}
+#JVM_INIT_HEAP_SIZE=
 
-ENABLE_UNIFI=yes
 JVM_EXTRA_OPTS=""
+
+#JAVA_ENTROPY_GATHER_DEVICE=
+#UNIFI_JVM_EXTRA_OPTS=
+#ENABLE_UNIFI=yes
+
 
 MONGOLOCK="${DATAPATH}/db/mongod.lock"
 JVM_EXTRA_OPTS="${JVM_EXTRA_OPTS} -Dunifi.datadir=${DATADIR} -Dunifi.logdir=${LOGDIR} -Dunifi.rundir=${RUNDIR}"
@@ -65,7 +67,6 @@ fi
 
 
 JVM_OPTS="${JVM_EXTRA_OPTS}
-  -Xmx1024M
   -Djava.awt.headless=true
   -Dfile.encoding=UTF-8"
 
@@ -101,6 +102,22 @@ else
 fi
 
 declare -A settings
+
+h2mb() {
+  awkcmd='
+    /[0-9]$/{print $1/1024/1024;next};
+    /[mM]$/{printf "%u\n", $1;next};
+    /[kK]$/{printf "%u\n", $1/1024;next}
+    /[gG]$/{printf "%u\n", $1*1024;next}
+  '
+  echo $1 | awk "${awkcmd}"
+}
+
+if ! [[ -z "$LOTSOFDEVICES" ]]; then
+  settings["unifi.G1GC.enabled"]="true"
+  settings["unifi.xms"]="$(h2mb $JVM_INIT_HEAP_SIZE)"
+  settings["unifi.xmx"]="$(h2mb ${JVM_MAX_HEAP_SIZE:-1024M})"
+fi
 
 # Implements issue #30
 if ! [[ -z "$DB_URI" || -z "$STATDB_URI" || -z "$DB_NAME" ]]; then

@@ -17,8 +17,9 @@ It is suggested you start running this as a non root user. The default right now
 
 | Version | Latest Tag |
 |---------|------------|
-| 5.6.x   | [`5.6.37-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.6.37-sc/Dockerfile) |
-| 5.7.x   | [`5.7.23-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.7.23-sc/Dockerfile) |
+| 5.6.x   | [`5.6.39-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.6.39-sc/Dockerfile) |
+| 5.7.x   | [`5.7.28-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.7.28-sc/Dockerfile) |
+| 5.8.x   | [`5.8.21-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.8.21-sc/Dockerfile) |
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `stable candidate` to `stable` instead of waiting for it to hit the repository.
 
@@ -245,7 +246,7 @@ privkey.pem # Private key for the cert
 chain.pem # full cert chain
 ```
 
-If your certificate has a different name, you can set the environment variable `CERTNAME` to the name of your certificate, e.g. `CERTNAME=my-cert.pem`.
+If your certificate or private key have different names, you can set the environment variables `CERTNAME` and `CERT_PRIVATE_NAME` to the name of your certificate/private key, e.g. `CERTNAME=my-cert.pem` and `CERT_PRIVATE_NAME=my-privkey.pem`.
 
 For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA Cert automatically. In case your letsencrypt cert is already the chained certificate, you can set the `CERT_IS_CHAIN` environment variable to `true`, e.g. `CERT_IS_CHAIN=true`. This option also works together with a custom `CERTNAME`.
 

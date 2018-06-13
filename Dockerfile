@@ -18,6 +18,7 @@ ENV BASEDIR=/usr/lib/unifi \
     ODATADIR=/var/lib/unifi \
     OLOGDIR=/var/log/unifi \
     CERTNAME=cert.pem \
+    CERT_PRIVATE_NAME=private.pem \
     CERT_IS_CHAIN=false \
     GOSU_VERSION=1.10 \
     BIND_PRIV=true \

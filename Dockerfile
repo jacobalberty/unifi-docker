@@ -4,7 +4,7 @@ LABEL maintainer="Jacob Alberty <jacob.alberty@foundigital.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ENV PKGURL=https://dl.ubnt.com/unifi/5.7.23/unifi_sysvinit_all.deb
+ARG PKGURL=
 
 ENV BASEDIR=/usr/lib/unifi \
     DATADIR=/unifi/data \
@@ -14,6 +14,7 @@ ENV BASEDIR=/usr/lib/unifi \
     ODATADIR=/var/lib/unifi \
     OLOGDIR=/var/log/unifi \
     CERTNAME=cert.pem \
+    CERT_PRIVATE_NAME=private.pem \
     CERT_IS_CHAIN=false \
     GOSU_VERSION=1.10 \
     BIND_PRIV=true \

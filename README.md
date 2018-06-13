@@ -1,10 +1,5 @@
 # unifi-docker
 
-## Fake Ubiquiti Device Discovery Tool discovered on the Chrome Web Store
-From [the announcement](https://community.ubnt.com/t5/Ubiquiti-Announcements-and-News/Fake-Ubiquiti-Device-Discovery-Tool-discovered-on-the-Chrome-Web/ba-p/2204367):
-
-> It has come to our attention that there recently was a fake Chrome Extension listed in the Google Chrome Web Store, pretending to be our Ubiquiti Device Discovery Tool. Not only was it fake, but it is also harmful. At the time of writing, the fake extension has been removed. One thing to keep in mind is that our Chrome App cannot be found by searching the Chrome Web Store due to changes on Google's end. 
-
 ## Run as non-root User
 
 It is suggested you start running this as a non root user. The default right now is to run as root but if you set the environment variable RUNAS_UID0 to false then the image will run as a special unfi user with the uid/gid 999/999. You should ideally set your data and logs to owned by the proper gid. The [environment variables section](https://github.com/jacobalberty/unifi-docker/blob/master/README.md#environment-variables) has more details. At some point in the future this feature may default to on and I personally run all of my own containers with it on. So turning it on for your own containers will help prevent any surprises.
@@ -13,7 +8,8 @@ It is suggested you start running this as a non root user. The default right now
 
 | Tag | Description |
 |-----|-------------|
-| [`latest`, `stable`, `5.6`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.6.30 as of 2018-01-26 |
+| [`latest`, `stable`, `5.7`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.7.23 as of 2018-04-16 |
+| [`lts`, `5.6`](https://github.com/jacobalberty/unifi-docker/blob/lts/Dockerfile) | Tracks UniFi LTS stable version - 5.6.37 as of 2018-04-16 |
 | [`oldstable`, `5.5`](https://github.com/jacobalberty/unifi-docker/blob/oldstable/Dockerfile) | Tracks UniFi Old Stable version - 5.5.24 as of 2017-11-13 |
 | [`sc`](https://github.com/jacobalberty/unifi-docker/blob/sc/Dockerfile) | Tracks UniFi "Stable Candidate", The latest stable candidate may flip between the two branches maintained by Ubuiqiti so it is advised you tag off of the version you want directly instead of the `sc` tag. |
 
@@ -21,8 +17,9 @@ It is suggested you start running this as a non root user. The default right now
 
 | Version | Latest Tag |
 |---------|------------|
-| 5.6.x   | [`5.6.36-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.6.36-sc/Dockerfile) |
-| 5.7.x   | [`5.7.20-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.7.20-sc/Dockerfile) |
+| 5.6.x   | [`5.6.39-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.6.39-sc/Dockerfile) |
+| 5.7.x   | [`5.7.28-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.7.28-sc/Dockerfile) |
+| 5.8.x   | [`5.8.21-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.8.21-sc/Dockerfile) |
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `stable candidate` to `stable` instead of waiting for it to hit the repository.
 
@@ -249,7 +246,7 @@ privkey.pem # Private key for the cert
 chain.pem # full cert chain
 ```
 
-If your certificate has a different name, you can set the environment variable `CERTNAME` to the name of your certificate, e.g. `CERTNAME=my-cert.pem`.
+If your certificate or private key have different names, you can set the environment variables `CERTNAME` and `CERT_PRIVATE_NAME` to the name of your certificate/private key, e.g. `CERTNAME=my-cert.pem` and `CERT_PRIVATE_NAME=my-privkey.pem`.
 
 For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA Cert automatically. In case your letsencrypt cert is already the chained certificate, you can set the `CERT_IS_CHAIN` environment variable to `true`, e.g. `CERT_IS_CHAIN=true`. This option also works together with a custom `CERTNAME`.
 

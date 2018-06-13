@@ -1,7 +1,7 @@
 services:
  - docker
 install:
-  - docker build --build-arg PKGURL=https://dl.ubnt.com/unifi/5.7.23/unifi_sysvinit_all.deb -t unifi .
+  - docker build -t unifi .
   - docker run -d -p 8443:8443 -e RUNAS_UID0=true --name unifi unifi
 script:
   - docker ps | grep -q unifi

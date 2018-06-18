@@ -1,0 +1,61 @@
+version: '2.4'
+services:
+  mongo:
+    image: mongo:3.4
+    networks:
+    - unifi
+    restart: always
+    volumes:
+    - type: volume
+      source: db
+      target: /data/db
+  controller:
+    image: "jacobalberty/unifi:${TAG:-latest}"
+    depends_on:
+    - mongo
+    init: true
+    networks:
+    - unifi
+    restart: always
+    volumes:
+    - type: volume
+      source: data
+      target: /unifi/data
+    - type: volume
+      source: log
+      target: /unifi/log
+    - type: volume
+      source: cert
+      target: /unifi/cert
+    - type: volume
+      source: init
+      target: /unifi/init.d
+    environment:
+      DB_URI: mongodb://mongo/unifi
+      STATDB_URI: mongodb://mongo/unifi_stat
+      DB_NAME: unifi
+    ports:
+    - "8080:8080"
+    - "8443:8443"
+    - "3478:3478/udp"
+    - "10001:10001/udp"
+  logs:
+    image: bash
+    depends_on:
+    - controller
+    command: bash -c 'tail -f /unifi/log/*'
+    restart: always
+    volumes:
+    - type: volume
+      source: log
+      target: /unifi/log
+
+volumes:
+  db:
+  data:
+  log:
+  cert:
+  init:
+
+networks:
+  unifi:

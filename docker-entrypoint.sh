@@ -94,7 +94,7 @@ confSet () {
   fi
 }
 
-confFile=/unifi/data/system.properties
+confFile="${DATADIR}/system.properties"
 if [ -e "$confFile" ]; then
   newfile=false
 else

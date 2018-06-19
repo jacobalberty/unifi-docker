@@ -43,6 +43,16 @@ mkdir -p unifi/log
 docker run --rm --init -p 8080:8080 -p 8443:8443 -p 3478:3478/udp -p 10001:10001/udp -e TZ='Africa/Johannesburg' -v ~/unifi:/unifi --name unifi jacobalberty/unifi:stable
 ```
 
+## Running with separate mongo container
+
+A compose file has been included that will bring up mongo and the controller,
+using named volumes for important directories.
+
+Simply clone this repo or copy the `docker-compose.yml` file and run
+```bash
+docker-compose up -d
+```
+
 ## Adopting Access Points/Switches/Security Gateway
 
 ### Layer 3 Adoption

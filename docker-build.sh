@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# fail on error
+set -e
+
 if [ "x${1}" == "x" ]; then
     echo please pass PKGURL as an environment variable
     exit 0

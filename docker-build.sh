@@ -3,6 +3,19 @@
 # fail on error
 set -e
 
+# Try multiple keyservers in case of failure
+addKey() {
+    for server in $(shuf -e ha.pool.sks-keyservers.net \
+        hkp://p80.pool.sks-keyservers.net:80 \
+        keyserver.ubuntu.com \
+        hkp://keyserver.ubuntu.com:80 \
+        pgp.mit.edu) ; do \
+        if apt-key adv --keyserver "$server" --recv "$1"; then
+            exit 0
+        fi
+    done
+}
+
 if [ "x${1}" == "x" ]; then
     echo please pass PKGURL as an environment variable
     exit 0
@@ -15,11 +28,11 @@ apt-get install -qy --no-install-recommends \
     openjdk-8-jre-headless \
     procps \
     libcap2-bin
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6
+addKey 0C49F3730359A14518585931BC711F9BA15703C6
 echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.4 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-3.4.list
 apt-get update
 echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5 ubiquiti" > /etc/apt/sources.list.d/20ubiquiti.list
-apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50
+addKey C0A52C50
 curl -L -o ./unifi.deb "${1}"
 apt -qy install mongodb-org ./unifi.deb
 rm -f ./unifi.deb

@@ -4,11 +4,15 @@
 
 It is suggested you start running this as a non root user. The default right now is to run as root but if you set the environment variable RUNAS_UID0 to false then the image will run as a special unfi user with the uid/gid 999/999. You should ideally set your data and logs to owned by the proper gid. The [environment variables section](https://github.com/jacobalberty/unifi-docker/blob/master/README.md#environment-variables) has more details. At some point in the future this feature may default to on and I personally run all of my own containers with it on. So turning it on for your own containers will help prevent any surprises.
 
+## Mongo and Docker for windows
+ Unifi uses mongo store its data. Mongo uses the fsync() system call on its data files. Because of how docker for windows works you can't bind mount `/unifi/db/data` on a docker for windows container. Therefore `-v ~/unifi:/unifi` won't work.
+ [Discussion on the issue](https://github.com/docker/for-win/issues/138).
+
 ## Supported Docker Hub Tags and Respective `Dockerfile` Links
 
 | Tag | Description |
 |-----|-------------|
-| [`latest`, `stable`, `5.8`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.8.24 as of 2018-06-29 |
+| [`latest`, `stable`, `5.8`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.8.28 as of 2018-08-08 |
 | [`5.7`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi 5.7 version - 5.7.23 as of 2018-04-16 |
 | [`lts`, `5.6`](https://github.com/jacobalberty/unifi-docker/blob/lts/Dockerfile) | Tracks UniFi LTS stable version - 5.6.39 as of 2018-06-25 |
 | [`oldstable`, `5.5`](https://github.com/jacobalberty/unifi-docker/blob/oldstable/Dockerfile) | Tracks UniFi Old Stable version - 5.5.24 as of 2017-11-13 |
@@ -43,6 +47,8 @@ mkdir -p unifi/data
 mkdir -p unifi/log
 docker run --rm --init -p 8080:8080 -p 8443:8443 -p 3478:3478/udp -p 10001:10001/udp -e TZ='Africa/Johannesburg' -v ~/unifi:/unifi --name unifi jacobalberty/unifi:stable
 ```
+
+**Note** you must omit `-v ~/unifi:/unifi` on windows, but you can use a local volume e.g. `-v unifi:/unifi` (omit the leading ~/) to persist the data on a local volume.
 
 ## Running with separate mongo container
 

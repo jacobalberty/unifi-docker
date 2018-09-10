@@ -13,9 +13,7 @@ It is suggested you start running this as a non root user. The default right now
 | Tag | Description |
 |-----|-------------|
 | [`latest`, `stable`, `5.8`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.8.28 as of 2018-08-08 |
-| [`5.7`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi 5.7 version - 5.7.23 as of 2018-04-16 |
 | [`lts`, `5.6`](https://github.com/jacobalberty/unifi-docker/blob/lts/Dockerfile) | Tracks UniFi LTS stable version - 5.6.40 as of 2018-09-10 |
-| [`oldstable`, `5.5`](https://github.com/jacobalberty/unifi-docker/blob/oldstable/Dockerfile) | Tracks UniFi Old Stable version - 5.5.24 as of 2017-11-13 |
 | [`sc`](https://github.com/jacobalberty/unifi-docker/blob/sc/Dockerfile) | Tracks UniFi "Stable Candidate", The latest stable candidate may flip between the two branches maintained by Ubuiqiti so it is advised you tag off of the version you want directly instead of the `sc` tag. |
 
 ### Latest Stable Candidate tags
@@ -23,12 +21,11 @@ It is suggested you start running this as a non root user. The default right now
 | Version | Latest Tag |
 |---------|------------|
 | 5.6.x   | [`5.6.39-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.6.39-sc/Dockerfile) |
-| 5.7.x   | [`5.7.28-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.7.28-sc/Dockerfile) |
-| 5.8.x   | [`5.8.28-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.8.28-sc/Dockerfile) |
+| 5.8.x   | [`5.8.30-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.8.30-sc/Dockerfile) |
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `stable candidate` to `stable` instead of waiting for it to hit the repository.
 
-In adition to these tags you may tag specific versions as well, for example `jacobalberty/unifi:5.4.19` will get you unifi 5.4.19 no matter what the current version is. Stable candidates now exist both under the `sc` tag and for tags with the extension `-sc` ie `jacobalberty/unifi:5.6.18-sc`. It is advised to use the specific versions as the `sc` tag may jump from 5.6.x to 5.5.x then back to 5.6.x as new stable candidates come out.
+In adition to these tags you may tag specific versions as well, for example `jacobalberty/unifi:5.6.40` will get you unifi 5.6.40 no matter what the current version is. Stable candidates now exist both under the `sc` tag and for tags with the extension `-sc` ie `jacobalberty/unifi:5.6.18-sc`. It is advised to use the specific versions as the `sc` tag may jump from 5.6.x to 5.8.x then back to 5.6.x as new stable candidates come out.
 
 ## Description
 
@@ -115,7 +112,7 @@ Under your containers service definition instead of using `image: jacobalberty/u
 ```shell
         image: jacobalberty/unifi:beta
          environment:
-          PKGURL: https://dl.ubnt.com/unifi/5.5.24/unifi_sysvinit_all.deb
+          PKGURL: https://dl.ubnt.com/unifi/5.6.40/unifi_sysvinit_all.deb
 ```
 
 Once again, simply change PKGURL to point to the package you would like to use.

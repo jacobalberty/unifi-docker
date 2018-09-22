@@ -1,0 +1,3 @@
+*.sh text eol=lf
+/functions text eol=lf
+/import_cert text eol=lf

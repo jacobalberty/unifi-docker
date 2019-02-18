@@ -34,7 +34,7 @@ services:
     image: bash
     depends_on:
       - controller
-    command: bash -c 'tail -f /unifi/log/*'
+    command: bash -c 'tail -f /unifi/log/*.log'
     restart: always
     volumes:
       - log:/unifi/log

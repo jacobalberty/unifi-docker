@@ -20,7 +20,8 @@ ENV BASEDIR=/usr/lib/unifi \
     BIND_PRIV=true \
     RUNAS_UID0=true \
     UNIFI_GID=999 \
-    UNIFI_UID=999
+    UNIFI_UID=999 \
+    JVM_MAX_HEAP_SIZE=1024M
 
 # Install gosu
 # https://github.com/tianon/gosu/blob/master/INSTALL.md
@@ -30,8 +31,7 @@ RUN set -ex \
     && fetchDeps=' \
         ca-certificates \
         wget \
-        gpg \
-        dirmngr \
+        gnupg \
     ' \
     && apt-get update \
     && apt-get install -y --no-install-recommends $fetchDeps \
@@ -69,7 +69,7 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
  && chmod +x /usr/local/bin/docker-build.sh
 
 RUN set -ex \
- && apt-get update && apt-get install -y --no-install-recommends gnupg \
+ && apt-get update && apt-get install -y --no-install-recommends gnupg openjdk-8-jre-headless \
  && mkdir -p /usr/share/man/man1/ \
  && groupadd -r unifi -g $UNIFI_GID \
  && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \

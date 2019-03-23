@@ -23,18 +23,21 @@ ENV BASEDIR=/usr/lib/unifi \
     UNIFI_UID=999 \
     JVM_MAX_HEAP_SIZE=1024M
 
-# Install gosu
-# https://github.com/tianon/gosu/blob/master/INSTALL.md
-# This should be integrated with the main run because it duplicates a lot of the steps there
-# but for now while shoehorning gosu in it is separate
+# Copy install and runtime scripts
+RUN mkdir -p /usr/unifi \
+    /usr/local/unifi/init.d \
+    /usr/unifi/init.d
+COPY docker-entrypoint.sh /usr/local/bin/
+COPY docker-healthcheck.sh /usr/local/bin/
+COPY docker-build.sh /usr/local/bin/
+COPY functions /usr/unifi/functions
+COPY import_cert /usr/unifi/init.d/
+
+# Install Gosu
 RUN set -ex \
-    && fetchDeps=' \
-        ca-certificates \
-        wget \
-        gnupg \
-    ' \
     && apt-get update \
-    && apt-get install -y --no-install-recommends $fetchDeps \
+    && apt-get dist-upgrade -y \
+    && apt-get install -y --no-install-recommends ca-certificates gnupg wget \
     && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
     && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
     && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc" \
@@ -52,28 +55,18 @@ RUN set -ex \
     && chmod +x /usr/local/bin/gosu \
     # verify that the binary works
     && gosu nobody true \
-    && apt-get purge -y --auto-remove $fetchDeps \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN mkdir -p /usr/unifi \
-     /usr/local/unifi/init.d \
-     /usr/unifi/init.d
-COPY docker-entrypoint.sh /usr/local/bin/
-COPY docker-healthcheck.sh /usr/local/bin/
-COPY docker-build.sh /usr/local/bin/
-COPY functions /usr/unifi/functions
-COPY import_cert /usr/unifi/init.d/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
- && chmod +x /usr/unifi/init.d/import_cert \
- && chmod +x /usr/local/bin/docker-healthcheck.sh \
- && chmod +x /usr/local/bin/docker-build.sh
-
-RUN set -ex \
- && apt-get update && apt-get install -y --no-install-recommends gnupg openjdk-8-jre-headless \
- && mkdir -p /usr/share/man/man1/ \
- && groupadd -r unifi -g $UNIFI_GID \
- && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \
- && /usr/local/bin/docker-build.sh "${PKGURL}"
+# Install Unifi
+    && chmod +x /usr/local/bin/docker-entrypoint.sh \
+    && chmod +x /usr/unifi/init.d/import_cert \
+    && chmod +x /usr/local/bin/docker-healthcheck.sh \
+    && chmod +x /usr/local/bin/docker-build.sh \
+    && apt-get install -y --no-install-recommends openjdk-8-jre-headless \
+    && mkdir -p /usr/share/man/man1/ \
+    && groupadd -r unifi -g $UNIFI_GID \
+    && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \
+    && /usr/local/bin/docker-build.sh "${PKGURL}" \
+    && apt-get purge -y --auto-remove wget \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/log/*
 
 VOLUME ["/unifi", "${RUNDIR}"]
 
@@ -87,8 +80,3 @@ HEALTHCHECK CMD /usr/local/bin/docker-healthcheck.sh || exit 1
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 CMD ["unifi"]
-
-# execute the controller directly without using the service
-#ENTRYPOINT ["/usr/bin/java", "-Xmx${JVM_MAX_HEAP_SIZE}", "-jar", "/usr/lib/unifi/lib/ace.jar"]
-  # See issue #12 on github: probably want to consider how JSVC handled creating multiple processes, issuing the -stop instruction, etc. Not sure if the above ace.jar class gracefully handles TERM signals.
-#CMD ["start"]

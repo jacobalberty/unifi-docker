@@ -66,7 +66,7 @@ RUN set -ex \
     && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \
     && /usr/local/bin/docker-build.sh "${PKGURL}" \
     && apt-get purge -y --auto-remove wget \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/log/*
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 VOLUME ["/unifi", "${RUNDIR}"]
 

@@ -41,7 +41,6 @@ RUN set -ex \
     && chmod +x /usr/unifi/init.d/import_cert \
     && chmod +x /usr/local/bin/docker-healthcheck.sh \
     && chmod +x /usr/local/bin/docker-build.sh \
-    && apt-get install -y --no-install-recommends openjdk-8-jre-headless \
     && mkdir -p /usr/share/man/man1/ \
     && groupadd -r unifi -g $UNIFI_GID \
     && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \

@@ -1,4 +1,4 @@
-FROM ubuntu:xenial
+FROM ubuntu:bionic
 
 LABEL maintainer="Jacob Alberty <jacob.alberty@foundigital.com>"
 
@@ -20,8 +20,7 @@ ENV BASEDIR=/usr/lib/unifi \
     RUNAS_UID0=true \
     UNIFI_GID=999 \
     UNIFI_UID=999 \
-    JVM_MAX_HEAP_SIZE=1024M \
-    GOSU_VERSION=1.10
+    JVM_MAX_HEAP_SIZE=1024M
 
 # Copy install and runtime scripts
 RUN mkdir -p /usr/unifi \
@@ -37,23 +36,6 @@ COPY import_cert /usr/unifi/init.d/
 RUN set -ex \
     && apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates gnupg wget \
-    && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
-    && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
-    && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc" \
-    # verify the signature
-    && export GNUPGHOME="$(mktemp -d)" \
-    && for server in $(shuf -e ha.pool.sks-keyservers.net \
-                            hkp://p80.pool.sks-keyservers.net:80 \
-                            keyserver.ubuntu.com \
-                            hkp://keyserver.ubuntu.com:80 \
-                            pgp.mit.edu) ; do \
-    gpg --keyserver "$server" --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && break || : ; \
-    done \
-    && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
-    && rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc \
-    && chmod +x /usr/local/bin/gosu \
-    # verify that the binary works
-    && gosu nobody true \
 # Install Unifi
     && chmod +x /usr/local/bin/docker-entrypoint.sh \
     && chmod +x /usr/unifi/init.d/import_cert \

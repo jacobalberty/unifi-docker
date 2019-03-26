@@ -35,7 +35,7 @@ COPY import_cert /usr/unifi/init.d/
 # Install Gosu
 RUN set -ex \
     && apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates gnupg wget \
+    && apt-get install -y --no-install-recommends ca-certificates gnupg wget gosu \
 # Install Unifi
     && chmod +x /usr/local/bin/docker-entrypoint.sh \
     && chmod +x /usr/unifi/init.d/import_cert \

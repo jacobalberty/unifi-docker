@@ -177,7 +177,7 @@ if [[ "${@}" == "unifi" ]]; then
         gosu unifi:unifi ${UNIFI_CMD} &
     fi
     wait
-    log "WARN: unifi service process ended without being singaled? Check for errors in ${LOGDIR}." >&2
+    log "WARN: unifi service process ended without being signaled? Check for errors in ${LOGDIR}." >&2
 else
     log "Executing: ${@}"
     exec ${@}

@@ -1,5 +1,4 @@
 version: '3.7'
-
 services:
   mongo:
     image: mongo:3.4

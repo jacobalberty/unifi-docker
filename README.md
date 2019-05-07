@@ -257,12 +257,17 @@ They should be named:
 ```shell
 cert.pem  # The Certificate
 privkey.pem # Private key for the cert
-chain.pem # full cert chain
+chain.pem # Certificate chain file
+ca.pem # CA Certificate file
 ```
 
-If your certificate or private key have different names, you can set the environment variables `CERTNAME` and `CERT_PRIVATE_NAME` to the name of your certificate/private key, e.g. `CERTNAME=my-cert.pem` and `CERT_PRIVATE_NAME=my-privkey.pem`.
+If your certificate, private key, certificate chain, or CA certificate have different names, you can set the environment variables `CERTNAME`, `CERT_PRIVATE_NAME`, `CERT_CHAIN_NAME`, and `CERT_CA_NAME` to the name of your certificate/private key/cert chain/ca cert, e.g. `CERTNAME=my-cert.pem`, `CERT_PRIVATE_NAME=my-privkey.pem`, `CERT_CHAIN_NAME=my-chain.pem`, `CERT_CA_NAME=my-ca.pem`.
 
-For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA Cert automatically. In case your letsencrypt cert is already the chained certificate, you can set the `CERT_IS_CHAIN` environment variable to `true`, e.g. `CERT_IS_CHAIN=true`. This option also works together with a custom `CERTNAME`.
+For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA Cert automatically.
+
+You MUST either supply the chain certificate(the certificate that the issuer used to sign your certificate) or, in case your cert is already the chained certificate, you can set the `CERT_IS_CHAIN` environment variable to `true`, e.g. `CERT_IS_CHAIN=true`.
+
+Optionally, when not using letsencrypt, you may supply a CA Certificate that will be prepended to the rest of the certificate chain, by providing a PEM formatted file named ca.pem, or using the `CERT_CA_NAME` environment variable.
 
 ## TODO
 

@@ -2,7 +2,7 @@ version: '3.7'
 services:
   mongo:
     image: mongo:3.4
-    retart_policy:
+    restart_policy:
       condition: any
       window: 60s
     networks:
@@ -14,7 +14,7 @@ services:
     depends_on:
       - mongo
     init: true
-    retart_policy:
+    restart_policy:
       condition: any
       window: 60s
     networks:
@@ -42,7 +42,7 @@ services:
     depends_on:
       - controller
     command: bash -c 'tail -f /unifi/log/*.log'
-    retart_policy:
+    restart_policy:
       condition: any
       window: 60s
     volumes:

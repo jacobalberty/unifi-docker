@@ -1,10 +1,9 @@
-version: '2.2'
+version: '3.7'
 services:
   mongo:
     image: mongo:3.4
     networks:
       - unifi
-    restart: always
     volumes:
       - db:/data/db
   controller:
@@ -14,7 +13,6 @@ services:
     init: true
     networks:
       - unifi
-    restart: always
     volumes:
       - data:/unifi/data
       - log:/unifi/log
@@ -37,7 +35,6 @@ services:
     depends_on:
       - controller
     command: bash -c 'tail -f /unifi/log/*.log'
-    restart: always
     volumes:
       - log:/unifi/log
 

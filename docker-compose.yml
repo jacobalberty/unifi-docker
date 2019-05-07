@@ -2,9 +2,10 @@ version: '3.7'
 services:
   mongo:
     image: mongo:3.4
-    restart_policy:
-      condition: any
-      window: 60s
+    deploy:
+      restart_policy:
+        condition: any
+        window: 60s
     networks:
       - unifi
     volumes:
@@ -14,9 +15,10 @@ services:
     depends_on:
       - mongo
     init: true
-    restart_policy:
-      condition: any
-      window: 60s
+    deploy:
+      restart_policy:
+        condition: any
+        window: 60s
     networks:
       - unifi
     volumes:
@@ -42,9 +44,10 @@ services:
     depends_on:
       - controller
     command: bash -c 'tail -f /unifi/log/*.log'
-    restart_policy:
-      condition: any
-      window: 60s
+    deploy:
+      restart_policy:
+        condition: any
+        window: 60s
     volumes:
       - log:/unifi/log
 

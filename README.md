@@ -63,6 +63,10 @@ docker-compose up -d
 
 The default example requires some l3 adoption method. You have a couple options to adopt.
 
+#### Force adoption IP
+
+Run UniFi Docker and open UniFi in browser. Go under Settings -> Controller and then enter the IP address of the Docker host machine in "Controller Hostname/IP", and check the "Override inform host with controller hostname/IP". Save settings and restart UniFi Docker container. 
+
 #### SSH Adoption
 
 The quickest one off method is to ssh into the access point and run the following commands:

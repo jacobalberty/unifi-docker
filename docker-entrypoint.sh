@@ -130,6 +130,12 @@ fi
 for key in "${!settings[@]}"; do
   confSet "$confFile" "$key" "${settings[$key]}"
 done
+
+if [ -n "${UNIFI_POST_CONFIGURE_SCRIPT+x}" ]; then
+  echo "Running Post Configure Script..."
+  eval "${UNIFI_POST_CONFIGURE_SCRIPT}"
+fi
+
 UNIFI_CMD="java ${JVM_OPTS} -jar ${BASEDIR}/lib/ace.jar start"
 
 # controller writes to relative path logs/server.log

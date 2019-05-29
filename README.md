@@ -12,7 +12,7 @@ It is suggested you start running this as a non root user. The default right now
 
 | Tag | Description |
 |-----|-------------|
-| [`latest`, `stable`, `5.10`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.10.19 as of 2019-02-27 |
+| [`latest`, `stable`, `5.10`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.10.24 as of 2019-05-29 |
 | [`lts`, `5.6`](https://github.com/jacobalberty/unifi-docker/blob/lts/Dockerfile) | Tracks UniFi LTS stable version - 5.6.40 as of 2018-09-10 |
 | [`sc`](https://github.com/jacobalberty/unifi-docker/blob/sc/Dockerfile) | Tracks UniFi "Stable Candidate", The latest stable candidate may flip between the two branches maintained by Ubuiqiti so it is advised you tag off of the version you want directly instead of the `sc` tag. |
 
@@ -21,7 +21,7 @@ It is suggested you start running this as a non root user. The default right now
 | Version | Latest Tag |
 |---------|------------|
 | 5.6.x   | [`5.6.39-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.6.39-sc/Dockerfile) |
-| 5.10.x   | [`5.10.16-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.10.16-sc/Dockerfile) |
+| 5.10.x   | [`5.10.24-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.10.24-sc/Dockerfile) |
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `stable candidate` to `stable` instead of waiting for it to hit the repository.
 
@@ -62,6 +62,10 @@ docker-compose up -d
 ### Layer 3 Adoption
 
 The default example requires some l3 adoption method. You have a couple options to adopt.
+
+#### Force adoption IP
+
+Run UniFi Docker and open UniFi in browser. Go under Settings -> Controller and then enter the IP address of the Docker host machine in "Controller Hostname/IP", and check the "Override inform host with controller hostname/IP". Save settings and restart UniFi Docker container. 
 
 #### SSH Adoption
 

@@ -4,7 +4,7 @@ LABEL maintainer="Jacob Alberty <jacob.alberty@foundigital.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ARG PKGURL
+ENV PKGURL=https://dl.ubnt.com/unifi/5.10.24/unifi_sysvinit_all.deb
 
 ENV BASEDIR=/usr/lib/unifi \
     DATADIR=/unifi/data \
@@ -42,7 +42,7 @@ RUN set -ex \
                             hkp://p80.pool.sks-keyservers.net:80 \
                             keyserver.ubuntu.com \
                             hkp://keyserver.ubuntu.com:80 \
-                            pgp.mit.edu) ; do \
+                            pool.sks-keyservers.net) ; do \
         gpg --keyserver "$server" --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && break || : ; \
     done \
     && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \

@@ -39,7 +39,7 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}_logs
     depends_on:
       - controller
-    command: bash -c 'tail -f /unifi/log/*.log'
+    command: bash -c 'tail -F /unifi/log/*.log'
     restart: always
     volumes:
       - log:/unifi/log

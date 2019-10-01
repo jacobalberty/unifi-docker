@@ -1,4 +1,4 @@
-FROM arm32v7/ubuntu:18.04
+FROM arm32v7/ubuntu:16.04
 
 LABEL maintainer="Jacob Alberty <jacob.alberty@foundigital.com>"
 

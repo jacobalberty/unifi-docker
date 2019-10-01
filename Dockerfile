@@ -33,8 +33,6 @@ ENV BASEDIR=/usr/lib/unifi \
 RUN set -ex \
     && fetchDeps=' \
         ca-certificates \
-        dirmngr \
-        gpg \
         wget \
     ' \
     && apt-get update \

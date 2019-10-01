@@ -14,17 +14,17 @@ It is suggested you start running this as a non root user. The default right now
 |-----|-------------|
 | [`latest`, `stable`, `5.11`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.11.47 as of 2019-10-01 |
 | [`lts`, `5.6`](https://github.com/jacobalberty/unifi-docker/blob/lts/Dockerfile) | Tracks UniFi LTS stable version - 5.6.40 as of 2018-09-10 |
-| [`sc`](https://github.com/jacobalberty/unifi-docker/blob/sc/Dockerfile) | Tracks UniFi "Stable Candidate", The latest stable candidate may flip between the two branches maintained by Ubuiqiti so it is advised you tag off of the version you want directly instead of the `sc` tag. |
+| [`rc`](https://github.com/jacobalberty/unifi-docker/blob/rc/Dockerfile) | Tracks UniFi "Release Candidate", The latest release candidate may flip between the two branches maintained by Ubuiqiti so it is advised you tag off of the version you want directly instead of the `rc` tag. |
 
-### Latest Stable Candidate tags
+### Latest Release Candidate tags
 
 | Version | Latest Tag |
 |---------|------------|
-| 5.11.x   | [`5.11.46-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.11.46-sc/Dockerfile) |
+| 5.11.x   | [`5.11.48-rc`](https://github.com/jacobalberty/unifi-docker/blob/5.11.48-rc/Dockerfile) |
 
-These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `stable candidate` to `stable` instead of waiting for it to hit the repository.
+These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `release candidate` to `stable` instead of waiting for it to hit the repository.
 
-In adition to these tags you may tag specific versions as well, for example `jacobalberty/unifi:5.6.40` will get you unifi 5.6.40 no matter what the current version is. Stable candidates now exist both under the `sc` tag and for tags with the extension `-sc` ie `jacobalberty/unifi:5.6.18-sc`. It is advised to use the specific versions as the `sc` tag may jump from 5.6.x to 5.8.x then back to 5.6.x as new stable candidates come out.
+In adition to these tags you may tag specific versions as well, for example `jacobalberty/unifi:5.6.40` will get you unifi 5.6.40 no matter what the current version is. Release candidates now exist both under the `rc` tag and for tags with the extension `-rc` ie `jacobalberty/unifi:5.6.18-rc`. It is advised to use the specific versions as the `rc` tag may jump from 5.6.x to 5.8.x then back to 5.6.x as new release candidates come out.
 
 ## Description
 

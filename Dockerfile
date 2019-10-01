@@ -1,10 +1,10 @@
-FROM arm32v7/ubuntu:xenial
+FROM arm32v7/ubuntu:18.04
 
 LABEL maintainer="Jacob Alberty <jacob.alberty@foundigital.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ENV PKGURL=https://dl.ubnt.com/unifi/5.11.46/unifi_sysvinit_all.deb
+ENV PKGURL=https://dl.ubnt.com/unifi/5.11.47/unifi_sysvinit_all.deb
 
 ENV BASEDIR=/usr/lib/unifi \
     DATADIR=/unifi/data \
@@ -29,6 +29,8 @@ ENV BASEDIR=/usr/lib/unifi \
 RUN set -ex \
     && fetchDeps=' \
         ca-certificates \
+        dirmngr \
+        gpg \
         wget \
     ' \
     && apt-get update \

@@ -33,6 +33,9 @@ apt-get update
 apt-get install -qy --no-install-recommends \
     apt-transport-https \
     curl \
+    dirmngr \
+    gpg \
+    gpg-agent \
     openjdk-8-jre-headless \
     procps \
     libcap2-bin

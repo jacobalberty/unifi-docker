@@ -253,7 +253,7 @@ While micro-service patterns try to avoid running multiple processes in a contai
 
 ## Init scripts
 
-You may now place init scripts to be launched during the unifi startup in /usr/local/unifi/init.d to perform any actions unique to your unifi setup. An example bash script to set up certificates is in `/usr/unifi/init.d/import.sh`.
+You may now place init scripts to be launched during the unifi startup in /usr/local/unifi/init.d to perform any actions unique to your unifi setup. An example bash script to set up certificates is in `/usr/unifi/init.d/import_cert`.
 
 ## Certificate Support
 

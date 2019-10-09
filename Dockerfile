@@ -81,7 +81,7 @@ EXPOSE 6789/tcp 8080/tcp 8443/tcp 8880/tcp 8843/tcp 3478/udp
 
 WORKDIR /unifi
 
-HEALTHCHECK CMD /usr/local/bin/docker-healthcheck.sh || exit 1
+HEALTHCHECK --start-period=5m CMD /usr/local/bin/docker-healthcheck.sh || exit 1
 
 # execute controller using JSVC like original debian package does
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]

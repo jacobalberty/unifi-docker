@@ -185,6 +185,18 @@ Default: `true`
 
 This is used to determine whether or not the UniFi service runs as a privileged (root) user. The default value is `true` but it is recommended to use `false` instead.
 
+### `UNIFI_HTTP_PORT`
+
+Default: `8080`
+
+This is the HTTP port used by the Web interface. Browsers will be redirected to the `UNIFI_HTTPS_PORT`.
+
+### `UNIFI_HTTPS_PORT`
+
+Default: `8443`
+
+This is the HTTPS port used by the Web interface.
+
 ### `UNIFI_UID` and `UNIFI_GID`
 
 Default: `999` for both

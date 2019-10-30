@@ -12,9 +12,9 @@ It is suggested you start running this as a non root user. The default right now
 
 | Tag | Description |
 |-----|-------------|
-| [`latest`, `stable`, `5.11`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.11.50 as of 2019-10-09 |
+| [`latest`, `stable`, `5.12`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.12.22 as of 2019-10-29 |
 | [`lts`, `5.6`](https://github.com/jacobalberty/unifi-docker/blob/lts/Dockerfile) | Tracks UniFi LTS stable version - 5.6.40 as of 2018-09-10 |
-| [`rc`](https://github.com/jacobalberty/unifi-docker/blob/rc/Dockerfile) | Tracks UniFi "Release Candidate", The latest release candidate may flip between the two branches maintained by Ubuiqiti so it is advised you tag off of the version you want directly instead of the `rc` tag. |
+| [`rc`](https://github.com/jacobalberty/unifi-docker/blob/rc/Dockerfile) | Tracks UniFi "Release Candidate", The latest release candidate may flip between the two branches maintained by Ubiquiti so it is advised you tag off of the version you want directly instead of the `rc` tag. |
 
 ### Latest Release Candidate tags
 

@@ -84,6 +84,7 @@ _EOF
         -deststorepass aircontrolenterprise \
         -destkeypass aircontrolenterprise \
         -destkeystore "${DATADIR}/keystore" \
+        -deststoretype pkcs12 \
         -srckeystore "${TEMPFILE}" -srcstoretype PKCS12 \
         -srcstorepass aircontrolenterprise \
         -alias unifi

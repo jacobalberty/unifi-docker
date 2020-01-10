@@ -1,4 +1,4 @@
-FROM arm32v7/ubuntu:16.04
+FROM arm64v8/ubuntu:16.04
 
 LABEL maintainer="Jacob Alberty <jacob.alberty@foundigital.com>"
 
@@ -16,7 +16,7 @@ ENV BASEDIR=/usr/lib/unifi \
     CERTNAME=cert.pem \
     CERT_PRIVATE_NAME=privkey.pem \
     CERT_IS_CHAIN=false \
-    GOSU_VERSION=1.10 \
+    GOSU_VERSION=1.11 \
     BIND_PRIV=true \
     RUNAS_UID0=true \
     UNIFI_GID=999 \

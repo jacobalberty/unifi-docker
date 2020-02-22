@@ -17,6 +17,9 @@ services:
     networks:
       - unifi
     restart: always
+    dns:
+      - 8.8.8.8
+      - 4.4.4.4
     volumes:
       - data:/unifi/data
       - log:/unifi/log

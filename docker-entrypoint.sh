@@ -133,7 +133,7 @@ if ! [[ -z "$UNIFI_HTTPS_PORT"  ]]; then
   settings["unifi.https.port"]="$UNIFI_HTTPS_PORT"
 fi
 
-if ! [[ "$UNIFI_ECC_CERT" == "true" ]]; then
+if [[ "$UNIFI_ECC_CERT" == "true" ]]; then
   settings["unifi.https.sslEnabledProtocols"]="TLSv1.2"
   settings["unifi.https.ciphers"]="TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256"
 fi

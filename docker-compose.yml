@@ -20,8 +20,8 @@ services:
       - log:/unifi/log
       - cert:/unifi/cert
       - init:/unifi/init.d
-      # Uncomment following line to have backups stored in a local folder
-      # ./backup/:/unifi/data/backup/
+      # Uncomment the following mount to store backups in a local folder
+      #- ./backup:/unifi/data/backup
     environment:
       DB_URI: mongodb://mongo/unifi
       STATDB_URI: mongodb://mongo/unifi_stat

@@ -8,6 +8,7 @@ services:
     restart: always
     volumes:
       - db:/data/db
+      - dbcfg:/data/configdb
   controller:
     image: "jacobalberty/unifi:${TAG:-latest}"
     container_name: ${COMPOSE_PROJECT_NAME}_controller
@@ -18,10 +19,12 @@ services:
       - unifi
     restart: always
     volumes:
+      - dir:/unifi
       - data:/unifi/data
       - log:/unifi/log
       - cert:/unifi/cert
       - init:/unifi/init.d
+      - run:/var/run/unifi
     environment:
       DB_URI: mongodb://mongo/unifi
       STATDB_URI: mongodb://mongo/unifi_stat
@@ -46,10 +49,13 @@ services:
 
 volumes:
   db:
+  dbcfg:
   data:
   log:
   cert:
   init:
+  dir:
+  run:
 
 networks:
   unifi:

@@ -115,6 +115,9 @@ if ! [[ -z "$LOTSOFDEVICES" ]]; then
   settings["unifi.G1GC.enabled"]="true"
   settings["unifi.xms"]="$(h2mb $JVM_INIT_HEAP_SIZE)"
   settings["unifi.xmx"]="$(h2mb ${JVM_MAX_HEAP_SIZE:-1024M})"
+  # Reduce MongoDB I/O (issue #300)
+  settings["unifi.db.nojournal"]="true"
+  settings["unifi.db.extraargs"]="--quiet"
 fi
 
 # Implements issue #30

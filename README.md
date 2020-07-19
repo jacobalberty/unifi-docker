@@ -198,6 +198,12 @@ Default: `8443`
 
 This is the HTTPS port used by the Web interface.
 
+### `UNIFI_STUN_PORT`
+
+Default: `3478`
+
+This is the STUN port used by the controller for NAT traversal (UDP).
+
 ### `UNIFI_UID` and `UNIFI_GID`
 
 Default: `999` for both

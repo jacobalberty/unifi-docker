@@ -204,6 +204,12 @@ Default: `3478`
 
 This is the STUN port used by the controller for NAT traversal (UDP).
 
+### `UNIFI_SPEEDTEST_PORT`
+
+Default: `6789`
+
+This is the mobile througput test port used by the controller.
+
 ### `UNIFI_UID` and `UNIFI_GID`
 
 Default: `999` for both

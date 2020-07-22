@@ -226,6 +226,15 @@ Default: `unset`
 
 Used to start the JVM with additional arguments.
 
+### `JVM_INIT_HEAP_SIZE`
+
+Default: `unset`
+
+### `JVM_MAX_HEAP_SIZE`
+Java Virtual Machine (JVM) allocates available memory. 
+For larger installations a larger value is recommended. For memory constrained system this value can be lowered. 
+Default `1024M`
+
 ### External MongoDB environment variables
 
 These variables are used to implement support for an [external MongoDB server](https://community.ubnt.com/t5/UniFi-Wireless/External-MongoDB-Server/td-p/1305297) and must all be set in order for this feature to work. Once all are set then the configuration file value for `db.mongo.local` will automatically be set to `false`.

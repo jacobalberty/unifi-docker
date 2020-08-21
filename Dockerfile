@@ -4,7 +4,7 @@ LABEL maintainer="Jacob Alberty <jacob.alberty@foundigital.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ARG PKGURL=https://dl.ui.com/unifi/5.13.32/unifi_sysvinit_all.deb
+ARG PKGURL=https://dl.ui.com/unifi/5.14.22/unifi_sysvinit_all.deb
 
 ENV BASEDIR=/usr/lib/unifi \
     DATADIR=/unifi/data \
@@ -28,52 +28,52 @@ ENV BASEDIR=/usr/lib/unifi \
 # but for now while shoehorning gosu in it is seperate
 RUN set -ex \
     && fetchDeps=' \
-        ca-certificates \
-        dirmngr \
-        gpg \
-        wget \
+    ca-certificates \
+    dirmngr \
+    gpg \
+    wget \
     ' \
     && apt-get update \
     && apt-get install -y --no-install-recommends $fetchDeps \
     && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
     && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
     && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc" \
-# verify the signature
+    # verify the signature
     && export GNUPGHOME="$(mktemp -d)" \
     && for server in $(shuf -e ha.pool.sks-keyservers.net \
-                            hkp://p80.pool.sks-keyservers.net:80 \
-                            keyserver.ubuntu.com \
-                            hkp://keyserver.ubuntu.com:80 \
-                            pool.sks-keyservers.net) ; do \
-        gpg --keyserver "$server" --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && break || : ; \
+    hkp://p80.pool.sks-keyservers.net:80 \
+    keyserver.ubuntu.com \
+    hkp://keyserver.ubuntu.com:80 \
+    pool.sks-keyservers.net) ; do \
+    gpg --keyserver "$server" --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && break || : ; \
     done \
     && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
     && rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc \
     && chmod +x /usr/local/bin/gosu \
-# verify that the binary works
+    # verify that the binary works
     && gosu nobody true \
     && apt-get purge -y --auto-remove $fetchDeps \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /usr/unifi \
-     /usr/local/unifi/init.d \
-     /usr/unifi/init.d
+    /usr/local/unifi/init.d \
+    /usr/unifi/init.d
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY docker-healthcheck.sh /usr/local/bin/
 COPY docker-build.sh /usr/local/bin/
 COPY functions /usr/unifi/functions
 COPY import_cert /usr/unifi/init.d/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
- && chmod +x /usr/unifi/init.d/import_cert \
- && chmod +x /usr/local/bin/docker-healthcheck.sh \
- && chmod +x /usr/local/bin/docker-build.sh
+    && chmod +x /usr/unifi/init.d/import_cert \
+    && chmod +x /usr/local/bin/docker-healthcheck.sh \
+    && chmod +x /usr/local/bin/docker-build.sh
 
 # Push installing openjdk-8-jre first, so that the unifi package doesn't pull in openjdk-7-jre as a dependency? Else uncomment and just go with openjdk-7.
 RUN set -ex \
- && mkdir -p /usr/share/man/man1/ \
- && groupadd -r unifi -g $UNIFI_GID \
- && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \
- && /usr/local/bin/docker-build.sh "${PKGURL}"
+    && mkdir -p /usr/share/man/man1/ \
+    && groupadd -r unifi -g $UNIFI_GID \
+    && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \
+    && /usr/local/bin/docker-build.sh "${PKGURL}"
 
 VOLUME ["/unifi", "${RUNDIR}"]
 
@@ -90,5 +90,5 @@ CMD ["unifi"]
 
 # execute the conroller directly without using the service
 #ENTRYPOINT ["/usr/bin/java", "-Xmx${JVM_MAX_HEAP_SIZE}", "-jar", "/usr/lib/unifi/lib/ace.jar"]
-  # See issue #12 on github: probably want to consider how JSVC handled creating multiple processes, issuing the -stop instraction, etc. Not sure if the above ace.jar class gracefully handles TERM signals.
+# See issue #12 on github: probably want to consider how JSVC handled creating multiple processes, issuing the -stop instraction, etc. Not sure if the above ace.jar class gracefully handles TERM signals.
 #CMD ["start"]

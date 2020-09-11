@@ -12,15 +12,16 @@ It is suggested you start running this as a non root user. The default right now
 
 | Tag | Description |
 |-----|-------------|
-| [`latest`, `stable`, `5.11`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.11.50 as of 2019-10-09 |
+| [`latest`, `stable`, `5.13`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.13.29 as of 2020-06-11 [Change Log 5-13-29](https://community.ui.com/releases/UniFi-Network-Controller-5-13-29/d7647910-77a2-4e61-bbfe-389206f2d6ad)|
 | [`lts`, `5.6`](https://github.com/jacobalberty/unifi-docker/blob/lts/Dockerfile) | Tracks UniFi LTS stable version - 5.6.40 as of 2018-09-10 |
-| [`rc`](https://github.com/jacobalberty/unifi-docker/blob/rc/Dockerfile) | Tracks UniFi "Release Candidate", The latest release candidate may flip between the two branches maintained by Ubuiqiti so it is advised you tag off of the version you want directly instead of the `rc` tag. |
+| [`rc`](https://github.com/jacobalberty/unifi-docker/blob/rc/Dockerfile) | Tracks UniFi "Release Candidate", The latest release candidate may flip between the two branches maintained by Ubiquiti so it is advised you tag off of the version you want directly instead of the `rc` tag. |
 
 ### Latest Release Candidate tags
 
 | Version | Latest Tag |
 |---------|------------|
 | 5.11.x   | [`5.11.48-rc`](https://github.com/jacobalberty/unifi-docker/blob/5.11.48-rc/Dockerfile) |
+| 5.12.x   | [`5.12.66-rc`](https://github.com/jacobalberty/unifi-docker/blob/5.12.66-rc/Dockerfile) |
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `release candidate` to `stable` instead of waiting for it to hit the repository.
 
@@ -218,6 +219,12 @@ Ex:
 ```
 
 as a fix for https://community.ubnt.com/t5/UniFi-Routing-Switching/IMPORTANT-Debian-Ubuntu-users-MUST-READ-Updated-06-21/m-p/1968251#M48264
+
+### `JVM_EXTRA_OPTS`
+
+Default: `unset`
+
+Used to start the JVM with additional arguments.
 
 ### External MongoDB environment variables
 

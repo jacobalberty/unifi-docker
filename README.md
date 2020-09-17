@@ -18,7 +18,7 @@ It is suggested you start running this as a non root user. The default right now
 
 | Tag | Description |
 |-----|-------------|
-| [`stable-6`, `6.0`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.0.20 as of 2020-09-14 [Change Log 6-0-20](https://community.ui.com/releases/UniFi-Network-Controller-6-0-20/3ddd1684-6747-4a66-a038-5ff0b25f4027)|
+| [`stable-6`, `6.0`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.0.22 as of 2020-09-17 [Change Log 6-0-22](https://community.ui.com/releases/UniFi-Network-Controller-6-0-22/910ceffc-f0e9-4518-86c1-df5eeee34695)|
 | [`latest`, `latest-5`, `stable-5`](https://github.com/jacobalberty/unifi-docker/blob/lts/Dockerfile) | Tracks UniFi 5.14 stable version - 5.14.23 as of 2020-09-14 |
 | [`rc`](https://github.com/jacobalberty/unifi-docker/blob/rc/Dockerfile) | Tracks UniFi "Release Candidate", The latest release candidate may flip between the two branches maintained by Ubiquiti so it is advised you tag off of the version you want directly instead of the `rc` tag. |
 
@@ -26,7 +26,7 @@ It is suggested you start running this as a non root user. The default right now
 
 | Version | Latest Tag |
 |---------|------------|
-| 6.0.x   | [`6.0.20-rc`](https://github.com/jacobalberty/unifi-docker/blob/6.0.20-rc/Dockerfile) |
+| 6.0.x   | [`6.0.22-rc`](https://github.com/jacobalberty/unifi-docker/blob/6.0.22-rc/Dockerfile) |
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `release candidate` to `stable` instead of waiting for it to hit the repository.
 

@@ -1,10 +1,10 @@
-FROM ubuntu:xenial
+FROM ubuntu:18.04
 
 LABEL maintainer="Jacob Alberty <jacob.alberty@foundigital.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ENV PKGURL=https://dl.ubnt.com/unifi/5.10.24/unifi_sysvinit_all.deb
+ARG PKGURL=https://dl.ui.com/unifi/6.0.22/unifi_sysvinit_all.deb
 
 ENV BASEDIR=/usr/lib/unifi \
     DATADIR=/unifi/data \
@@ -29,6 +29,8 @@ ENV BASEDIR=/usr/lib/unifi \
 RUN set -ex \
     && fetchDeps=' \
         ca-certificates \
+        dirmngr \
+        gpg \
         wget \
     ' \
     && apt-get update \
@@ -79,7 +81,7 @@ EXPOSE 6789/tcp 8080/tcp 8443/tcp 8880/tcp 8843/tcp 3478/udp
 
 WORKDIR /unifi
 
-HEALTHCHECK CMD /usr/local/bin/docker-healthcheck.sh || exit 1
+HEALTHCHECK --start-period=5m CMD /usr/local/bin/docker-healthcheck.sh || exit 1
 
 # execute controller using JSVC like original debian package does
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]

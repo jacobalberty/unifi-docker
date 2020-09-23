@@ -42,8 +42,6 @@ DIRS="${RUNDIR} ${LOGDIR} ${DATADIR} ${BASEDIR}"
 JVM_MAX_HEAP_SIZE=${JVM_MAX_HEAP_SIZE:-1024M}
 #JVM_INIT_HEAP_SIZE=
 
-JVM_EXTRA_OPTS=""
-
 #JAVA_ENTROPY_GATHER_DEVICE=
 #UNIFI_JVM_EXTRA_OPTS=
 #ENABLE_UNIFI=yes
@@ -117,6 +115,9 @@ if ! [[ -z "$LOTSOFDEVICES" ]]; then
   settings["unifi.G1GC.enabled"]="true"
   settings["unifi.xms"]="$(h2mb $JVM_INIT_HEAP_SIZE)"
   settings["unifi.xmx"]="$(h2mb ${JVM_MAX_HEAP_SIZE:-1024M})"
+  # Reduce MongoDB I/O (issue #300)
+  settings["unifi.db.nojournal"]="true"
+  settings["unifi.db.extraargs"]="--quiet"
 fi
 
 # Implements issue #30
@@ -125,6 +126,19 @@ if ! [[ -z "$DB_URI" || -z "$STATDB_URI" || -z "$DB_NAME" ]]; then
   settings["db.mongo.uri"]="$DB_URI"
   settings["statdb.mongo.uri"]="$STATDB_URI"
   settings["unifi.db.name"]="$DB_NAME"
+fi
+
+if ! [[ -z "$UNIFI_HTTP_PORT"  ]]; then
+  settings["unifi.http.port"]="$UNIFI_HTTP_PORT"
+fi
+
+if ! [[ -z "$UNIFI_HTTPS_PORT"  ]]; then
+  settings["unifi.https.port"]="$UNIFI_HTTPS_PORT"
+fi
+
+if [[ "$UNIFI_ECC_CERT" == "true" ]]; then
+  settings["unifi.https.sslEnabledProtocols"]="TLSv1.2"
+  settings["unifi.https.ciphers"]="TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256"
 fi
 
 for key in "${!settings[@]}"; do

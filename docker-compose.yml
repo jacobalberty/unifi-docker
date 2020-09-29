@@ -25,6 +25,8 @@ services:
       - cert:/unifi/cert
       - init:/unifi/init.d
       - run:/var/run/unifi
+      # Mount local folder for backups and autobackups
+      - ./backup:/unifi/data/backup
     environment:
       DB_URI: mongodb://mongo/unifi
       STATDB_URI: mongodb://mongo/unifi_stat

@@ -26,7 +26,7 @@ It is suggested you start running this as a non root user. The default right now
 
 | Version | Latest Tag |
 |---------|------------|
-| 6.0.x   | [`6.0.24-rc`](https://github.com/jacobalberty/unifi-docker/blob/6.0.24-rc/Dockerfile) |
+| 6.0.x   | [`6.0.26-rc`](https://github.com/jacobalberty/unifi-docker/blob/6.0.26-rc/Dockerfile) |
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `release candidate` to `stable` instead of waiting for it to hit the repository.
 

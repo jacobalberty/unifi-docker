@@ -12,6 +12,7 @@ before_install:
   - curl --silent -L "https://github.com/docker/buildx/releases/download/v0.3.0/buildx-v0.3.0.linux-amd64" > ~/.docker/cli-plugins/docker-buildx
   - chmod a+x ~/.docker/cli-plugins/docker-buildx
 script:
+  - docker buildx create --use
   - docker buildx build --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --tag unifi .
   - docker run -d -p 8443:8443 -p 8080:8080 -e RUNAS_UID0=true --name unifi unifi
   - docker ps | grep -q unifi

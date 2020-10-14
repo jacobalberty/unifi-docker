@@ -8,7 +8,8 @@ or move yourself to some 5.14.x tag that holds you there instead of continuing t
 
 ## Run as non-root User
 
-It is suggested you start running this as a non root user. The default right now is to run as root but if you set the environment variable RUNAS_UID0 to false then the image will run as a special unfi user with the uid/gid 999/999. You should ideally set your data and logs to owned by the proper gid. The [environment variables section](https://github.com/jacobalberty/unifi-docker/blob/master/README.md#environment-variables) has more details. At some point in the future this feature may default to on and I personally run all of my own containers with it on. So turning it on for your own containers will help prevent any surprises.
+It is suggested you start running this as a non root user. The default right now is to run as root but if you set the docker run flag `--user` to `unifi` then the image will run as a special unfi user with the uid/gid 999/999. You should ideally set your data and logs to owned by the proper gid.
+You will not be able to bind to lower ports by default. If you also pass the docker run flag `--sysctl` with `net.ipv4.ip_unprivileged_port_start=0` then you will be able to freely bind to whatever port you wish. This should not be needed if you are using the default ports.
 
 ## Mongo and Docker for windows
  Unifi uses mongo store its data. Mongo uses the fsync() system call on its data files. Because of how docker for windows works you can't bind mount `/unifi/db/data` on a docker for windows container. Therefore `-v ~/unifi:/unifi` won't work.
@@ -175,18 +176,6 @@ New name: `/unifi/log`
 
 ## Environment Variables:
 
-### `BIND_PRIV`
-
-Default: `true`
-
-This is used to enable binding to ports less than 1024 when running the UniFi service as a restricted user. On some docker filesystem combinations setcap may not work so you would need to set this to false.
-
-### `RUNAS_UID0`
-
-Default: `true`
-
-This is used to determine whether or not the UniFi service runs as a privileged (root) user. The default value is `true` but it is recommended to use `false` instead.
-
 ### `UNIFI_HTTP_PORT`
 
 Default: `8080`
@@ -198,12 +187,6 @@ This is the HTTP port used by the Web interface. Browsers will be redirected to 
 Default: `8443`
 
 This is the HTTPS port used by the Web interface.
-
-### `UNIFI_UID` and `UNIFI_GID`
-
-Default: `999` for both
-
-These variables set the UID and GID for the user and group the UniFi service runs as when `RUNAS_UID0` is set to false
 
 ### `TZ`
 

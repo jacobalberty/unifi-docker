@@ -58,16 +58,19 @@ RUN set -ex \
 
 RUN mkdir -p /usr/unifi \
      /usr/local/unifi/init.d \
-     /usr/unifi/init.d
+     /usr/unifi/init.d \
+     /usr/local/docker
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY docker-healthcheck.sh /usr/local/bin/
 COPY docker-build.sh /usr/local/bin/
 COPY functions /usr/unifi/functions
 COPY import_cert /usr/unifi/init.d/
+COPY pre_build /usr/local/docker/pre_build
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
  && chmod +x /usr/unifi/init.d/import_cert \
  && chmod +x /usr/local/bin/docker-healthcheck.sh \
- && chmod +x /usr/local/bin/docker-build.sh
+ && chmod +x /usr/local/bin/docker-build.sh \
+ && chmod -R +x /usr/local/docker/pre_build
 
 # Push installing openjdk-8-jre first, so that the unifi package doesn't pull in openjdk-7-jre as a dependency? Else uncomment and just go with openjdk-7.
 RUN set -ex \

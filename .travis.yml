@@ -1,5 +1,8 @@
 language: bash
 dist: bionic
+env:
+ global:
+  - DOCKER_REPO=jacobalberty/unifi
 services:
  - docker
 before_install:
@@ -7,14 +10,11 @@ before_install:
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
   - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) edge"
   - sudo apt-get update
-  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce qemu-user-static
+  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
   - mkdir -vp ~/.docker/cli-plugins/
   - curl --silent -L "https://github.com/docker/buildx/releases/download/v0.4.2/buildx-v0.4.2.linux-amd64" > ~/.docker/cli-plugins/docker-buildx
   - chmod a+x ~/.docker/cli-plugins/docker-buildx
-script:
+install:
+  - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - docker buildx create --use
-  - docker buildx build --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --tag unifi .
-  - docker run -d -p 8443:8443 -p 8080:8080 -e RUNAS_UID0=true --name unifi unifi
-  - docker ps | grep -q unifi
-  - docker logs unifi
-  - sleep 10 && curl --connect-timeout 5 --max-time 10 --retry 5 --retry-delay 0 --retry-max-time 60 -kILs --fail http://127.0.0.1:8080 || exit 1
+script: bash ci.sh

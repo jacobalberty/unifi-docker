@@ -51,8 +51,6 @@ RUN set -ex \
     && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
     && rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc \
     && chmod +x /usr/local/bin/gosu \
-# verify that the binary works
-    && gosu nobody true \
     && apt-get purge -y --auto-remove $fetchDeps \
     && rm -rf /var/lib/apt/lists/*
 

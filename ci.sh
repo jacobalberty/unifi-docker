@@ -4,9 +4,9 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
   docker buildx build \
     --progress plain \
     --platform linux/arm/v7,linux/arm64/v8,linux/amd64 \
-    -t unifi:latest \
-    --load \
     .
+
+  docker build -t unifi:latest .
 
   docker run -d -p 8443:8443 -p 8080:8080 -e PKGURL --name unifi unifi:latest
   docker ps | grep -q unifi

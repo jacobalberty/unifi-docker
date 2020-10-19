@@ -4,15 +4,14 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
   docker buildx build \
     --progress plain \
     --platform linux/arm/v7,linux/arm64/v8,linux/amd64 \
-    -t unifi \
+    -t unifi:latest \
+    --load \
     .
 
-# TODO: This doesn't work right now because it's looking for unifi:latest and the build tags it differently for some reason
-#  docker run -d -p 8443:8443 -p 8080:8080 -e RUNAS_UID0=true --name unifi unifi
-#  docker ps | grep -q unifi
-#  docker logs unifi
-#  sleep 10 && curl --connect-timeout 5 --max-time 10 --retry 5 --retry-delay 0 --retry-max-time 60 -kILs --fail http://127.0.0.1:8080 || exit 1
-
+  docker run -d -p 8443:8443 -p 8080:8080 -e PKGURL --name unifi unifi:latest
+  docker ps | grep -q unifi
+  docker logs unifi
+  sleep 10 && curl --connect-timeout 5 --max-time 10 --retry 5 --retry-delay 0 --retry-max-time 60 -kILs --fail http://127.0.0.1:8080 || exit 1
   exit $?
 fi
 BRANCH="${TRAVIS_BRANCH:-latest}"

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then
+if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
   docker buildx build \
     --progress plain \
     --platform linux/arm/v7,linux/arm64/v8,linux/amd64 \

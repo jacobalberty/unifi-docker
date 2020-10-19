@@ -1,5 +1,18 @@
 #!/bin/sh
 
+getTags() {
+  BRANCH="${TRAVIS_BRANCH:-latest}"
+  if [ $BRANCH = 'master' ]; then
+    BRANCH=latest
+  fi
+  echo --tag $DOCKER_REPO:$BRANCH
+  if [ -f tags.list ]; then
+    for tag in $(cat tags.list); do
+      echo --tag $DOCKER_REPO:$tag
+    done
+  fi
+}
+
 if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
   docker buildx build \
     --progress plain \
@@ -14,14 +27,10 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
   sleep 10 && curl --connect-timeout 5 --max-time 10 --retry 5 --retry-delay 0 --retry-max-time 60 -kILs --fail http://127.0.0.1:8080 || exit 1
   exit $?
 fi
-BRANCH="${TRAVIS_BRANCH:-latest}"
-if [ $BRANCH = 'master' ]; then
-  BRANCH=latest
-fi
 echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin &> /dev/null
 docker buildx build \
   --progress plain \
   --platform linux/arm/v7,linux/arm64/v8,linux/amd64 \
-  -t $DOCKER_REPO:$BRANCH \
+  $(getTags) \
   --push \
   .

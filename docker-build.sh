@@ -39,13 +39,15 @@ apt-get install -qy --no-install-recommends \
     openjdk-8-jre-headless \
     procps \
     libcap2-bin
-tryfail apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
-echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-3.6.list
-apt-get update
 echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5 ubiquiti" > /etc/apt/sources.list.d/20ubiquiti.list
 tryfail apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 06E85760C0A52C50
+
+if [ -d "/usr/local/docker/pre_build/$(dpkg --print-architecture)" ]; then
+    find "/usr/local/docker/pre_build/$(dpkg --print-architecture)" -type f -exec '{}' \;
+fi
+
 curl -L -o ./unifi.deb "${1}"
-apt -qy install mongodb-org ./unifi.deb
+apt -qy install ./unifi.deb
 rm -f ./unifi.deb
 chown -R unifi:unifi /usr/lib/unifi
 rm -rf /var/lib/apt/lists/*

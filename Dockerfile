@@ -11,6 +11,7 @@ ENV BASEDIR=/usr/lib/unifi \
     LOGDIR=/unifi/log \
     CERTDIR=/unifi/cert \
     RUNDIR=/var/run/unifi \
+    RUNDIR2=/usr/lib/unifi/run \
     ODATADIR=/var/lib/unifi \
     OLOGDIR=/var/log/unifi \
     CERTNAME=cert.pem \
@@ -50,23 +51,24 @@ RUN set -ex \
     && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
     && rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc \
     && chmod +x /usr/local/bin/gosu \
-# verify that the binary works
-    && gosu nobody true \
     && apt-get purge -y --auto-remove $fetchDeps \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /usr/unifi \
      /usr/local/unifi/init.d \
-     /usr/unifi/init.d
+     /usr/unifi/init.d \
+     /usr/local/docker
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY docker-healthcheck.sh /usr/local/bin/
 COPY docker-build.sh /usr/local/bin/
 COPY functions /usr/unifi/functions
 COPY import_cert /usr/unifi/init.d/
+COPY pre_build /usr/local/docker/pre_build
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
  && chmod +x /usr/unifi/init.d/import_cert \
  && chmod +x /usr/local/bin/docker-healthcheck.sh \
- && chmod +x /usr/local/bin/docker-build.sh
+ && chmod +x /usr/local/bin/docker-build.sh \
+ && chmod -R +x /usr/local/docker/pre_build
 
 # Push installing openjdk-8-jre first, so that the unifi package doesn't pull in openjdk-7-jre as a dependency? Else uncomment and just go with openjdk-7.
 RUN set -ex \
@@ -75,7 +77,7 @@ RUN set -ex \
  && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \
  && /usr/local/bin/docker-build.sh "${PKGURL}"
 
-VOLUME ["/unifi", "${RUNDIR}"]
+VOLUME ["/unifi", "${RUNDIR}", "${RUNDIR2}"]
 
 EXPOSE 6789/tcp 8080/tcp 8443/tcp 8880/tcp 8843/tcp 3478/udp
 

@@ -24,6 +24,13 @@ addKey() {
     return 1
 }
 
+if [ ! -f /usr/bin/sudo ]; then
+  apt-get update
+  apt-get install sudo
+  rm -rf /var/lib/apt/lists/*
+  echo "unifi ALL=(ALL) NOPASSWD:SETENV: /usr/local/bin/docker-build.sh" > /etc/sudoers.d/unifi-build
+fi
+
 if [ "x${1}" == "x" ]; then
     echo please pass PKGURL as an environment variable
     exit 0
@@ -63,4 +70,5 @@ ln -s ${LOGDIR} ${OLOGDIR}
 mkdir -p /var/cert ${CERTDIR}
 ln -s ${CERTDIR} /var/cert/unifi
 
+rm -rf /etc/sudoers.d/unifi-build
 rm -rf "${0}"

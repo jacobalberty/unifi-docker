@@ -3,7 +3,11 @@
 . /usr/unifi/functions
 
 if [ -x /usr/local/bin/docker-build.sh ]; then
-    /usr/local/bin/docker-build.sh "${PKGURL}"
+    if [[ $EUID -ne 0 ]]; then
+      sudo -E /usr/local/bin/docker-build.sh "${PKGURL}"
+    else
+      /usr/local/bin/docker-build.sh "${PKGURL}"
+    fi
 fi
 
 exit_handler() {

@@ -2,9 +2,7 @@
 
 ## `latest` tag
 
-For now `latest` tracks `latest-5` which is 5.14.x. This is due to some breaking changes when upgrading from 5.14.x to 6.0.x. 
-At some time in the near future `latest` will get moved to the 6.0.x branch. This is your grace period to either upgrade to 6.0.x manually and ensure nothing breaks
-or move yourself to some 5.14.x tag that holds you there instead of continuing to track `latest`.
+`latest` is now tracking unifi 6.0.x as of 2020-10-20.
 
 ## Run as non-root User
 
@@ -19,9 +17,8 @@ You will not be able to bind to lower ports by default. If you also pass the doc
 
 | Tag | Description |
 |-----|-------------|
-| [`stable-6`, `6.0`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.0.23 as of 2020-09-23 [Change Log 6-0-23](https://community.ui.com/releases/UniFi-Network-Controller-6-0-23/6ee72622-e3ca-4ebe-9e82-97fe7cca2094)|
-| [`latest`, `latest-5`, `stable-5`](https://github.com/jacobalberty/unifi-docker/blob/master-5/Dockerfile) | Tracks UniFi 5.14 stable version - 5.14.23 as of 2020-09-14 |
-| [`multiarch`](https://github.com/jacobalberty/unifi-docker/blob/multiarch/Dockerfile) | Tracks UniFi stable version but is built with amd64, arm64, and (for now) armhf support - 6.0.23 as of 2020-09-23 [Change Log 6-0-23](https://community.ui.com/releases/UniFi-Network-Controller-6-0-23/6ee72622-e3ca-4ebe-9e82-97fe7cca2094)|
+| [`latest`, `stable-6`, `6.0`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.0.28 as of 2020-10-20 [Change Log 6-0-28](https://community.ui.com/releases/UniFi-Network-Controller-6-0-28/23c77a99-0957-449a-b3c0-58a37d4df81f)|
+| [`latest-5`, `stable-5`, `5.0`](https://github.com/jacobalberty/unifi-docker/blob/master-5/Dockerfile) | Tracks UniFi 5.14 stable version - 5.14.23 as of 2020-09-14 |
 
 ### Latest Release Candidate tags
 

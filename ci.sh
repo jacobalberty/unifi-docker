@@ -6,7 +6,7 @@ getTags() {
     BRANCH=latest
   fi
   echo --tag $DOCKER_REPO:$BRANCH
-  if [ -f tags.list ]; then
+  if [ -f tags.list ] && [ -z "$TRAVIS_TAG" ]; then
     for tag in $(cat tags.list); do
       echo --tag $DOCKER_REPO:$tag
     done

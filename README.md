@@ -4,6 +4,12 @@
 
 `latest` is now tracking unifi 6.0.x as of 2020-10-20.
 
+## multiarch
+
+All tags are now multiarch capable with `amd64`, `armhf`, and `arm64` builds included.
+`armhf` for now uses mongodb 3.4, I do not see much of a path forward for `armhf` due to the lack of mongodb support for 32 bit arm, but I will
+support it as long as feasibly possible, for now that date seems to be expiration of support for ubuntu 18.04.
+
 ## Run as non-root User
 
 It is suggested you start running this as a non root user. The default right now is to run as root but if you set the docker run flag `--user` to `unifi` then the image will run as a special unfi user with the uid/gid 999/999. You should ideally set your data and logs to owned by the proper gid.

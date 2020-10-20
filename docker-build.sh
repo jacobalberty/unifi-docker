@@ -39,7 +39,7 @@ apt-get install -qy --no-install-recommends \
     openjdk-8-jre-headless \
     procps \
     libcap2-bin
-echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5 ubiquiti" > /etc/apt/sources.list.d/20ubiquiti.list
+echo 'deb https://www.ui.com/downloads/unifi/debian stable ubiquiti' | tee /etc/apt/sources.list.d/100-ubnt-unifi.list
 tryfail apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 06E85760C0A52C50
 
 if [ -d "/usr/local/docker/pre_build/$(dpkg --print-architecture)" ]; then

@@ -166,6 +166,9 @@ if [[ "${@}" == "unifi" ]]; then
             mkdir -p "${dir}"
         fi
     done
+    if [ $CUID != 0 ]; then
+      sudo -E UNIFI_UID=$(id -u) UNIFI_GID=$(id -g) /usr/local/bin/docker-permissions.sh
+    fi
     ${UNIFI_CMD} &
     wait
     log "WARN: unifi service process ended without being signaled? Check for errors in ${LOGDIR}." >&2

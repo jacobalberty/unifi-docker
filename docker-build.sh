@@ -28,7 +28,8 @@ if [ ! -f /usr/bin/sudo ]; then
   apt-get update
   apt-get install sudo
   rm -rf /var/lib/apt/lists/*
-  echo "unifi ALL=(ALL) NOPASSWD:SETENV: /usr/local/bin/docker-build.sh" > /etc/sudoers.d/unifi-build
+  echo "ALL ALL=(ALL) NOPASSWD:SETENV: /usr/local/bin/docker-build.sh" > /etc/sudoers.d/unifi-build
+  echo "ALL ALL=(ALL) NOPASSWD:SETENV: /usr/local/bin/docker-permissions.sh" > /etc/sudoers.d/unifi-permissions
 fi
 
 if [ "x${1}" == "x" ]; then

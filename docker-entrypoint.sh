@@ -166,34 +166,7 @@ if [[ "${@}" == "unifi" ]]; then
             mkdir -p "${dir}"
         fi
     done
-    if [ "${RUNAS_UID0}" == "true" ] || [ "${CUID}" != "0" ]; then
-        if [ "${CUID}" == 0 ]; then
-            log 'WARNING: Running UniFi in insecure (root) mode'
-        fi
-        ${UNIFI_CMD} &
-    elif [ "${RUNAS_UID0}" == "false" ]; then
-        if [ "${BIND_PRIV}" == "true" ]; then
-            if setcap 'cap_net_bind_service=+ep' "${JAVA_HOME}/jre/bin/java"; then
-                sleep 1
-            else
-                log "ERROR: setcap failed, can not continue"
-                log "ERROR: You may either launch with -e BIND_PRIV=false and only use ports >1024"
-                log "ERROR: or run this container as root with -e RUNAS_UID0=true"
-                exit 1
-            fi
-        fi
-        if [ "$(id unifi -u)" != "${UNIFI_UID}" ] || [ "$(id unifi -g)" != "${UNIFI_GID}" ]; then
-            log "INFO: Changing 'unifi' UID to '${UNIFI_UID}' and GID to '${UNIFI_GID}'"
-            usermod -o -u ${UNIFI_UID} unifi && groupmod -o -g ${UNIFI_GID} unifi
-        fi
-        # Using a loop here so I can check more directories easily later
-        for dir in ${DIRS}; do
-            if [ "$(stat -c '%u' "${dir}")" != "${UNIFI_UID}" ]; then
-                chown -R "${UNIFI_UID}:${UNIFI_GID}" "${dir}"
-            fi
-        done
-        gosu unifi:unifi ${UNIFI_CMD} &
-    fi
+    ${UNIFI_CMD} &
     wait
     log "WARN: unifi service process ended without being signaled? Check for errors in ${LOGDIR}." >&2
 else

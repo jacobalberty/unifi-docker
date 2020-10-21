@@ -11,7 +11,6 @@ ENV BASEDIR=/usr/lib/unifi \
     LOGDIR=/unifi/log \
     CERTDIR=/unifi/cert \
     RUNDIR=/var/run/unifi \
-    RUNDIR2=/usr/lib/unifi/run \
     ODATADIR=/var/lib/unifi \
     OLOGDIR=/var/log/unifi \
     CERTNAME=cert.pem \
@@ -77,7 +76,7 @@ RUN set -ex \
  && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \
  && /usr/local/bin/docker-build.sh "${PKGURL}"
 
-VOLUME ["/unifi", "${RUNDIR}", "${RUNDIR2}"]
+VOLUME ["/unifi", "${RUNDIR}"]
 
 EXPOSE 6789/tcp 8080/tcp 8443/tcp 8880/tcp 8843/tcp 3478/udp
 

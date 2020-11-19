@@ -23,7 +23,7 @@ You will not be able to bind to lower ports by default. If you also pass the doc
 
 | Tag | Description |
 |-----|-------------|
-| [`latest`, `stable-6`, `6.0`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.0.36 as of 2020-11-19 [Change Log 6-0-36](https://dl.ui.com/unifi/6.0.36/unifi_sysvinit_all.deb)|
+| [`latest`, `stable-6`, `6.0`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.0.36 as of 2020-11-19 [Change Log 6-0-36](https://community.ui.com/releases/UniFi-Network-Controller-6-0-36/9e57165b-3422-4fcf-ae02-13affcb388c8)|
 | [`latest-5`, `stable-5`, `5.0`](https://github.com/jacobalberty/unifi-docker/blob/master-5/Dockerfile) | Tracks UniFi 5.14 stable version - 5.14.23 as of 2020-09-14 |
 
 ### Latest Release Candidate tags

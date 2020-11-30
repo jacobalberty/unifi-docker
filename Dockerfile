@@ -76,7 +76,7 @@ RUN set -ex \
  && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \
  && /usr/local/bin/docker-build.sh "${PKGURL}"
 
-RUN mkdir -p /unifi && chown unifi.unifi -R /unifi
+RUN mkdir -p /unifi && chown unifi:unifi -R /unifi
 
 VOLUME ["/unifi", "${RUNDIR}"]
 

@@ -145,6 +145,10 @@ if [[ "$UNIFI_ECC_CERT" == "true" ]]; then
   settings["unifi.https.ciphers"]="TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256"
 fi
 
+if [[ "$UNIFI_STDOUT" == "true" ]]; then
+  settings["unifi.logStdout"]="true"
+fi
+
 for key in "${!settings[@]}"; do
   confSet "$confFile" "$key" "${settings[$key]}"
 done

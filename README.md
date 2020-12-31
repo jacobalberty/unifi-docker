@@ -188,6 +188,12 @@ Default: `8443`
 
 This is the HTTPS port used by the Web interface.
 
+### `UNIFI_STDOUT`
+
+Default: `unset`
+
+Controller outputs logs to stdout in addition to server.log
+
 ### `TZ`
 
 TimeZone. (i.e America/Chicago)

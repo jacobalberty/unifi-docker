@@ -2,9 +2,13 @@
 
 ## `latest` tag
 
-For now `latest` tracks `latest-5` which is 5.14.x. This is due to some breaking changes when upgrading from 5.14.x to 6.0.x. 
-At some time in the near future `latest` will get moved to the 6.0.x branch. This is your grace period to either upgrade to 6.0.x manually and ensure nothing breaks
-or move yourself to some 5.14.x tag that holds you there instead of continuing to track `latest`.
+`latest` is now tracking unifi 6.0.x as of 2020-10-20.
+
+## multiarch
+
+All tags are now multiarch capable with `amd64`, `armhf`, and `arm64` builds included.
+`armhf` for now uses mongodb 3.4, I do not see much of a path forward for `armhf` due to the lack of mongodb support for 32 bit arm, but I will
+support it as long as feasibly possible, for now that date seems to be expiration of support for ubuntu 18.04.
 
 ## Run as non-root User
 
@@ -19,15 +23,14 @@ You will not be able to bind to lower ports by default. If you also pass the doc
 
 | Tag | Description |
 |-----|-------------|
-| [`stable-6`, `6.0`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.0.23 as of 2020-09-23 [Change Log 6-0-23](https://community.ui.com/releases/UniFi-Network-Controller-6-0-23/6ee72622-e3ca-4ebe-9e82-97fe7cca2094)|
-| [`latest`, `latest-5`, `stable-5`](https://github.com/jacobalberty/unifi-docker/blob/lts/Dockerfile) | Tracks UniFi 5.14 stable version - 5.14.23 as of 2020-09-14 |
-| [`rc`](https://github.com/jacobalberty/unifi-docker/blob/rc/Dockerfile) | Tracks UniFi "Release Candidate", The latest release candidate may flip between the two branches maintained by Ubiquiti so it is advised you tag off of the version you want directly instead of the `rc` tag. |
+| [`latest`, `stable-6`, `6.0`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.0.45 as of 2021-01-26 [Change Log 6-0-45](https://community.ui.com/releases/UniFi-Network-Controller-6-0-45/8d3b98e1-b9d4-4ab3-b8da-721dbe9ab842)|
+| [`latest-5`, `stable-5`, `5.0`](https://github.com/jacobalberty/unifi-docker/blob/master-5/Dockerfile) | Tracks UniFi 5.14 stable version - 5.14.23 as of 2020-09-14 |
 
 ### Latest Release Candidate tags
 
 | Version | Latest Tag |
 |---------|------------|
-| 6.0.x   | [`6.0.27-rc`](https://github.com/jacobalberty/unifi-docker/blob/6.0.27-rc/Dockerfile) |
+| 6.0.x   | [`6.0.43-rc`](https://github.com/jacobalberty/unifi-docker/blob/6.0.43-rc/Dockerfile) |
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `release candidate` to `stable` instead of waiting for it to hit the repository.
 
@@ -215,6 +218,15 @@ as a fix for https://community.ubnt.com/t5/UniFi-Routing-Switching/IMPORTANT-Deb
 Default: `unset`
 
 Used to start the JVM with additional arguments.
+
+### `JVM_INIT_HEAP_SIZE`
+
+Default: `unset`
+
+### `JVM_MAX_HEAP_SIZE`
+Java Virtual Machine (JVM) allocates available memory. 
+For larger installations a larger value is recommended. For memory constrained system this value can be lowered. 
+Default `1024M`
 
 ### External MongoDB environment variables
 

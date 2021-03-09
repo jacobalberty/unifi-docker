@@ -149,9 +149,6 @@ if [[ "$UNIFI_STDOUT" == "true" ]]; then
   settings["unifi.logStdout"]="true"
 fi
 
-for key in "${!settings[@]}"; do
-  confSet "$confFile" "$key" "${settings[$key]}"
-done
 UNIFI_CMD="java ${JVM_OPTS} -jar ${BASEDIR}/lib/ace.jar start"
 
 # controller writes to relative path logs/server.log
@@ -169,6 +166,9 @@ if [[ "${@}" == "unifi" ]]; then
             fi
             mkdir -p "${dir}"
         fi
+    done
+    for key in "${!settings[@]}"; do
+      confSet "$confFile" "$key" "${settings[$key]}"
     done
     if [ $CUID != 0 ]; then
       sudo -E UNIFI_UID=$(id -u) UNIFI_GID=$(id -g) /usr/local/bin/docker-permissions.sh

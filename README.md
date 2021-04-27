@@ -191,6 +191,18 @@ Default: `8443`
 
 This is the HTTPS port used by the Web interface.
 
+### `PORTAL_HTTP_PORT`
+
+Default: `80`
+
+Port used for HTTP portal redirection.
+
+### `PORTAL_HTTPS_PORT`
+
+Default: `8443`
+
+Port used for HTTPS portal redirection.
+
 ### `UNIFI_STDOUT`
 
 Default: `unset`

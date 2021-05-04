@@ -128,6 +128,14 @@ if ! [[ -z "$DB_URI" || -z "$STATDB_URI" || -z "$DB_NAME" ]]; then
   settings["unifi.db.name"]="$DB_NAME"
 fi
 
+if ! [[ -z "$PORTAL_HTTP_PORT"  ]]; then
+  settings["portal.http.port"]="$PORTAL_HTTP_PORT"
+fi
+
+if ! [[ -z "$PORTAL_HTTPS_PORT"  ]]; then
+  settings["portal.https.port"]="$PORTAL_HTTPS_PORT"
+fi
+
 if ! [[ -z "$UNIFI_HTTP_PORT"  ]]; then
   settings["unifi.http.port"]="$UNIFI_HTTP_PORT"
 fi

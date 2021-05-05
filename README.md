@@ -199,7 +199,7 @@ Port used for HTTP portal redirection.
 
 ### `PORTAL_HTTPS_PORT`
 
-Default: `8443`
+Default: `8843`
 
 Port used for HTTPS portal redirection.
 

@@ -225,14 +225,16 @@ Ex:
 
 as a fix for https://community.ubnt.com/t5/UniFi-Routing-Switching/IMPORTANT-Debian-Ubuntu-users-MUST-READ-Updated-06-21/m-p/1968251#M48264
 
-### `JVM_EXTRA_OPTS`
+### `LOTSOFDEVICES`
+Default: `unset`
+Enable this with `true`if you run a system with a lot of devices and or with a low powered system (like a Raspberry Pi)
 
+### `JVM_EXTRA_OPTS`
+Used to start the JVM with additional arguments.
 Default: `unset`
 
-Used to start the JVM with additional arguments.
-
 ### `JVM_INIT_HEAP_SIZE`
-
+Set the starting size of the javascript engine for example: `1024M`
 Default: `unset`
 
 ### `JVM_MAX_HEAP_SIZE`

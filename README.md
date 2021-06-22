@@ -23,7 +23,7 @@ You will not be able to bind to lower ports by default. If you also pass the doc
 
 | Tag | Description |
 |-----|-------------|
-| [`latest`, `stable-6`, `6.2`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.2.26 as of 2021-06-21 [Change Log 6-1-71](https://community.ui.com/releases/UniFi-Network-Application-6-2-26/0dfcbc77-8a4f-4e20-bb93-07bbb0237e3a)|
+| [`latest`, `v6`, `v6.2`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.2.26 as of 2021-06-21 [Change Log 6-1-71](https://community.ui.com/releases/UniFi-Network-Application-6-2-26/0dfcbc77-8a4f-4e20-bb93-07bbb0237e3a)|
 | [`latest-5`, `stable-5`, `5.0`](https://github.com/jacobalberty/unifi-docker/blob/master-5/Dockerfile) | Tracks UniFi 5.14 stable version - 5.14.23 as of 2020-09-14 |
 
 ### Latest Release Candidate tags
@@ -34,7 +34,8 @@ You will not be able to bind to lower ports by default. If you also pass the doc
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `release candidate` to `stable` instead of waiting for it to hit the repository.
 
-In adition to these tags you may tag specific versions as well, for example `jacobalberty/unifi:5.6.40` will get you unifi 5.6.40 no matter what the current version is. Release candidates now exist both under the `rc` tag and for tags with the extension `-rc` ie `jacobalberty/unifi:5.6.18-rc`. It is advised to use the specific versions as the `rc` tag may jump from 5.6.x to 5.8.x then back to 5.6.x as new release candidates come out.
+In adition to these tags you may tag specific versions as well, for example `jacobalberty/unifi:v6.2.26` will get you unifi 6.2.26 no matter what the current version is.
+For release candidates it is advised to use the specific versions as the `rc` tag may jump from 5.6.x to 5.8.x then back to 5.6.x as new release candidates come out.
 
 ## Description
 

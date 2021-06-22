@@ -11,6 +11,9 @@ services:
       - dbcfg:/data/configdb
   controller:
     image: "jacobalberty/unifi:${TAG:-latest}"
+    dns: 
+      - 127.0.0.11
+      - 8.8.8.8
     container_name: ${COMPOSE_PROJECT_NAME}_controller
     depends_on:
       - mongo
@@ -64,3 +67,14 @@ volumes:
 
 networks:
   unifi:
+    driver: macvlan
+    driver_opts:      
+      parent: myvlan
+      macvlan_mode: bridge
+    ipam:
+      config:
+        - subnet: 192.168.2.0/24
+          ip_range: 192.168.2.16/29
+          gateway: 192.168.2.1
+        
+            

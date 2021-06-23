@@ -140,16 +140,20 @@ commit ; save
 If you have success with openvpn and dhcp servers setup than copy `client.ovpn` file that was created by installlation script to your machine where controller will be placed to, lets assume, it will be an Amazon EC2 instance with Debian latest ami
 ```shell
 sudo apt update && sudo apt install openvpn -y
-sed -i s,tun,tap,g client.opvn
+sed -i s,tun,tap,g client.ovpn
 openvpn --config client.ovpn &
 ip link set up dev tap0
 ip link add myvlan link tap0 type macvlan mode bridge
 ip addr add 192.168.2.2/24 dev myvlan 
 ip link set up dev myvlan
 ```
-After network setup will be success finished you'll be able to start the docker-compose with 
-
-`docker-compose up -d --build` 
+After network setup will be success finished you'll be able to start the docker-compose 
+```shell
+apt install docker.io python3-pip -y
+pip3 install docker-compose
+systemctl enable --now docker
+docker-compose up -d --build
+```
 
 ## Beta Users
 

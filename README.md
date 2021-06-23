@@ -99,9 +99,57 @@ You can also enable layer 2 adoption through one of two methods.
 
 If you launch the container using host networking \(With the `--net=host` parameter on `docker run`\) Layer 2 adoption works as if the controller is installed on the host.
 
-#### Bridge Networking
+## Bridge Networking
 
-It is possible to configure the `macvlan` driver to bridge your container to the host's networking adapter. Specific instructions for this container are not yet available but you can read a write-up for docker at [collabnix.com/docker-17-06-swarm-mode-now-with-macvlan-support](http://collabnix.com/docker-17-06-swarm-mode-now-with-macvlan-support/).
+## Disclamer: Network mastering may be very hard and timeconsuming proccess. All of these command snippets are not complete manual but just a general way direction
+
+
+It is possible to configure the `macvlan` driver to bridge your container to the host's networking adapter. 
+
+Let's say, your Edge router has Unifi AP connected on eth2 port, and this one port is excluded from switch0 interface.
+So, here is what we gonna do.
+
+On the router side, dowload and execute openvpn server install script
+```shell
+wget https://git.io/vpn -O openvpn-install.sh
+chmod +x openvpn-install.sh
+./openvpn-install.sh
+systemctl enable --now openvpn-iptables
+sed -i s,tun,tap,g /etc/openvpn/server/server.conf
+systemctl enable --now openvpn-server@server
+brctl addbr br0
+brctl addif br0 eth2
+brctl addif br0 tap0
+ip addr add 192.168.2.1/24 dev tap0
+ip link set up dev tap0
+ip link set up dev br0
+ip route add 192.168.2.0/24 dev br0
+```
+In adition to this you have to add new dhcp server on you router
+```shell
+configure
+set service dhcp-server shared-network-name WIFI authoritative enable
+set service dhcp-server shared-network-name WIFI subnet 192.168.2.0/24 default-router 192.168.2.1
+set service dhcp-server shared-network-name WIFI subnet 192.168.2.0/24 dns-server 8.8.8.8
+set service dhcp-server shared-network-name WIFI subnet 192.168.2.0/24 lease 86400
+set service dhcp-server shared-network-name WIFI subnet 192.168.2.0/24 start 192.168.2.39 stop 192.168.2.243
+set service dhcp-server shared-network-name WIFI subnet 192.168.2.0/24 static-mapping uap-pro ip-address 192.168.2.38
+set service dhcp-server shared-network-name WIFI subnet 192.168.2.0/24 static-mapping uap-pro mac-address <mac-address>
+commit ; save
+```
+If you have success with openvpn and dhcp servers setup that copy `client.ovpn` file that was created by installlation script to your machine when controller will be placed to, lets assume, it will be an Amazon EC2 instance with Debian latest ami
+```shell
+sudo apt update && sudo apt install openvpn -y
+sed -i s,tun,tap,g client.opvn
+openvpn --config client.ovpn &
+ip link set up dev tap0
+ip link add myvlan link tap0 type macvlan mode bridge
+ip addr add 192.168.2.2/24 dev myvlan 
+ip link set up dev myvlan
+```
+After network setup will be success finished you will be able to start the docker-compose with 
+
+`docker-compose up -d --build` 
 
 ## Beta Users
 

@@ -166,6 +166,8 @@ pip3 install docker-compose
 systemctl enable --now docker
 docker-compose up -d --build
 ```
+Now you able to reach your unifi container IP behing your Edge router.  
+Enjoy!
 
 ## Beta Users
 

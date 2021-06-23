@@ -106,7 +106,7 @@ If you launch the container using host networking \(With the `--net=host` parame
 
 It is possible to configure the `macvlan` driver to bridge your container to the host's networking adapter. 
 
-Let's say, your Edge router has Unifi AP connected on eth2 port, and this one port is excluded from switch0 interface.
+Let's say, your Edge router has Unifi AP connected on `eth2` port, and this one port is excluded from `switch0` interface.
 So, here is what we gonna do.
 
 On the router side, dowload and execute openvpn server install script

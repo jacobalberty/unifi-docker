@@ -141,11 +141,23 @@ If you have success with openvpn and dhcp servers setup than copy `client.ovpn` 
 ```shell
 sudo apt update && sudo apt install openvpn -y
 sed -i s,tun,tap,g client.ovpn
-openvpn --config client.ovpn &
-ip link set up dev tap0
-ip link add myvlan link tap0 type macvlan mode bridge
-ip addr add 192.168.2.2/24 dev myvlan 
-ip link set up dev myvlan
+cat <<EOF > /etc/systemd/system/vpn.service
+[Unit]
+Description=OpenVPN client service
+
+[Service]
+ExecStart=/bin/bash -c "/usr/sbin/openvpn --config /home/admin/client.ovpn"
+ExecStartPost=/bin/sleep 10
+ExecStartPost=/usr/bin/ip link set up dev tap0
+ExecStartPost=/usr/bin/ip link add myvlan link tap0 type macvlan mode bridge
+ExecStartPost=/usr/bin/ip addr add 192.168.2.2/24 dev myvlan
+ExecStartPost=/usr/bin/ip link set up dev myvlan
+
+[Install]
+WantedBy=network-online.target
+EOF
+systemctl daemon-reload
+systemctl enable --now vpn.service
 ```
 After network setup will be success finished you'll be able to start the docker-compose 
 ```shell

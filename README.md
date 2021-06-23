@@ -137,7 +137,7 @@ set service dhcp-server shared-network-name WIFI subnet 192.168.2.0/24 static-ma
 set service dhcp-server shared-network-name WIFI subnet 192.168.2.0/24 static-mapping uap-pro mac-address <mac-address>
 commit ; save
 ```
-If you have success with openvpn and dhcp servers setup that copy `client.ovpn` file that was created by installlation script to your machine where controller will be placed to, lets assume, it will be an Amazon EC2 instance with Debian latest ami
+If you have success with openvpn and dhcp servers setup than copy `client.ovpn` file that was created by installlation script to your machine where controller will be placed to, lets assume, it will be an Amazon EC2 instance with Debian latest ami
 ```shell
 sudo apt update && sudo apt install openvpn -y
 sed -i s,tun,tap,g client.opvn
@@ -147,7 +147,7 @@ ip link add myvlan link tap0 type macvlan mode bridge
 ip addr add 192.168.2.2/24 dev myvlan 
 ip link set up dev myvlan
 ```
-After network setup will be success finished you will be able to start the docker-compose with 
+After network setup will be success finished you'll be able to start the docker-compose with 
 
 `docker-compose up -d --build` 
 

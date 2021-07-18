@@ -32,8 +32,10 @@ fi
 apt-get update
 apt-get install -qy --no-install-recommends \
     apt-transport-https \
+    ca-certificates \
     curl \
     dirmngr \
+    gosu \
     gpg \
     gpg-agent \
     openjdk-8-jre-headless \

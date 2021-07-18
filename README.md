@@ -15,8 +15,8 @@ support it as long as feasibly possible, for now that date seems to be expiratio
 It is suggested you start running this as a non root user. The default right now is to run as root but if you set the docker run flag `--user` to `unifi` then the image will run as a special unfi user with the uid/gid 999/999. You should ideally set your data and logs to owned by the proper gid.
 You will not be able to bind to lower ports by default. If you also pass the docker run flag `--sysctl` with `net.ipv4.ip_unprivileged_port_start=0` then you will be able to freely bind to whatever port you wish. This should not be needed if you are using the default ports.
 
-## Mongo and Docker for windows
- Unifi uses mongo store its data. Mongo uses the fsync() system call on its data files. Because of how docker for windows works you can't bind mount `/unifi/db/data` on a docker for windows container. Therefore `-v ~/unifi:/unifi` won't work.
+## Mongo and Docker for Windows
+ Unifi uses mongo store its data. Mongo uses the fsync() system call on its data files. Because of how docker for Windows works you can't bind mount `/unifi/db/data` on a docker for Windows container. Therefore `-v ~/unifi:/unifi` won't work.
  [Discussion on the issue](https://github.com/docker/for-win/issues/138).
 
 ## Supported Docker Hub Tags and Respective `Dockerfile` Links
@@ -39,22 +39,23 @@ For release candidates it is advised to use the specific versions as the `rc` ta
 
 ## Description
 
-This is a containerized version of [Ubiqiti Network](https://www.ubnt.com/)'s Unifi Controller.
+This is a containerized version of [Ubiquiti Network](https://www.ubnt.com/)'s Unifi Controller.
 
 The following options may be of use:
 
 - Set the timezone with `TZ`
 - Bind mount the `data` and `log` volumes
 
-It is suggested that you include --init to handle process reaping
-Example to test with
+It is suggested that you include `--init` to your `docker run` command line to handle process reaping.
+
+Example to test with:
 
 ```bash
 mkdir -p ~/unifi/data ~/unifi/log
 docker run --rm --init -p 8080:8080 -p 8443:8443 -p 3478:3478/udp -e TZ='Africa/Johannesburg' -v ~/unifi:/unifi --name unifi jacobalberty/unifi:stable
 ```
 
-**Note** you must omit `-v ~/unifi:/unifi` on windows, but you can use a local volume e.g. `-v unifi:/unifi` (omit the leading ~/) to persist the data on a local volume.
+**Note** you must omit `-v ~/unifi:/unifi` on Windows, but you can use a local volume e.g. `-v unifi:/unifi` (omit the leading `~/`) to persist the data on a local volume.
 
 ## Running with separate mongo container
 
@@ -74,7 +75,7 @@ The default example requires some l3 adoption method. You have a couple options 
 
 #### Force adoption IP
 
-Run UniFi Docker and open UniFi in browser. Go under Settings -> Controller and then enter the IP address of the Docker host machine in "Controller Hostname/IP", and check the "Override inform host with controller hostname/IP". Save settings and restart UniFi Docker container. 
+Run UniFi Docker and open UniFi in browser. Go under Settings -> Controller and then enter the IP address of the Docker host machine in "Controller Hostname/IP", and check the "Override inform host with controller hostname/IP". Save settings and restart UniFi Docker container.
 
 #### SSH Adoption
 
@@ -96,7 +97,7 @@ You can also enable layer 2 adoption through one of two methods.
 
 #### Host Networking
 
-If you launch the container using host networking \(With the `--net=host` parameter on `docker run`\) Layer 2 adoption works as if the controller is installed on the host.
+If you launch the container using host networking (with the `--net=host` parameter on `docker run`) Layer 2 adoption works as if the controller is installed on the host.
 
 #### Bridge Networking
 
@@ -113,12 +114,12 @@ If you would like to submit a new feature for the images the beta branch is prob
 
 Using the Beta build is pretty easy, just use the `jacobalberty/unifi:beta` image and add `-e PKGURL=https://dl.ubnt.com/unifi/5.6.30/unifi_sysvinit_all.deb` to your usual command line.
 
-Simply replace the url to the debian package with the version you prefer.
+Simply replace the url to the Debian package with the version you prefer.
 
 
 ### Building Beta Using `docker-compose.yml` Version 2
 
-This is just as easy when using version 2 of the docker-compose.yml file format.
+This is just as easy when using version 2 of the `docker-compose.yml` file format.
 
 Under your containers service definition instead of using `image: jacobalberty/unifi` use the following:
 
@@ -128,7 +129,7 @@ Under your containers service definition instead of using `image: jacobalberty/u
           PKGURL: https://dl.ubnt.com/unifi/5.6.40/unifi_sysvinit_all.deb
 ```
 
-Once again, simply change PKGURL to point to the package you would like to use.
+Once again, simply change `PKGURL` to point to the package you would like to use.
 
 ## Volumes:
 
@@ -236,8 +237,8 @@ Used to start the JVM with additional arguments.
 Default: `unset`
 
 ### `JVM_MAX_HEAP_SIZE`
-Java Virtual Machine (JVM) allocates available memory. 
-For larger installations a larger value is recommended. For memory constrained system this value can be lowered. 
+Java Virtual Machine (JVM) allocates available memory.
+For larger installations a larger value is recommended. For memory constrained system this value can be lowered.
 Default `1024M`
 
 ### External MongoDB environment variables
@@ -275,20 +276,20 @@ See [UniFi - Ports Used](https://help.ubnt.com/hc/en-us/articles/218506997-UniFi
 
 ## Multi-process container
 
-While micro-service patterns try to avoid running multiple processes in a container, the unifi5 container tries to follow the same process execution model intended by the original debian package and it's init script, while trying to avoid needing to run a full init system.
+While micro-service patterns try to avoid running multiple processes in a container, the unifi container tries to follow the same process execution model intended by the original Debian package and its init script, while trying to avoid needing to run a full init system.
 
-`dumb-init` has now been removed. Instead it is now suggested you include --init in your docker run command line. If you are using docker-compose you can accomplish the same by making sure you use version 2.2 of the yml format and add `init: true` to your service definition.
+`dumb-init` has now been removed. Instead it is now suggested you include `--init` in your `docker run` command line. If you are using docker-compose you can accomplish the same by making sure you use version 2.2 of the yml format and add `init: true` to your service definition.
 
 `unifi.sh` executes and waits on the jsvc process which orchestrates running the controller as a service. The wrapper script also traps SIGTERM to issue the appropriate stop command to the unifi java `com.ubnt.ace.Launcher` process in the hopes that it helps keep the shutdown graceful.
 
 
 ## Init scripts
 
-You may now place init scripts to be launched during the unifi startup in /usr/local/unifi/init.d to perform any actions unique to your unifi setup. An example bash script to set up certificates is in `/usr/unifi/init.d/import_cert`.
+You may now place init scripts to be launched during the unifi startup in `/usr/local/unifi/init.d` to perform any actions unique to your unifi setup. An example bash script to set up certificates is in `/usr/unifi/init.d/import_cert`.
 
 ## Certificate Support
 
-To use custom SSL certs, you must map a volume with the certs to /unifi/cert
+To use custom SSL certs, you must map a volume with the certs to `/unifi/cert`
 
 They should be named:
 
@@ -300,7 +301,7 @@ chain.pem # full cert chain
 
 If your certificate or private key have different names, you can set the environment variables `CERTNAME` and `CERT_PRIVATE_NAME` to the name of your certificate/private key, e.g. `CERTNAME=my-cert.pem` and `CERT_PRIVATE_NAME=my-privkey.pem`.
 
-For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA Cert automatically. In case your letsencrypt cert is already the chained certificate, you can set the `CERT_IS_CHAIN` environment variable to `true`, e.g. `CERT_IS_CHAIN=true`. This option also works together with a custom `CERTNAME`.
+For Let's Encrypt certs, we'll autodetect that and add the needed Identrust X3 CA Cert automatically. In case your Let's Encrypt cert is already the chained certificate, you can set the `CERT_IS_CHAIN` environment variable to `true`, e.g. `CERT_IS_CHAIN=true`. This option also works together with a custom `CERTNAME`.
 
 ## TODO
 

@@ -41,7 +41,7 @@ RUN set -ex \
  && mkdir -p /usr/share/man/man1/ \
  && groupadd -r unifi -g $UNIFI_GID \
  && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \
- && /usr/local/bin/docker-build.sh "${PKGURL}"
+ && /usr/local/bin/docker-build.sh
 
 RUN mkdir -p /unifi && chown unifi:unifi -R /unifi
 

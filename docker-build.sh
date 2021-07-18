@@ -10,7 +10,7 @@ tryfail() {
     (exit $s)
 }
 
-if [ "x${1}" == "x" ]; then
+if [ "x${PKGURL}" == "x" ]; then
     echo please pass PKGURL as an environment variable
     exit 0
 fi
@@ -35,7 +35,7 @@ if [ -d "/usr/local/docker/pre_build/$(dpkg --print-architecture)" ]; then
     find "/usr/local/docker/pre_build/$(dpkg --print-architecture)" -type f -exec '{}' \;
 fi
 
-curl -L -o ./unifi.deb "${1}"
+curl -L -o ./unifi.deb "${PKGURL}"
 apt -qy install ./unifi.deb
 rm -f ./unifi.deb
 chown -R unifi:unifi /usr/lib/unifi

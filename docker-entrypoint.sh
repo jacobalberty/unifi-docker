@@ -26,6 +26,16 @@ exit_handler() {
 
 trap 'kill ${!}; exit_handler' SIGHUP SIGINT SIGQUIT SIGTERM
 
+set_java_home() {
+    JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/jre/bin/java::")
+    if [ ! -d "${JAVA_HOME}" ]; then
+        # For some reason readlink failed so lets just make some assumptions instead
+        # We're assuming openjdk 8 since thats what we install in Dockerfile
+        arch=`dpkg --print-architecture 2>/dev/null`
+        JAVA_HOME=/usr/lib/jvm/java-8-openjdk-${arch}
+    fi
+}
+
 [ "x${JAVA_HOME}" != "x" ] || set_java_home
 
 

@@ -37,7 +37,6 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
  && chmod -R +x /usr/local/docker/pre_build
 
 RUN set -ex \
- && mkdir -p /usr/share/man/man1/ \
  && groupadd -r unifi -g $UNIFI_GID \
  && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \
  && /usr/local/bin/docker-build.sh

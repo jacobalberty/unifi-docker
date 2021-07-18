@@ -31,7 +31,7 @@ echo 'deb https://www.ui.com/downloads/unifi/debian stable ubiquiti' | tee /etc/
 tryfail apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 06E85760C0A52C50
 
 if [ -d "/usr/local/docker/pre_build/$(dpkg --print-architecture)" ]; then
-    find "/usr/local/docker/pre_build/$(dpkg --print-architecture)" -type f -exec '{}' \;
+    run-parts "/usr/local/docker/pre_build/$(dpkg --print-architecture)"
 fi
 
 curl -L -o ./unifi.deb "${PKGURL}"

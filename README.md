@@ -50,8 +50,7 @@ It is suggested that you include --init to handle process reaping
 Example to test with
 
 ```bash
-mkdir -p unifi/data
-mkdir -p unifi/log
+mkdir -p ~/unifi/data ~/unifi/log
 docker run --rm --init -p 8080:8080 -p 8443:8443 -p 3478:3478/udp -e TZ='Africa/Johannesburg' -v ~/unifi:/unifi --name unifi jacobalberty/unifi:stable
 ```
 

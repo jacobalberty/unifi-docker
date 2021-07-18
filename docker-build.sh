@@ -51,5 +51,3 @@ ln -s ${DATADIR} ${ODATADIR}
 ln -s ${LOGDIR} ${OLOGDIR}
 mkdir -p /var/cert ${CERTDIR}
 ln -s ${CERTDIR} /var/cert/unifi
-
-rm -rf "${0}"

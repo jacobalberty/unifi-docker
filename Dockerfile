@@ -25,9 +25,10 @@ RUN mkdir -p /usr/unifi \
      /usr/local/unifi/init.d \
      /usr/unifi/init.d \
      /usr/local/docker
-COPY docker-entrypoint.sh /usr/local/bin/
-COPY docker-healthcheck.sh /usr/local/bin/
-COPY docker-build.sh /usr/local/bin/
+COPY docker-entrypoint.sh \
+     docker-healthcheck.sh \
+     docker-build.sh \
+     /usr/local/bin/
 COPY import_cert /usr/unifi/init.d/
 COPY pre_build /usr/local/docker/pre_build
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh \

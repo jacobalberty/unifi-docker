@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-. /usr/unifi/functions
+log() {
+    echo "$(date +"[%Y-%m-%d %T,%3N]") <docker-entrypoint> $*"
+}
 
 if [ -x /usr/local/bin/docker-build.sh ]; then
     /usr/local/bin/docker-build.sh "${PKGURL}"

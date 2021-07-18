@@ -2,7 +2,9 @@
 
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
-. /usr/unifi/functions
+log() {
+    echo "$(date +"[%Y-%m-%d %T,%3N]") <import_cert> $*"
+}
 
 if [[ ! -d "${CERTDIR}" || ! -f "${CERTDIR}/${CERTNAME}" ]]; then
     exit 0

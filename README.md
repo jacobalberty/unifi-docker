@@ -2,7 +2,7 @@
 
 ## `latest` tag
 
-`latest` is now tracking unifi 6.2.x as of 2021-05-19.
+`latest` is now tracking unifi 6.4.x as of 2021-09-20.
 
 ## multiarch
 
@@ -23,7 +23,7 @@ You will not be able to bind to lower ports by default. If you also pass the doc
 
 | Tag | Description |
 |-----|-------------|
-| [`latest`, `v6`, `v6.2`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.2.26 as of 2021-06-21 [Change Log 6-1-71](https://community.ui.com/releases/UniFi-Network-Application-6-2-26/0dfcbc77-8a4f-4e20-bb93-07bbb0237e3a)|
+| [`latest`, `v6`, `v6.4`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.4.54 as of 2021-09-20 [Change Log 6-4-54](https://community.ui.com/releases/UniFi-Network-Application-6-4-54/c1be3b7f-44c4-4d6f-af1e-707bf017110d)|
 | [`latest-5`, `stable-5`, `5.0`](https://github.com/jacobalberty/unifi-docker/blob/master-5/Dockerfile) | Tracks UniFi 5.14 stable version - 5.14.23 as of 2020-09-14 |
 
 ### Latest Release Candidate tags

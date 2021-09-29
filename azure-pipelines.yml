@@ -10,7 +10,7 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '25970b0c-f02c-4f38-8201-f5719af0172f'
+  dockerRegistryServiceConnection: '669df954-b8dd-4f30-97f6-93fff3ddab60'
   imageRepository: 'unifidocker'
   containerRegistry: 'unifireg.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'

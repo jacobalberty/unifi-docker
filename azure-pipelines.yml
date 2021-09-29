@@ -12,7 +12,7 @@ variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '25970b0c-f02c-4f38-8201-f5719af0172f'
   imageRepository: 'unifidocker'
-  containerRegistry: 'eolaksregistry.azurecr.io'
+  containerRegistry: 'unifireg.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
 

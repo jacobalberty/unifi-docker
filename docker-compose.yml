@@ -1,13 +1,14 @@
-version: '2.2'
+version: '2.3'
 services:
   mongo:
-    image: mongo:3.4
+    image: mongo:3.6
     container_name: ${COMPOSE_PROJECT_NAME}_mongo
     networks:
       - unifi
     restart: always
     volumes:
       - db:/data/db
+      - dbcfg:/data/configdb
   controller:
     image: "jacobalberty/unifi:${TAG:-latest}"
     container_name: ${COMPOSE_PROJECT_NAME}_controller
@@ -18,10 +19,17 @@ services:
       - unifi
     restart: always
     volumes:
+      - dir:/unifi
       - data:/unifi/data
       - log:/unifi/log
       - cert:/unifi/cert
       - init:/unifi/init.d
+      - run:/var/run/unifi
+      # Mount local folder for backups and autobackups
+      - ./backup:/unifi/data/backup
+    user: unifi
+    sysctls:
+      net.ipv4.ip_unprivileged_port_start: 0
     environment:
       DB_URI: mongodb://mongo/unifi
       STATDB_URI: mongodb://mongo/unifi_stat
@@ -46,10 +54,13 @@ services:
 
 volumes:
   db:
+  dbcfg:
   data:
   log:
   cert:
   init:
+  dir:
+  run:
 
 networks:
   unifi:

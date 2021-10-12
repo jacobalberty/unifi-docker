@@ -4,7 +4,7 @@ LABEL maintainer="Jacob Alberty <jacob.alberty@foundigital.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ARG PKGURL=https://dl.ubnt.com/unifi/5.12.35/unifi_sysvinit_all.deb
+ARG PKGURL=https://dl.ui.com/unifi/6.4.54/unifi_sysvinit_all.deb
 
 ENV BASEDIR=/usr/lib/unifi \
     DATADIR=/unifi/data \
@@ -50,23 +50,24 @@ RUN set -ex \
     && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
     && rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc \
     && chmod +x /usr/local/bin/gosu \
-# verify that the binary works
-    && gosu nobody true \
     && apt-get purge -y --auto-remove $fetchDeps \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /usr/unifi \
      /usr/local/unifi/init.d \
-     /usr/unifi/init.d
+     /usr/unifi/init.d \
+     /usr/local/docker
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY docker-healthcheck.sh /usr/local/bin/
 COPY docker-build.sh /usr/local/bin/
 COPY functions /usr/unifi/functions
 COPY import_cert /usr/unifi/init.d/
+COPY pre_build /usr/local/docker/pre_build
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
  && chmod +x /usr/unifi/init.d/import_cert \
  && chmod +x /usr/local/bin/docker-healthcheck.sh \
- && chmod +x /usr/local/bin/docker-build.sh
+ && chmod +x /usr/local/bin/docker-build.sh \
+ && chmod -R +x /usr/local/docker/pre_build
 
 # Push installing openjdk-8-jre first, so that the unifi package doesn't pull in openjdk-7-jre as a dependency? Else uncomment and just go with openjdk-7.
 RUN set -ex \
@@ -74,6 +75,8 @@ RUN set -ex \
  && groupadd -r unifi -g $UNIFI_GID \
  && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \
  && /usr/local/bin/docker-build.sh "${PKGURL}"
+
+RUN mkdir -p /unifi && chown unifi:unifi -R /unifi
 
 VOLUME ["/unifi", "${RUNDIR}"]
 

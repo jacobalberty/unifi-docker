@@ -115,6 +115,9 @@ if ! [[ -z "$LOTSOFDEVICES" ]]; then
   settings["unifi.G1GC.enabled"]="true"
   settings["unifi.xms"]="$(h2mb $JVM_INIT_HEAP_SIZE)"
   settings["unifi.xmx"]="$(h2mb ${JVM_MAX_HEAP_SIZE:-1024M})"
+  # Reduce MongoDB I/O (issue #300)
+  settings["unifi.db.nojournal"]="true"
+  settings["unifi.db.extraargs"]="--quiet"
 fi
 
 # Implements issue #30
@@ -125,6 +128,14 @@ if ! [[ -z "$DB_URI" || -z "$STATDB_URI" || -z "$DB_NAME" ]]; then
   settings["unifi.db.name"]="$DB_NAME"
 fi
 
+if ! [[ -z "$PORTAL_HTTP_PORT"  ]]; then
+  settings["portal.http.port"]="$PORTAL_HTTP_PORT"
+fi
+
+if ! [[ -z "$PORTAL_HTTPS_PORT"  ]]; then
+  settings["portal.https.port"]="$PORTAL_HTTPS_PORT"
+fi
+
 if ! [[ -z "$UNIFI_HTTP_PORT"  ]]; then
   settings["unifi.http.port"]="$UNIFI_HTTP_PORT"
 fi
@@ -133,9 +144,15 @@ if ! [[ -z "$UNIFI_HTTPS_PORT"  ]]; then
   settings["unifi.https.port"]="$UNIFI_HTTPS_PORT"
 fi
 
-for key in "${!settings[@]}"; do
-  confSet "$confFile" "$key" "${settings[$key]}"
-done
+if [[ "$UNIFI_ECC_CERT" == "true" ]]; then
+  settings["unifi.https.sslEnabledProtocols"]="TLSv1.2"
+  settings["unifi.https.ciphers"]="TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256"
+fi
+
+if [[ "$UNIFI_STDOUT" == "true" ]]; then
+  settings["unifi.logStdout"]="true"
+fi
+
 UNIFI_CMD="java ${JVM_OPTS} -jar ${BASEDIR}/lib/ace.jar start"
 
 # controller writes to relative path logs/server.log
@@ -153,6 +170,9 @@ if [[ "${@}" == "unifi" ]]; then
             fi
             mkdir -p "${dir}"
         fi
+    done
+    for key in "${!settings[@]}"; do
+      confSet "$confFile" "$key" "${settings[$key]}"
     done
     if [ "${RUNAS_UID0}" == "true" ] || [ "${CUID}" != "0" ]; then
         if [ "${CUID}" == 0 ]; then

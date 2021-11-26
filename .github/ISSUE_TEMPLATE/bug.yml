@@ -1,0 +1,56 @@
+name: Bug Report
+description: File a bug report
+labels: ["bug"]
+assignees:
+  - jacobalberty
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening a bug report, please search for the behaviour in the existing issues. 
+        
+        ---
+        
+        Thank you for taking the time to file a bug report. To address this bug as fast as possible, we need some information.
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      description: "Which operating system do you use? Please provide the version as well."
+      placeholder: "Ubuntu Linux 20.04.3 LTS"
+    validations:
+      required: true
+  - type: input
+    id: unifi
+    attributes:
+      label: UniFi Tag
+      description: "Please specify the tag of the Docker image you are using"
+      placeholder: "stable"
+    validations:
+      required: true
+  - type: input
+    id: docker
+    attributes:
+      label: Docker run
+      description: "Please specify the full Docker command or the docker-compose.yml file you use to start the container (omit sensitive values)"
+      placeholder: "docker run --rm --init -p 8080:8080 -p 8443:8443 -p 3478:3478/udp -p 10001:10001/udp -e TZ='Africa/Johannesburg' -v ~/unifi/data:/var/lib/unifi -v ~/unifi/logs:/var/log/unifi --name unifi jacobalberty/unifi:stable"
+    validations:
+      required: true
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Bug description
+      description: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Which steps do we need to take to reproduce this error?
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: If applicable, provide relevant log output. No need for backticks here.
+      render: shell

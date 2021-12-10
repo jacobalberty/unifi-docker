@@ -8,18 +8,18 @@ fi
 
 exit_handler() {
     log "Exit signal received, shutting down"
-    java -jar ${BASEDIR}/lib/ace.jar stop
-    for i in `seq 1 10` ; do
-        [ -z "$(pgrep -f ${BASEDIR}/lib/ace.jar)" ] && break
+    java -jar "${BASEDIR}"/lib/ace.jar stop
+    for i in $(seq 1 10) ; do
+        [ -z "$(pgrep -f "${BASEDIR}"/lib/ace.jar)" ] && break
         # graceful shutdown
-        [ $i -gt 1 ] && [ -d ${BASEDIR}/run ] && touch ${BASEDIR}/run/server.stop || true
+        [ "$i" -gt 1 ] && [ -d "${BASEDIR}"/run ] && touch "${BASEDIR}"/run/server.stop || true
         # savage shutdown
-        [ $i -gt 7 ] && pkill -f ${BASEDIR}/lib/ace.jar || true
+        [ "$i" -gt 7 ] && pkill -f "${BASEDIR}"/lib/ace.jar || true
         sleep 1
     done
     # shutdown mongod
-    if [ -f ${MONGOLOCK} ]; then
-        mongo localhost:${MONGOPORT} --eval "db.getSiblingDB('admin').shutdownServer()" >/dev/null 2>&1
+    if [ -f "${MONGOLOCK}" ]; then
+        mongo localhost:"${MONGOPORT}" --eval "db.getSiblingDB('admin').shutdownServer()" >/dev/null 2>&1
     fi
     exit ${?};
 }
@@ -51,15 +51,15 @@ MONGOLOCK="${DATAPATH}/db/mongod.lock"
 JVM_EXTRA_OPTS="${JVM_EXTRA_OPTS} -Dunifi.datadir=${DATADIR} -Dunifi.logdir=${LOGDIR} -Dunifi.rundir=${RUNDIR}"
 PIDFILE=/var/run/unifi/unifi.pid
 
-if [ ! -z "${JVM_MAX_HEAP_SIZE}" ]; then
+if [ -n "${JVM_MAX_HEAP_SIZE}" ]; then
   JVM_EXTRA_OPTS="${JVM_EXTRA_OPTS} -Xmx${JVM_MAX_HEAP_SIZE}"
 fi
 
-if [ ! -z "${JVM_INIT_HEAP_SIZE}" ]; then
+if [ -n "${JVM_INIT_HEAP_SIZE}" ]; then
   JVM_EXTRA_OPTS="${JVM_EXTRA_OPTS} -Xms${JVM_INIT_HEAP_SIZE}"
 fi
 
-if [ ! -z "${JVM_MAX_THREAD_STACK_SIZE}" ]; then
+if [ -n "${JVM_MAX_THREAD_STACK_SIZE}" ]; then
   JVM_EXTRA_OPTS="${JVM_EXTRA_OPTS} -Xss${JVM_MAX_THREAD_STACK_SIZE}"
 fi
 
@@ -108,13 +108,13 @@ h2mb() {
     /[kK]$/{printf "%u\n", $1/1024;next}
     /[gG]$/{printf "%u\n", $1*1024;next}
   '
-  echo $1 | awk "${awkcmd}"
+  echo "$1" | awk "${awkcmd}"
 }
 
-if ! [[ -z "$LOTSOFDEVICES" ]]; then
+if [[ -n "$LOTSOFDEVICES" ]]; then
   settings["unifi.G1GC.enabled"]="true"
-  settings["unifi.xms"]="$(h2mb $JVM_INIT_HEAP_SIZE)"
-  settings["unifi.xmx"]="$(h2mb ${JVM_MAX_HEAP_SIZE:-1024M})"
+  settings["unifi.xms"]="$(h2mb "$JVM_INIT_HEAP_SIZE")"
+  settings["unifi.xmx"]="$(h2mb "${JVM_MAX_HEAP_SIZE:-1024M}")"
   # Reduce MongoDB I/O (issue #300)
   settings["unifi.db.nojournal"]="true"
   settings["unifi.db.extraargs"]="--quiet"
@@ -128,19 +128,19 @@ if ! [[ -z "$DB_URI" || -z "$STATDB_URI" || -z "$DB_NAME" ]]; then
   settings["unifi.db.name"]="$DB_NAME"
 fi
 
-if ! [[ -z "$PORTAL_HTTP_PORT"  ]]; then
+if [[ -n "$PORTAL_HTTP_PORT"  ]]; then
   settings["portal.http.port"]="$PORTAL_HTTP_PORT"
 fi
 
-if ! [[ -z "$PORTAL_HTTPS_PORT"  ]]; then
+if [[ -n "$PORTAL_HTTPS_PORT"  ]]; then
   settings["portal.https.port"]="$PORTAL_HTTPS_PORT"
 fi
 
-if ! [[ -z "$UNIFI_HTTP_PORT"  ]]; then
+if [[ -n "$UNIFI_HTTP_PORT"  ]]; then
   settings["unifi.http.port"]="$UNIFI_HTTP_PORT"
 fi
 
-if ! [[ -z "$UNIFI_HTTPS_PORT"  ]]; then
+if [[ -n "$UNIFI_HTTPS_PORT"  ]]; then
   settings["unifi.https.port"]="$UNIFI_HTTPS_PORT"
 fi
 
@@ -156,7 +156,7 @@ fi
 UNIFI_CMD="java ${JVM_OPTS} -jar ${BASEDIR}/lib/ace.jar start"
 
 # controller writes to relative path logs/server.log
-cd ${BASEDIR}
+cd "${BASEDIR}" || exit
 
 CUID=$(id -u)
 
@@ -192,7 +192,7 @@ if [[ "${@}" == "unifi" ]]; then
         fi
         if [ "$(id unifi -u)" != "${UNIFI_UID}" ] || [ "$(id unifi -g)" != "${UNIFI_GID}" ]; then
             log "INFO: Changing 'unifi' UID to '${UNIFI_UID}' and GID to '${UNIFI_GID}'"
-            usermod -o -u ${UNIFI_UID} unifi && groupmod -o -g ${UNIFI_GID} unifi
+            usermod -o -u "${UNIFI_UID}" unifi && groupmod -o -g "${UNIFI_GID}" unifi
         fi
         # Using a loop here so I can check more directories easily later
         for dir in ${DIRS}; do
@@ -200,12 +200,12 @@ if [[ "${@}" == "unifi" ]]; then
                 chown -R "${UNIFI_UID}:${UNIFI_GID}" "${dir}"
             fi
         done
-        gosu unifi:unifi ${UNIFI_CMD} &
+        gosu unifi:unifi "${UNIFI_CMD}" &
     fi
     wait
     log "WARN: unifi service process ended without being signaled? Check for errors in ${LOGDIR}." >&2
 else
-    log "Executing: ${@}"
-    exec ${@}
+    log "Executing: ${*}"
+    exec "${@}"
 fi
 exit 1

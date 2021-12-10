@@ -200,7 +200,7 @@ if [[ "${@}" == "unifi" ]]; then
                 chown -R "${UNIFI_UID}:${UNIFI_GID}" "${dir}"
             fi
         done
-        gosu unifi:unifi "${UNIFI_CMD}" &
+        gosu unifi:unifi ${UNIFI_CMD} &
     fi
     wait
     log "WARN: unifi service process ended without being signaled? Check for errors in ${LOGDIR}." >&2

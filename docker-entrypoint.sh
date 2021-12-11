@@ -2,7 +2,10 @@
 
 . /usr/unifi/functions
 
-validate || echo "Missing an included hotfix" && exit 1
+if ! validate; then
+  echo "Missing an included hotfix"
+  exit 1
+fi
 
 if [ -x /usr/local/bin/docker-build.sh ]; then
     /usr/local/bin/docker-build.sh "${PKGURL}"

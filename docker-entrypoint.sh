@@ -2,6 +2,7 @@
 
 . /usr/unifi/functions
 
+# Check that any included hotfixes have been properly applied and exit if not
 if ! validate; then
   echo "Missing an included hotfix"
   exit 1

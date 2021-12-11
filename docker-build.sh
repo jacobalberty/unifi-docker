@@ -6,7 +6,7 @@ set -e
 # Retry 5 times with a wait of 10 seconds between each retry
 tryfail() {
     for i in $(seq 1 5);
-        do [ "$i" -gt 1 ] && sleep 10; "$@" && s=0 && break || s=$?; done;
+        do [ $i -gt 1 ] && sleep 10; $* && s=0 && break || s=$?; done;
     (exit $s)
 }
 
@@ -24,7 +24,7 @@ addKey() {
     return 1
 }
 
-if [ "${1}" == "" ]; then
+if [ "x${1}" == "x" ]; then
     echo please pass PKGURL as an environment variable
     exit 0
 fi
@@ -53,15 +53,15 @@ rm -f ./unifi.deb
 chown -R unifi:unifi /usr/lib/unifi
 rm -rf /var/lib/apt/lists/*
 
-rm -rf "${ODATADIR}" "${OLOGDIR}"
-mkdir -p "${DATADIR}" "${LOGDIR}"
-ln -s "${DATADIR}" "${BASEDIR}"/data
-ln -s "${RUNDIR}" "${BASEDIR}"/run
-ln -s "${LOGDIR}" "${BASEDIR}"/logs
-rm -rf "${ODATADIR}" "${OLOGDIR}"
-ln -s "${DATADIR}" "${ODATADIR}"
-ln -s "${LOGDIR}" "${OLOGDIR}"
-mkdir -p /var/cert "${CERTDIR}"
-ln -s "${CERTDIR}" /var/cert/unifi
+rm -rf ${ODATADIR} ${OLOGDIR}
+mkdir -p ${DATADIR} ${LOGDIR}
+ln -s ${DATADIR} ${BASEDIR}/data
+ln -s ${RUNDIR} ${BASEDIR}/run
+ln -s ${LOGDIR} ${BASEDIR}/logs
+rm -rf {$ODATADIR} ${OLOGDIR}
+ln -s ${DATADIR} ${ODATADIR}
+ln -s ${LOGDIR} ${OLOGDIR}
+mkdir -p /var/cert ${CERTDIR}
+ln -s ${CERTDIR} /var/cert/unifi
 
 rm -rf "${0}"

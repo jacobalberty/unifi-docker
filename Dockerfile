@@ -56,6 +56,11 @@ RUN set -ex \
 
 RUN mkdir -p /unifi && chown unifi:unifi -R /unifi
 
+# This is to apply a hotfix for CVE-2021-44228 Maybe this should be pushed into the main one branch to make it easier to apply hotfixes?
+COPY hotfixes /usr/local/unifi/hotfixes
+
+RUN chmod +x /usr/local/unifi/hotfixes/* && run-parts /usr/local/unifi/hotfixes
+
 VOLUME ["/unifi", "${RUNDIR}"]
 
 EXPOSE 6789/tcp 8080/tcp 8443/tcp 8880/tcp 8843/tcp 3478/udp

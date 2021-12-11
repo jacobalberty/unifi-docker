@@ -1,5 +1,10 @@
 # unifi-docker
 
+## Important News
+
+Please update to [6.5.54](https://community.ui.com/releases/UniFi-Network-Application-6-5-54/d717f241-48bb-4979-8b10-99db36ddabe1) as soon as possible as it contains a critical
+fix for a remote code execution vulnerability (CVE-2021-44228). If you are on 6.0.54 please immediately stop your controller and watch [this issue](https://github.com/jacobalberty/unifi-docker/issues/494). If you need to make changes to your configuration it would be best to disconnect your network connectivity before starting the controller and then turn off the controller again before connecting back to the internet.
+
 ## `latest` tag
 
 `latest` is now tracking unifi 6.5.x as of 2021-11-22.
@@ -23,14 +28,13 @@ You will not be able to bind to lower ports by default. If you also pass the doc
 
 | Tag | Description |
 |-----|-------------|
-| [`latest`, `v6`, `v6.5`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.5.53 as of 2021-11-22 [Change Log 6-5-53](https://community.ui.com/releases/UniFi-Network-Application-6-5-53/16025ec1-4bbc-46a9-8f4f-8561fd59cd4c)|
-| [`latest-5`, `stable-5`, `5.0`](https://github.com/jacobalberty/unifi-docker/blob/master-5/Dockerfile) | Tracks UniFi 5.14 stable version - 5.14.23 as of 2020-09-14 |
+| [`latest`, `v6`, `v6.5`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.5.54 as of 2021-10-22 [Change Log 6-5-54](https://community.ui.com/releases/UniFi-Network-Application-6-5-54/d717f241-48bb-4979-8b10-99db36ddabe1)|
 
 ### Latest Release Candidate tags
 
 | Version | Latest Tag |
 |---------|------------|
-| 6.5.x   | [`6.5.52-rc`](https://github.com/jacobalberty/unifi-docker/blob/6.5.52-rc/Dockerfile) |
+| 6.5.x   | [`6.5.54`](https://github.com/jacobalberty/unifi-docker/blob/6.5.54/Dockerfile) |
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `release candidate` to `stable` instead of waiting for it to hit the repository.
 

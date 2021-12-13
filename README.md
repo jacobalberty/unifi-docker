@@ -1,8 +1,13 @@
 # unifi-docker
 
+## Important News
+
+Please update to [6.5.54](https://community.ui.com/releases/UniFi-Network-Application-6-5-54/d717f241-48bb-4979-8b10-99db36ddabe1) as soon as possible as it contains a critical
+fix for a remote code execution vulnerability (CVE-2021-44228). If you are on 6.0.54 please immediately stop your controller and watch [this issue](https://github.com/jacobalberty/unifi-docker/issues/494). If you need to make changes to your configuration it would be best to disconnect your network connectivity before starting the controller and then turn off the controller again before connecting back to the internet.
+
 ## `latest` tag
 
-`latest` is now tracking unifi 6.1.x as of 2021-03-21.
+`latest` is now tracking unifi 6.5.x as of 2021-11-22.
 
 ## multiarch
 
@@ -23,18 +28,18 @@ You will not be able to bind to lower ports by default. If you also pass the doc
 
 | Tag | Description |
 |-----|-------------|
-| [`latest`, `stable-6`, `6.1`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.1.71 as of 2021-03-24 [Change Log 6-1-71](https://community.ui.com/releases/UniFi-Network-Controller-6-1-71/0cffd3ed-7429-4529-9a20-9fead78ebf66)|
-| [`latest-5`, `stable-5`, `5.0`](https://github.com/jacobalberty/unifi-docker/blob/master-5/Dockerfile) | Tracks UniFi 5.14 stable version - 5.14.23 as of 2020-09-14 |
+| [`latest`, `v6`, `v6.5`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.5.54 as of 2021-10-22 [Change Log 6-5-54](https://community.ui.com/releases/UniFi-Network-Application-6-5-54/d717f241-48bb-4979-8b10-99db36ddabe1)|
 
 ### Latest Release Candidate tags
 
 | Version | Latest Tag |
 |---------|------------|
-| 6.1.x   | [`6.1.71-rc`](https://github.com/jacobalberty/unifi-docker/blob/6.1.71-rc/Dockerfile) |
+| 6.5.x   | [`6.5.54`](https://github.com/jacobalberty/unifi-docker/blob/6.5.54/Dockerfile) |
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `release candidate` to `stable` instead of waiting for it to hit the repository.
 
-In adition to these tags you may tag specific versions as well, for example `jacobalberty/unifi:5.6.40` will get you unifi 5.6.40 no matter what the current version is. Release candidates now exist both under the `rc` tag and for tags with the extension `-rc` ie `jacobalberty/unifi:5.6.18-rc`. It is advised to use the specific versions as the `rc` tag may jump from 5.6.x to 5.8.x then back to 5.6.x as new release candidates come out.
+In adition to these tags you may tag specific versions as well, for example `jacobalberty/unifi:v6.2.26` will get you unifi 6.2.26 no matter what the current version is.
+For release candidates it is advised to use the specific versions as the `rc` tag may jump from 5.6.x to 5.8.x then back to 5.6.x as new release candidates come out.
 
 ## Description
 
@@ -51,7 +56,7 @@ Example to test with
 ```bash
 mkdir -p unifi/data
 mkdir -p unifi/log
-docker run --rm --init -p 8080:8080 -p 8443:8443 -p 3478:3478/udp -e TZ='Africa/Johannesburg' -v ~/unifi:/unifi --name unifi jacobalberty/unifi:stable
+docker run --rm --init -p 8080:8080 -p 8443:8443 -p 3478:3478/udp -e TZ='Africa/Johannesburg' -v ~/unifi:/unifi --name unifi jacobalberty/unifi:v6
 ```
 
 **Note** you must omit `-v ~/unifi:/unifi` on windows, but you can use a local volume e.g. `-v unifi:/unifi` (omit the leading ~/) to persist the data on a local volume.

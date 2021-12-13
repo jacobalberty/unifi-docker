@@ -2,8 +2,10 @@
 
 ## Important News
 
-Please update to [6.5.54](https://community.ui.com/releases/UniFi-Network-Application-6-5-54/d717f241-48bb-4979-8b10-99db36ddabe1) as soon as possible as it contains a critical
-fix for a remote code execution vulnerability (CVE-2021-44228). If you are on 6.0.45 please immediately stop your controller and watch [this issue](https://github.com/jacobalberty/unifi-docker/issues/494). If you need to make changes to your configuration it would be best to disconnect your network connectivity before starting the controller and then turn off the controller again before connecting back to the internet.
+Please update to [v6.5.54](https://community.ui.com/releases/UniFi-Network-Application-6-5-54/d717f241-48bb-4979-8b10-99db36ddabe1) as soon as possible as it contains a critical
+fix for a remote code execution vulnerability (CVE-2021-44228). I have also backported the fix to `v6.0.45` and `v5.14.23` for those on EOL hardware releases or who just prefer the older version.
+
+Again: Only the `v6.5.54`, `v6.0.45` and the `v5.14.23` tags have the fix backported to them. Please be sure you are running the one with the v in the tag name for those two older versions.
 
 ## `latest` tag
 

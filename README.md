@@ -232,19 +232,25 @@ Ex:
 
 as a fix for https://community.ubnt.com/t5/UniFi-Routing-Switching/IMPORTANT-Debian-Ubuntu-users-MUST-READ-Updated-06-21/m-p/1968251#M48264
 
-### `JVM_EXTRA_OPTS`
+### `LOTSOFDEVICES`
+Enable this with `true` if you run a system with a lot of devices and or with a low powered system (like a Raspberry Pi)
 
 Default: `unset`
 
+### `JVM_EXTRA_OPTS`
 Used to start the JVM with additional arguments.
 
+Default: `unset`
+
 ### `JVM_INIT_HEAP_SIZE`
+Set the starting size of the javascript engine for example: `1024M`
 
 Default: `unset`
 
 ### `JVM_MAX_HEAP_SIZE`
 Java Virtual Machine (JVM) allocates available memory. 
 For larger installations a larger value is recommended. For memory constrained system this value can be lowered. 
+
 Default `1024M`
 
 ### External MongoDB environment variables

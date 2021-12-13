@@ -234,6 +234,14 @@ as a fix for https://community.ubnt.com/t5/UniFi-Routing-Switching/IMPORTANT-Deb
 
 ### `LOTSOFDEVICES`
 Enable this with `true` if you run a system with a lot of devices and or with a low powered system (like a Raspberry Pi)
+This makes a few adjustments to try and improve performance: 
+* enable unifi.G1GC.enabled
+* set unifi.xms to JVM_INIT_HEAP_SIZE
+* set unifi.xmx to JVM_MAX_HEAP_SIZE
+* enable unifi.db.nojournal
+* set unifi.dg.extraargs to --quiet
+See [This website](https://help.ui.com/hc/en-us/articles/115005159588-UniFi-How-to-Tune-the-Network-Application-for-High-Number-of-UniFi-Devices) for an explanation 
+of some of those options.
 
 Default: `unset`
 

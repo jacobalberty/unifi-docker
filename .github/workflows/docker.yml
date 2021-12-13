@@ -6,6 +6,9 @@ on:
     tags:
       - 'v*.*.*'
 
+env:
+  TEST_TAG: jacobalberty/unifi:test
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -54,6 +57,18 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and export to Docker
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          load: true
+          tags: ${{ env.TEST_TAG }}
+      - name: Test image
+        run: |
+          docker run -d --rm --name unifitest ${{env.TEST_TAG}} &&
+          sleep 35 &&
+          [ $(docker inspect --format='{{json .State.Health.Status}}' unifitest ) == \"healthy\" ] &&
+          docker stop unifitest
       - name: Build container image
         uses: docker/build-push-action@v2
         with:

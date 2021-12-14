@@ -49,7 +49,7 @@ This is a containerized version of [Ubiqiti Network](https://www.ubnt.com/)'s Un
 
 The following options may be of use:
 
-- Set the timezone with `TZ`
+- Set the timezone with `TZ` ([list of timezones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones))
 - Bind mount the `data` and `log` volumes
 
 It is suggested that you include --init to handle process reaping

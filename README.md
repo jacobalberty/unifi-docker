@@ -1,6 +1,11 @@
 # unifi-docker
 
-## Important News
+## Important log4shell News
+
+Please update again. There has been another log4shell vulnerability discovered that even the v6.5.54 release from ubiquiti is vulnerable to. I have installed the log4j version 2.16.0 in thses tags to mitigate log4shell.
+
+To verify you have the latest hotfix applied you should see `Hotfix validated: cve-2021-45046` in your docker logs for your unifi container at startup
+
 
 Please update to [v6.5.54](https://community.ui.com/releases/UniFi-Network-Application-6-5-54/d717f241-48bb-4979-8b10-99db36ddabe1) as soon as possible as it contains a critical
 fix for a remote code execution vulnerability (CVE-2021-44228). I have also backported the fix to `v6.0.45` and `v5.14.23` for those on EOL hardware releases or who just prefer the older version.

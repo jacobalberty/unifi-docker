@@ -2,15 +2,12 @@
 
 ## Important log4shell News
 
-Please update again. There has been another log4shell vulnerability discovered that even the v6.5.54 release from ubiquiti is vulnerable to. I have installed the log4j version 2.16.0 in thses tags to mitigate log4shell.
+Please update to [v6.5.55](https://community.ui.com/releases/UniFi-Network-Application-6-5-55/48c64137-4a4a-41f7-b7e4-3bee505ae16e) as soon as possible as it contains a critical
+fix for a remote code execution vulnerability (CVE-2021-44228 as well as CVE-2021-45046). I have also backported the fix to `v6.0.45` and `v5.14.23` for those on EOL hardware releases or who just prefer the older version.
 
-To verify you have the latest hotfix applied you should see `Hotfix validated: cve-2021-45046` in your docker logs for your unifi container at startup
+To verify you have the latest hotfix applied on `v6.0.45` and `v5.14.23` you should see `Hotfix validated: cve-2021-45046` in your docker logs for your unifi container at startup
 
-
-Please update to [v6.5.54](https://community.ui.com/releases/UniFi-Network-Application-6-5-54/d717f241-48bb-4979-8b10-99db36ddabe1) as soon as possible as it contains a critical
-fix for a remote code execution vulnerability (CVE-2021-44228). I have also backported the fix to `v6.0.45` and `v5.14.23` for those on EOL hardware releases or who just prefer the older version.
-
-Again: Only the `v6.5.54`, `v6.0.45` and the `v5.14.23` tags have the fix backported to them. Please be sure you are running the one with the v in the tag name for those two older versions.
+Again: Only the `v6.5.55`, `v6.0.45` and the `v5.14.23` tags have the fix backported to them. Please be sure you are running the one with the v in the tag name for those two older versions.
 
 ## `latest` tag
 
@@ -35,13 +32,13 @@ You will not be able to bind to lower ports by default. If you also pass the doc
 
 | Tag | Description |
 |-----|-------------|
-| [`latest`, `v6`, `v6.5`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.5.54 as of 2021-10-22 [Change Log 6-5-54](https://community.ui.com/releases/UniFi-Network-Application-6-5-54/d717f241-48bb-4979-8b10-99db36ddabe1)|
+| [`latest`, `v6`, `v6.5`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.5.55 as of 2021-12-14 [Change Log 6-5-55](https://community.ui.com/releases/UniFi-Network-Application-6-5-55/48c64137-4a4a-41f7-b7e4-3bee505ae16e)|
 
 ### Latest Release Candidate tags
 
 | Version | Latest Tag |
 |---------|------------|
-| 6.5.x   | [`6.5.54`](https://github.com/jacobalberty/unifi-docker/blob/6.5.54/Dockerfile) |
+| 6.5.x   | [`6.5.55`](https://github.com/jacobalberty/unifi-docker/blob/6.5.55/Dockerfile) |
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `release candidate` to `stable` instead of waiting for it to hit the repository.
 

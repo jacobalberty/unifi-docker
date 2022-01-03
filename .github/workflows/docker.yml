@@ -2,7 +2,7 @@ name: Publish Docker image
 on:
   push:
     branches:
-      - 'master'
+      - 'stable-6'
     tags:
       - 'v*.*.*'
 

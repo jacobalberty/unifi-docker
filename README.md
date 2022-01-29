@@ -23,7 +23,7 @@ support it as long as feasibly possible, for now that date seems to be expiratio
 
 ## Run as non-root User
 
-It is suggested you start running this as a non root user. The default right now is to run as root but if you set the docker run flag `--user` to `unifi` then the image will run as a special unfi user with the uid/gid 999/999. You should ideally set your data and logs to owned by the proper gid.
+It is suggested you start running this as a non root user. The default right now is to run as root but if you set the docker run flag `--user` to `unifi` then the image will run as a special unfi user with the default uid/gid 999/999. You can change this using environment variables `UNIFI_UID` and `UNIFI_GID` when running the container. You should ideally set your data and logs to owned by the proper gid.
 You will not be able to bind to lower ports by default. If you also pass the docker run flag `--sysctl` with `net.ipv4.ip_unprivileged_port_start=0` then you will be able to freely bind to whatever port you wish. This should not be needed if you are using the default ports.
 
 ## Mongo and Docker for windows

@@ -1,0 +1,42 @@
+services:
+  controller:
+    image: jacobalberty/unifi:$TAG_NAME
+    container_name: unifi
+    networks:
+      - unifi
+      - proxy # This doesn't have to be proxy, it's the name of the network traefik is connected to
+    restart: always
+    volumes:
+      - $UNIFI_DATA:/unifi/data
+      - $UNIFI_LOG:/unifi/log
+      - $UNIFI_CERT:/unifi/cert
+      - $UNIFI_INIT:/unifi/init.d
+    environment:
+      TZ: $UNIFI_TZ
+    ports:
+      - 3478:3478/udp # STUN
+      - 6789:6789/tcp # Speed test
+      - 8080:8080/tcp # Device/ controller comm.
+      - 8443:8443/tcp # Controller GUI/API as seen in a web browser
+      - 8880:8880/tcp # HTTP portal redirection
+      - 8843:8843/tcp # HTTPS portal redirection
+      - 10001:10001/udp # AP discovery
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.unifi.entrypoints=http" # Change to your entrypoint name
+      - "traefik.http.routers.unifi.rule=Host(`${UNIFI_URL}`)"
+      - "traefik.http.middlewares.unifi-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.unifi.middlewares=unifi-https-redirect"
+      - "traefik.http.routers.unifi-secure.entrypoints=https"
+      - "traefik.http.routers.unifi-secure.rule=Host(`${UNIFI_URL}`)"
+      - "traefik.http.routers.unifi-secure.tls=true"
+      - "traefik.http.routers.unifi-secure.tls.certresolver=http" # Change to your certresolver name
+      - "traefik.http.routers.unifi-secure.service=unifi"
+      - "traefik.http.services.unifi.loadbalancer.server.port=8443"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.services.unifi.loadbalancer.server.scheme=https"
+
+networks:
+  unifi:
+  proxy:
+    external: true

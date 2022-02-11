@@ -26,32 +26,10 @@ ENV BASEDIR=/usr/lib/unifi \
 # https://github.com/tianon/gosu/blob/master/INSTALL.md
 # This should be integrated with the main run because it duplicates a lot of the steps there
 # but for now while shoehorning gosu in it is seperate
-RUN set -ex \
-    && fetchDeps=' \
-        ca-certificates \
-        dirmngr \
-        gpg \
-        wget \
-    ' \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends $fetchDeps \
-    && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
-    && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
-    && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc" \
-# verify the signature
-    && export GNUPGHOME="$(mktemp -d)" \
-    && for server in $(shuf -e ha.pool.sks-keyservers.net \
-                            hkp://p80.pool.sks-keyservers.net:80 \
-                            keyserver.ubuntu.com \
-                            hkp://keyserver.ubuntu.com:80 \
-                            pool.sks-keyservers.net) ; do \
-        gpg --keyserver "$server" --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && break || : ; \
-    done \
-    && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
-    && rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc \
-    && chmod +x /usr/local/bin/gosu \
-    && apt-get purge -y --auto-remove $fetchDeps \
-    && rm -rf /var/lib/apt/lists/*
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y gosu; \
+	rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /usr/unifi \
      /usr/local/unifi/init.d \
@@ -78,9 +56,14 @@ RUN set -ex \
 
 RUN mkdir -p /unifi && chown unifi:unifi -R /unifi
 
+# Apply any hotfixes that were included
+COPY hotfixes /usr/local/unifi/hotfixes
+
+RUN chmod +x /usr/local/unifi/hotfixes/* && run-parts /usr/local/unifi/hotfixes
+
 VOLUME ["/unifi", "${RUNDIR}"]
 
-EXPOSE 6789/tcp 8080/tcp 8443/tcp 8880/tcp 8843/tcp 3478/udp
+EXPOSE 6789/tcp 8080/tcp 8443/tcp 8880/tcp 8843/tcp 3478/udp 10001/udp
 
 WORKDIR /unifi
 

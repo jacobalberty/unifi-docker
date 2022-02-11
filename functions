@@ -22,3 +22,12 @@ instPkg() {
         fi
     done
 }
+
+# Validate that any included hotfixes have been applied
+validate() (
+  shopt -s nullglob
+  for i in /usr/local/unifi/hotfixes/*-validate.md5sum; do
+    md5sum -c "$i" > /dev/null 2>&1 || return 1
+    echo "Hotfix validated: $(basename ${i::-16})"
+  done
+)

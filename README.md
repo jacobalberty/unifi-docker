@@ -1,8 +1,19 @@
 # unifi-docker
 
+## Important log4shell News
+
+These tags have now been update with a hotfix for CVE-2021-45105 as well.
+
+Please update to [v6.5.55](https://community.ui.com/releases/UniFi-Network-Application-6-5-55/48c64137-4a4a-41f7-b7e4-3bee505ae16e) as soon as possible as it contains a critical
+fix for a remote code execution vulnerability (CVE-2021-44228 as well as CVE-2021-45046). I have also backported the fix to `v6.0.45` and `v5.14.23` for those on EOL hardware releases or who just prefer the older version.
+
+To verify you have the latest hotfix applied on `v6.0.45` and `v5.14.23` you should see `Hotfix validated: cve-2021-45105` in your docker logs for your unifi container at startup
+
+Again: Only the `v6.5.55`, `v6.0.45` and the `v5.14.23` tags have the fix backported to them. Please be sure you are running the one with the v in the tag name for those two older versions.
+
 ## `latest` tag
 
-`latest` is now tracking unifi 6.4.x as of 2021-09-20.
+`latest` is now tracking unifi 6.5.x as of 2021-11-22.
 
 ## multiarch
 
@@ -23,14 +34,13 @@ You will not be able to bind to lower ports by default. If you also pass the doc
 
 | Tag | Description |
 |-----|-------------|
-| [`latest`, `v6`, `v6.4`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.4.54 as of 2021-09-20 [Change Log 6-4-54](https://community.ui.com/releases/UniFi-Network-Application-6-4-54/c1be3b7f-44c4-4d6f-af1e-707bf017110d)|
-| [`latest-5`, `stable-5`, `5.0`](https://github.com/jacobalberty/unifi-docker/blob/master-5/Dockerfile) | Tracks UniFi 5.14 stable version - 5.14.23 as of 2020-09-14 |
+| [`latest`, `v6`, `v6.5`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.5.55 as of 2021-12-14 [Change Log 6-5-55](https://community.ui.com/releases/UniFi-Network-Application-6-5-55/48c64137-4a4a-41f7-b7e4-3bee505ae16e)|
 
 ### Latest Release Candidate tags
 
 | Version | Latest Tag |
 |---------|------------|
-| 6.1.x   | [`6.1.71-rc`](https://github.com/jacobalberty/unifi-docker/blob/6.1.71-rc/Dockerfile) |
+| 6.5.x   | [`6.5.55`](https://github.com/jacobalberty/unifi-docker/blob/6.5.55/Dockerfile) |
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `release candidate` to `stable` instead of waiting for it to hit the repository.
 
@@ -43,7 +53,7 @@ This is a containerized version of [Ubiqiti Network](https://www.ubnt.com/)'s Un
 
 The following options may be of use:
 
-- Set the timezone with `TZ`
+- Set the timezone with `TZ` ([list of timezones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones))
 - Bind mount the `data` and `log` volumes
 
 It is suggested that you include --init to handle process reaping
@@ -52,7 +62,7 @@ Example to test with
 ```bash
 mkdir -p unifi/data
 mkdir -p unifi/log
-docker run --rm --init -p 8080:8080 -p 8443:8443 -p 3478:3478/udp -e TZ='Africa/Johannesburg' -v ~/unifi:/unifi --name unifi jacobalberty/unifi:stable
+docker run --rm --init -p 8080:8080 -p 8443:8443 -p 3478:3478/udp -e TZ='Africa/Johannesburg' -v ~/unifi:/unifi --name unifi jacobalberty/unifi:v6
 ```
 
 **Note** you must omit `-v ~/unifi:/unifi` on windows, but you can use a local volume e.g. `-v unifi:/unifi` (omit the leading ~/) to persist the data on a local volume.
@@ -200,7 +210,7 @@ Port used for HTTP portal redirection.
 
 ### `PORTAL_HTTPS_PORT`
 
-Default: `8443`
+Default: `8843`
 
 Port used for HTTPS portal redirection.
 
@@ -226,19 +236,35 @@ Ex:
 
 as a fix for https://community.ubnt.com/t5/UniFi-Routing-Switching/IMPORTANT-Debian-Ubuntu-users-MUST-READ-Updated-06-21/m-p/1968251#M48264
 
-### `JVM_EXTRA_OPTS`
+### `LOTSOFDEVICES`
+Enable this with `true` if you run a system with a lot of devices and or with a low powered system (like a Raspberry Pi)
+This makes a few adjustments to try and improve performance: 
+
+* enable unifi.G1GC.enabled
+* set unifi.xms to JVM_INIT_HEAP_SIZE
+* set unifi.xmx to JVM_MAX_HEAP_SIZE
+* enable unifi.db.nojournal
+* set unifi.dg.extraargs to --quiet
+
+See [This website](https://help.ui.com/hc/en-us/articles/115005159588-UniFi-How-to-Tune-the-Network-Application-for-High-Number-of-UniFi-Devices) for an explanation 
+of some of those options.
 
 Default: `unset`
 
+### `JVM_EXTRA_OPTS`
 Used to start the JVM with additional arguments.
 
+Default: `unset`
+
 ### `JVM_INIT_HEAP_SIZE`
+Set the starting size of the javascript engine for example: `1024M`
 
 Default: `unset`
 
 ### `JVM_MAX_HEAP_SIZE`
 Java Virtual Machine (JVM) allocates available memory. 
 For larger installations a larger value is recommended. For memory constrained system this value can be lowered. 
+
 Default `1024M`
 
 ### External MongoDB environment variables

@@ -57,6 +57,7 @@ jobs:
           export PKGURL=${{env.PKGURL}} &&
           docker run -d --env PKGURL --rm --name unifitest ${{env.TEST_TAG}} &&
           sleep 35 &&
+          for i in $(seq 1 10); do [ $(docker inspect --format='{{json .State.Health.Status}}' unifitest ) == \"healthy\" ] && break ||  sleep 35; done &&
           [ $(docker inspect --format='{{json .State.Health.Status}}' unifitest ) == \"healthy\" ] &&
           docker stop unifitest
       - name: Build Docker image

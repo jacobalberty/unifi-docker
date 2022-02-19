@@ -54,7 +54,7 @@ jobs:
           tags: ${{ env.TEST_TAG }}
       - name: Test image
         run: |
-          export PKGURL &&
+          export PKGURL=${{env.PKGURL}} &&
           docker run -d --env PKGURL --rm --name unifitest ${{env.TEST_TAG}} &&
           sleep 35 &&
           [ $(docker inspect --format='{{json .State.Health.Status}}' unifitest ) == \"healthy\" ] &&

@@ -161,7 +161,7 @@ fi
 
 UNIFI_CMD="java ${JVM_OPTS} -jar ${BASEDIR}/lib/ace.jar start"
 
-if  command -v permset &> /dev/null
+if [ "$EUID" -ne 0 ] && command -v permset &> /dev/null
 then
   permset
 fi

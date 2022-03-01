@@ -1,19 +1,9 @@
 # unifi-docker
 
-## Important log4shell News
-
-These tags have now been update with a hotfix for CVE-2021-45105 as well.
-
-Please update to [v6.5.55](https://community.ui.com/releases/UniFi-Network-Application-6-5-55/48c64137-4a4a-41f7-b7e4-3bee505ae16e) as soon as possible as it contains a critical
-fix for a remote code execution vulnerability (CVE-2021-44228 as well as CVE-2021-45046). I have also backported the fix to `v6.0.45` and `v5.14.23` for those on EOL hardware releases or who just prefer the older version.
-
-To verify you have the latest hotfix applied on `v6.0.45` and `v5.14.23` you should see `Hotfix validated: cve-2021-45105` in your docker logs for your unifi container at startup
-
-Again: Only the `v6.5.55`, `v6.0.45` and the `v5.14.23` tags have the fix backported to them. Please be sure you are running the one with the v in the tag name for those two older versions.
 
 ## `latest` tag
 
-`latest` is now tracking unifi 6.5.x as of 2021-11-22.
+`latest` is now tracking unifi 7.0.x as of 2022-02-28.
 
 ## multiarch
 
@@ -34,13 +24,13 @@ You will not be able to bind to lower ports by default. If you also pass the doc
 
 | Tag | Description |
 |-----|-------------|
-| [`latest`, `v6`, `v6.5`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 6.5.55 as of 2021-12-14 [Change Log 6-5-55](https://community.ui.com/releases/UniFi-Network-Application-6-5-55/48c64137-4a4a-41f7-b7e4-3bee505ae16e)|
+| [`latest`, `v7`, `v7.0`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 7.0.23 as of 2021-02-28 [Change Log 7.0.23](https://community.ui.com/releases/UniFi-Network-Application-7-0-23/f1b404b4-f595-4346-aaa1-df6941e35525)|
 
 ### Latest Release Candidate tags
 
 | Version | Latest Tag |
 |---------|------------|
-| 6.5.x   | [`6.5.55`](https://github.com/jacobalberty/unifi-docker/blob/6.5.55/Dockerfile) |
+| 7.0.x   | [`7.0.23`](https://github.com/jacobalberty/unifi-docker/blob/7.0.23/Dockerfile) |
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `release candidate` to `stable` instead of waiting for it to hit the repository.
 

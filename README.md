@@ -24,13 +24,13 @@ You will not be able to bind to lower ports by default. If you also pass the doc
 
 | Tag | Description |
 |-----|-------------|
-| [`latest`, `v7`, `v7.0`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 7.0.23 as of 2021-02-28 [Change Log 7.0.23](https://community.ui.com/releases/UniFi-Network-Application-7-0-23/f1b404b4-f595-4346-aaa1-df6941e35525)|
+| [`latest`, `v7`, `v7.0`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 7.0.25 as of 2021-03-17 [Change Log 7.0.25](https://community.ui.com/releases/UniFi-Network-Application-7-0-25/3344c362-7da5-4ecd-a403-3b47520e3c01)|
 
 ### Latest Release Candidate tags
 
 | Version | Latest Tag |
 |---------|------------|
-| 7.0.x   | [`7.0.23`](https://github.com/jacobalberty/unifi-docker/blob/7.0.23/Dockerfile) |
+| 7.0.x   | [`7.0.25`](https://github.com/jacobalberty/unifi-docker/blob/7.0.25/Dockerfile) |
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `release candidate` to `stable` instead of waiting for it to hit the repository.
 
@@ -75,7 +75,7 @@ The default example requires some l3 adoption method. You have a couple options 
 
 #### Force adoption IP
 
-Run UniFi Docker and open UniFi in browser. Go under Settings -> Controller and then enter the IP address of the Docker host machine in "Controller Hostname/IP", and check the "Override inform host with controller hostname/IP". Save settings and restart UniFi Docker container. 
+Run UniFi Docker and open UniFi in browser. Go under Settings -> Controller and then enter the IP address of the Docker host machine in "Controller Hostname/IP", and check the "Override inform host with controller hostname/IP". Save settings and restart UniFi Docker container.
 
 #### SSH Adoption
 
@@ -228,7 +228,7 @@ as a fix for https://community.ubnt.com/t5/UniFi-Routing-Switching/IMPORTANT-Deb
 
 ### `LOTSOFDEVICES`
 Enable this with `true` if you run a system with a lot of devices and or with a low powered system (like a Raspberry Pi)
-This makes a few adjustments to try and improve performance: 
+This makes a few adjustments to try and improve performance:
 
 * enable unifi.G1GC.enabled
 * set unifi.xms to JVM_INIT_HEAP_SIZE
@@ -236,7 +236,7 @@ This makes a few adjustments to try and improve performance:
 * enable unifi.db.nojournal
 * set unifi.dg.extraargs to --quiet
 
-See [This website](https://help.ui.com/hc/en-us/articles/115005159588-UniFi-How-to-Tune-the-Network-Application-for-High-Number-of-UniFi-Devices) for an explanation 
+See [This website](https://help.ui.com/hc/en-us/articles/115005159588-UniFi-How-to-Tune-the-Network-Application-for-High-Number-of-UniFi-Devices) for an explanation
 of some of those options.
 
 Default: `unset`
@@ -252,8 +252,8 @@ Set the starting size of the javascript engine for example: `1024M`
 Default: `unset`
 
 ### `JVM_MAX_HEAP_SIZE`
-Java Virtual Machine (JVM) allocates available memory. 
-For larger installations a larger value is recommended. For memory constrained system this value can be lowered. 
+Java Virtual Machine (JVM) allocates available memory.
+For larger installations a larger value is recommended. For memory constrained system this value can be lowered.
 
 Default `1024M`
 

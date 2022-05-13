@@ -1,10 +1,12 @@
-FROM golang:1.18.0-bullseye as permset
-WORKDIR /src
-RUN git clone https://github.com/jacobalberty/permset.git /src && \
-    mkdir -p /out && \
-    go build -ldflags "-X main.chownDir=/unifi" -o /out/permset
+FROM golang:1.18.2-bullseye as permset
 
-FROM ubuntu:18.04
+WORKDIR /src
+
+RUN git clone https://github.com/jacobalberty/permset.git /src \
+  && mkdir -p /out \
+  && go build -ldflags "-X main.chownDir=/unifi" -o /out/permset
+
+FROM ubuntu:20.04
 
 LABEL maintainer="Jacob Alberty <jacob.alberty@foundigital.com>"
 
@@ -33,44 +35,52 @@ ENV BASEDIR=/usr/lib/unifi \
 # https://github.com/tianon/gosu/blob/master/INSTALL.md
 # This should be integrated with the main run because it duplicates a lot of the steps there
 # but for now while shoehorning gosu in it is seperate
-RUN set -eux; \
-	apt-get update; \
-	apt-get install -y gosu; \
-	rm -rf /var/lib/apt/lists/*
+RUN set -eux \
+  && apt update \
+  && apt upgrade -y \
+  && apt dist-upgrade -y \
+  && apt install -y gosu \
+  && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /usr/unifi \
-     /usr/local/unifi/init.d \
-     /usr/unifi/init.d \
-     /usr/local/docker
+RUN mkdir -p \
+  /usr/unifi \
+  /usr/local/unifi/init.d \
+  /usr/unifi/init.d \
+  /usr/local/docker
+
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY docker-healthcheck.sh /usr/local/bin/
 COPY docker-build.sh /usr/local/bin/
 COPY functions /usr/unifi/functions
 COPY import_cert /usr/unifi/init.d/
 COPY pre_build /usr/local/docker/pre_build
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
- && chmod +x /usr/unifi/init.d/import_cert \
- && chmod +x /usr/local/bin/docker-healthcheck.sh \
- && chmod +x /usr/local/bin/docker-build.sh \
- && chmod -R +x /usr/local/docker/pre_build
+
+RUN chmod -R +x \
+  /usr/local/bin/docker-entrypoint.sh \
+  /usr/unifi/init.d/import_cert \
+  /usr/local/bin/docker-healthcheck.sh \
+  /usr/local/bin/docker-build.sh \
+  /usr/local/docker/pre_build
 
 # Push installing openjdk-8-jre first, so that the unifi package doesn't pull in openjdk-7-jre as a dependency? Else uncomment and just go with openjdk-7.
 RUN set -ex \
- && mkdir -p /usr/share/man/man1/ \
- && groupadd -r unifi -g $UNIFI_GID \
- && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \
- && /usr/local/bin/docker-build.sh "${PKGURL}"
+  && mkdir -p /usr/share/man/man1/ \
+  && groupadd -r unifi -g $UNIFI_GID \
+  && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \
+  && /usr/local/bin/docker-build.sh "${PKGURL}"
 
 COPY --from=permset /out/permset /usr/local/bin/permset
-RUN chown 0.0 /usr/local/bin/permset && \
-    chmod +s /usr/local/bin/permset
 
-RUN mkdir -p /unifi && chown unifi:unifi -R /unifi
+RUN chown 0.0 /usr/local/bin/permset \
+  && chmod +s /usr/local/bin/permset \
+  && mkdir -p /unifi \
+  && chown unifi:unifi -R /unifi
 
 # Apply any hotfixes that were included
 COPY hotfixes /usr/local/unifi/hotfixes
 
-RUN chmod +x /usr/local/unifi/hotfixes/* && run-parts /usr/local/unifi/hotfixes
+RUN chmod +x /usr/local/unifi/hotfixes/* \
+  && run-parts /usr/local/unifi/hotfixes
 
 VOLUME ["/unifi", "${RUNDIR}"]
 

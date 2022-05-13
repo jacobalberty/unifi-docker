@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # fail on error
-set -e
+set -ex
 
 # Retry 5 times with a wait of 10 seconds between each retry
 tryfail() {

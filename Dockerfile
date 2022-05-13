@@ -35,8 +35,7 @@ ENV BASEDIR=/usr/lib/unifi \
 # https://github.com/tianon/gosu/blob/master/INSTALL.md
 # This should be integrated with the main run because it duplicates a lot of the steps there
 # but for now while shoehorning gosu in it is seperate
-RUN set -eux \
-  && apt update \
+RUN apt update \
   && apt upgrade -y \
   && apt dist-upgrade -y \
   && apt install -y gosu \
@@ -63,8 +62,7 @@ RUN chmod -R +x \
   /usr/local/docker/pre_build
 
 # Push installing openjdk-8-jre first, so that the unifi package doesn't pull in openjdk-7-jre as a dependency? Else uncomment and just go with openjdk-7.
-RUN set -ex \
-  && mkdir -p /usr/share/man/man1/ \
+RUN mkdir -p /usr/share/man/man1/ \
   && groupadd -r unifi -g $UNIFI_GID \
   && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \
   && /usr/local/bin/docker-build.sh "${PKGURL}"

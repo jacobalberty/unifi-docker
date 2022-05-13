@@ -29,16 +29,16 @@ if [ "x${1}" == "x" ]; then
     exit 0
 fi
 
-apt-get update
-apt-get install -qy --no-install-recommends \
+apt update
+apt install -qy --no-install-recommends \
     apt-transport-https \
     curl \
     dirmngr \
     gpg \
     gpg-agent \
+    libcap2-bin \
     openjdk-8-jre-headless \
     procps \
-    libcap2-bin \
     tzdata
 echo 'deb https://www.ui.com/downloads/unifi/debian stable ubiquiti' | tee /etc/apt/sources.list.d/100-ubnt-unifi.list
 tryfail apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 06E85760C0A52C50

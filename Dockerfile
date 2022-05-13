@@ -43,14 +43,14 @@ RUN set -eux \
   && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p \
-  /usr/unifi \
+  /usr/local/docker \
   /usr/local/unifi/init.d \
-  /usr/unifi/init.d \
-  /usr/local/docker
+  /usr/unifi \
+  /usr/unifi/init.d
 
+COPY docker-build.sh /usr/local/bin/
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY docker-healthcheck.sh /usr/local/bin/
-COPY docker-build.sh /usr/local/bin/
 COPY functions /usr/unifi/functions
 COPY import_cert /usr/unifi/init.d/
 COPY pre_build /usr/local/docker/pre_build

@@ -9,7 +9,7 @@ on:
 
 env:
   TEST_TAG: jacobalberty/unifi:test
-  PKGURL: https://dl.ui.com/unifi/6.5.55/unifi_sysvinit_all.deb
+  PKGURL: https://dl.ui.com/unifi/7.1.65/unifi_sysvinit_all.deb
 
 jobs:
   build:

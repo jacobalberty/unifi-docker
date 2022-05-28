@@ -3,7 +3,7 @@
 
 ## `latest` tag
 
-`latest` is now tracking unifi 7.1.x as of 2022-05-09.
+`latest` is now tracking unifi 7.1.x as of 2022-05-18.
 
 ## multiarch
 
@@ -24,13 +24,13 @@ You will not be able to bind to lower ports by default. If you also pass the doc
 
 | Tag | Description |
 |-----|-------------|
-| [`latest`, `v7`, `v7.1`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 7.1.65 as of 2022-05-09 [Change Log 7.1.65](https://community.ui.com/releases/UniFi-Network-Application-7-1-65/6866da09-c506-42ec-abcf-1b7fcc0dddc7)|
+| [`latest`, `v7`, `v7.1`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 7.1.66 as of 2022-05-18 [Change Log 7.1.66](https://community.ui.com/releases/UniFi-Network-Application-7-1-66/cf1208d2-3898-418c-b841-699e7b773fd4)|
 
 ### Latest Release Candidate tags
 
 | Version | Latest Tag |
 |---------|------------|
-| 7.1.x   | [`7.1.65`](https://github.com/jacobalberty/unifi-docker/blob/7.1.65/Dockerfile) |
+| 7.1.x   | [`7.1.66`](https://github.com/jacobalberty/unifi-docker/blob/7.1.66/Dockerfile) |
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `release candidate` to `stable` instead of waiting for it to hit the repository.
 

@@ -1,4 +1,4 @@
-FROM golang:1.18.0-bullseye as permset
+FROM golang:1.18.2-bullseye as permset
 WORKDIR /src
 RUN git clone https://github.com/jacobalberty/permset.git /src && \
     mkdir -p /out && \

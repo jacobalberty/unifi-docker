@@ -1,3 +1,9 @@
+FROM golang:1.18.3-bullseye as permset
+WORKDIR /src
+RUN git clone https://github.com/jacobalberty/permset.git /src && \
+    mkdir -p /out && \
+    go build -ldflags "-X main.chownDir=/unifi" -o /out/permset
+
 FROM ubuntu:18.04
 
 LABEL maintainer="Jacob Alberty <jacob.alberty@foundigital.com>"
@@ -10,7 +16,8 @@ ENV BASEDIR=/usr/lib/unifi \
     DATADIR=/unifi/data \
     LOGDIR=/unifi/log \
     CERTDIR=/unifi/cert \
-    RUNDIR=/var/run/unifi \
+    RUNDIR=/unifi/run \
+    ORUNDIR=/var/run/unifi \
     ODATADIR=/var/lib/unifi \
     OLOGDIR=/var/log/unifi \
     CERTNAME=cert.pem \
@@ -53,6 +60,10 @@ RUN set -ex \
  && groupadd -r unifi -g $UNIFI_GID \
  && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \
  && /usr/local/bin/docker-build.sh "${PKGURL}"
+
+COPY --from=permset /out/permset /usr/local/bin/permset
+RUN chown 0.0 /usr/local/bin/permset && \
+    chmod +s /usr/local/bin/permset
 
 RUN mkdir -p /unifi && chown unifi:unifi -R /unifi
 

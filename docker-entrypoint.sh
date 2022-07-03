@@ -161,6 +161,11 @@ fi
 
 UNIFI_CMD="java ${JVM_OPTS} -jar ${BASEDIR}/lib/ace.jar start"
 
+if [ "$EUID" -ne 0 ] && command -v permset &> /dev/null
+then
+  permset
+fi
+
 # controller writes to relative path logs/server.log
 cd ${BASEDIR}
 

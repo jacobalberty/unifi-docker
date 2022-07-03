@@ -30,7 +30,7 @@ You will not be able to bind to lower ports by default. If you also pass the doc
 
 | Version | Latest Tag |
 |---------|------------|
-| 7.1.x   | [`7.1.66`](https://github.com/jacobalberty/unifi-docker/blob/7.1.66/Dockerfile) |
+| 7.1.x   | [`v7.1.67-rc`](https://github.com/jacobalberty/unifi-docker/blob/v7.1.67-rc/Dockerfile) |
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `release candidate` to `stable` instead of waiting for it to hit the repository.
 

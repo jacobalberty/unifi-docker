@@ -130,7 +130,7 @@ You may also specify a version number (e.g., `jacobalberty/unifi:6.2.26`) to get
 
 | Tag | Description | Changelog |
 |-----|-------------|-----------|
-| [`latest`, `v7`, `v7.1`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Current Stable: Version 7.1.66 as of 2022-05-18 |[Change Log 7.1.66](https://community.ui.com/releases/UniFi-Network-Application-7-1-66/cf1208d2-3898-418c-b841-699e7b773fd4)|
+| [`latest`, `v7`, `v7.1`, `7.1.66`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Current Stable: Version 7.1.66 as of 2022-05-18 |[Change Log 7.1.66](https://community.ui.com/releases/UniFi-Network-Application-7-1-66/cf1208d2-3898-418c-b841-699e7b773fd4)|
 | [`development`](https://github.com/jacobalberty/unifi-docker/blob/7.1.67/Dockerfile) | Release Candidate: 7.1.67-rc as of yyyy-mm-dd | [Change Log 7.1.67-rc](https://community.ui.com/releases/UniFi-Network-Application-7-1-67/f85ec723-ae52-405b-8905-077afcc97bb5) |
 | `6.2.26` | Earlier 6.2.26 version | link to changelog |
 | `5.8.x` | Earlier 5.8.x version (if available) | link to changelog |

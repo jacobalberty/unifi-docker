@@ -44,6 +44,7 @@ docker run -d --init \
    -e TZ='Africa/Johannesburg' \
    -v ~/unifi:/unifi \
    --user unifi \
+   --name unifi \
    jacobalberty/unifi
 ```
 
@@ -64,12 +65,10 @@ Unifi devices can "find" the Unifi Controller.
 
 To change options, stop the Docker container then re-run the `docker run...` command
 above with the new options.
-To stop the running container, you need to get its name -
-a two-word phrase, separated by "_", shown at the end of the `docker ps` command.
 
 ```bash
-docker ps # to find the container name - it'll be two_words
-docker stop two_words
+docker stop unifi
+docker rm unifi
 ```
 ### Upgrading Unifi Controller
 

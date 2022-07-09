@@ -113,25 +113,21 @@ See [Mongo and Docker for Windows](#mongo-and-docker-for-windows) for more detai
 
 ## Supported Tags
 
-_[**Note:** Docker's rule is to retrieve `:latest` if no tag is specified.
-Newcomers should not be using an RC version,
-so I suggest that we tag the most recent stable version with `:latest`.
-Someone who wants the release candidate can add the `:development` tag -richb]_
-
-You may specify the version of Unifi Controller in the `docker run ...` command.
+You can specify the version of Unifi Controller in the `docker run ...` command.
 For example, the container named `jacobalberty/unifi` provides the most recent stable release.
 See the table below for the current version.
 
-The `development` tag (for example, `jacobalberty/unifi:development`)
-uses the most recent version from the UniFi APT repository,
-whether stable, or an experimental release candidate.
+The `rc` tag (for example, `jacobalberty/unifi:rc`)
+uses the most recent release candidate from the UniFi APT repository.
 
 You may also specify a version number (e.g., `jacobalberty/unifi:6.2.26`) to get a specific version number, as shown in the table below.
 
+_????? Which older versions are actually available? We should list only those... -richb_
+
 | Tag | Description | Changelog |
 |-----|-------------|-----------|
-| [`latest`, `v7`, `v7.1`, `7.1.66`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Current Stable: Version 7.1.66 as of 2022-05-18 |[Change Log 7.1.66](https://community.ui.com/releases/UniFi-Network-Application-7-1-66/cf1208d2-3898-418c-b841-699e7b773fd4)|
-| [`development`](https://github.com/jacobalberty/unifi-docker/blob/7.1.67/Dockerfile) | Release Candidate: 7.1.67-rc as of yyyy-mm-dd | [Change Log 7.1.67-rc](https://community.ui.com/releases/UniFi-Network-Application-7-1-67/f85ec723-ae52-405b-8905-077afcc97bb5) |
+| [`latest`, `7.1.66`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Current Stable: Version 7.1.66 as of 2022-05-18 |[Change Log 7.1.66](https://community.ui.com/releases/UniFi-Network-Application-7-1-66/cf1208d2-3898-418c-b841-699e7b773fd4)|
+| [`rc`](https://github.com/jacobalberty/unifi-docker/blob/7.1.67/Dockerfile) | Release Candidate: 7.1.67-rc as of yyyy-mm-dd | [Change Log 7.1.67-rc](https://community.ui.com/releases/UniFi-Network-Application-7-1-67/f85ec723-ae52-405b-8905-077afcc97bb5) |
 | `6.2.26` | Earlier 6.2.26 version | link to changelog |
 | `5.8.x` | Earlier 5.8.x version (if available) | link to changelog |
 | `5.6.x` _(available?)_ | Earlier 5.86.x version (if available) | link to changelog |

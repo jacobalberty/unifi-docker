@@ -6,9 +6,14 @@ No more hassling with Controller, Java, or OS updates:
 a Docker container simplifies the installation procedure
 and eliminates problems with dependencies and versions.
 
-The current version is Unifi Controller 7.1.66.
 This container has been tested on Ubuntu, Debian, macOS,
-and even Raspberry Pi hardware. 
+and even Raspberry Pi hardware.
+For information about running on Windows, see [Unifi-in-Docker on Windows](#unifi-in-docker-on-windows) below.
+
+## Current Information
+
+The current version is Unifi Controller 7.1.66.
+There are currently no hot-fix or CVE warnings affecting Unifi Controller.
 
 ## Setting up, Running, Stopping, Upgrading Unifi-in-Docker
 
@@ -21,21 +26,24 @@ and start the Docker container running.
 ### Setting up directories
 
 One-time setup: create the "unifi" directory on the Docker host.
-(By default, this README assumes you will use the home directory.
-If you create the directory elsewhere, read the **Options**
-section below to adjust.)
 Within the "unifi" directory, create two sub-directories: "data" and "log".
 
 ```bash
-cd      # by default, use the home directory
+cd # by default, use the home directory
 mkdir -p unifi/data
 mkdir -p unifi/log
 ```
 
+_Note:_ By default, this README assumes you will use the home directory
+on Linux, Unix, macOS.
+If you create the directory elsewhere, read the
+[Options section](#options-on-the-command-line)
+below to adjust.)
+
 ### Running Unifi-in-Docker
 
 Each time you want to start Unifi, use this command.
-Each of the options is described below.
+Each of the options is [described below.](#options-on-the-command-line)
 
 ```bash
 docker run -d --init \
@@ -65,6 +73,8 @@ Unifi devices can "find" the Unifi Controller.
 
 To change options, stop the Docker container then re-run the `docker run...` command
 above with the new options.
+_Note:_ The `docker rm unifi` command simply removes the "name" from the previous Docker image.
+No time-consuming rebuild is required.
 
 ```bash
 docker stop unifi
@@ -73,7 +83,7 @@ docker rm unifi
 ### Upgrading Unifi Controller
 
 All the configuration and other files created by Unifi Controller
-are stored on the Docker host's local disk.
+are stored on the Docker host's local disk (`~/unifi` by default.)
 No information is retained within the container.
 An upgrade to a new version of Unifi Controller simply retrieves a new Docker container,
 which then re-uses the configuration from the local disk.
@@ -81,9 +91,9 @@ The upgrade process is:
 
 1. **MAKE A BACKUP** on another computer, not the Docker host _(Always, every time...)_
 2. Stop the current container (see above)
-3. Enter `docker run...` with the new container name (see above)
+3. Enter `docker run...` with the newer container tag (see [Supported Tags](#supported-tags) below.)
 
-## Options for Unifi-in-Docker
+## Options on the Command Line
 
 The options for the `docker run...` command are:
 
@@ -92,7 +102,7 @@ The options for the `docker run...` command are:
 - `--restart=unless-stopped` - If the container should stop for some reason,
 restart it unless you issue a `docker stop ...`
 - `-p ...` - Set the ports to pass through to the container.
-The list above - `-p 8080:8080 -p 8443:8443 -p 3478:3478/udp`
+`-p 8080:8080 -p 8443:8443 -p 3478:3478/udp`
 is the minimal set for a working Unifi Controller. 
 - `-e TZ=...` Set an environment variable named `TZ` with the desired time zone.
 Find your time zone in this 
@@ -108,71 +118,34 @@ See the [Volumes](#volumes) discussion for other volumes used by Unifi Controlle
 - `jacobalberty/unifi` - the name of the container to use.
 The `jacobalberty...` image is retrieved from [Dockerhub.](https://hub.docker.com/r/jacobalberty/unifi)
 See the discussion about [Supported Tags](#supported-docker-hub-tags-and-respective-dockerfile-links) below.
-- **Windows Users:** There is a problem with Mongo database and a bind-mount volume.
-See [Mongo and Docker for Windows](#mongo-and-docker-for-windows) for more details.
+- **Windows Users:** For information about running on Windows, see [Unifi-in-Docker on Windows](#unifi-in-docker-on-windows) below.
 
 ## Supported Tags
 
-You can specify the version of Unifi Controller in the `docker run ...` command.
-For example, the container named `jacobalberty/unifi` provides the most recent stable release.
+You can choose the version of Unifi Controller in the `docker run ...` command.
+In Docker terminology, these versions are specified by "tags".
+
+For example, in this project the container named `jacobalberty/unifi`
+(with no "tag")
+provides the most recent stable release.
 See the table below for the current version.
 
 The `rc` tag (for example, `jacobalberty/unifi:rc`)
 uses the most recent release candidate from the UniFi APT repository.
 
-You may also specify a version number (e.g., `jacobalberty/unifi:6.2.26`) to get a specific version number, as shown in the table below.
+You may also specify a version number (e.g., `jacobalberty/unifi:stable6`)
+to get a specific version number, as shown in the table below.
 
-_????? Which older versions are actually available? We should list only those... -richb_
+_Note:_ In Docker, specifying an image with no tag 
+(e.g., `jacobalberty/unifi`) gets the "latest" tag.
+For Unifi-in-Docker, this uses the most recent stable version.
 
 | Tag | Description | Changelog |
 |-----|-------------|-----------|
 | [`latest`, `7.1.66`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Current Stable: Version 7.1.66 as of 2022-05-18 |[Change Log 7.1.66](https://community.ui.com/releases/UniFi-Network-Application-7-1-66/cf1208d2-3898-418c-b841-699e7b773fd4)|
-| [`rc`](https://github.com/jacobalberty/unifi-docker/blob/7.1.67/Dockerfile) | Release Candidate: 7.1.67-rc as of yyyy-mm-dd | [Change Log 7.1.67-rc](https://community.ui.com/releases/UniFi-Network-Application-7-1-67/f85ec723-ae52-405b-8905-077afcc97bb5) |
-| `6.2.26` | Earlier 6.2.26 version | link to changelog |
-| `5.8.x` | Earlier 5.8.x version (if available) | link to changelog |
-| `5.6.x` _(available?)_ | Earlier 5.86.x version (if available) | link to changelog |
-
-### multiarch
-
-All available containers now support multiarch with `amd64`, `armhf`, and `arm64` builds included.
-`armhf` for now uses mongodb 3.4, I do not see much of a path forward for `armhf` due
-to the lack of mongodb support for 32 bit arm, but I will
-support it as long as feasibly possible, for now that date seems to be expiration of support for ubuntu 18.04.
-
-## Run as non-root User
-
-It is suggested you start running the Unifi Controller as a non-root user.
-The default container runs it as root but if you set the docker run flag `--user` to `unifi`,
-then the image will run as a special unfi user with the uid/gid 999/999.
-You should ideally set your data and logs to owned by the proper gid.
-
-Note: If you run as `unifi`, you will not be able to bind to lower ports by default.
-This should not be needed if you are using the default ports.
-If you need this, also pass the `docker run ...` flag `--sysctl` with `net.ipv4.ip_unprivileged_port_start=0`
-to bind to whatever port you wish.
-
-## Mongo and Docker for windows
-Unifi uses the Mongo database to store its data.
-Mongo uses the fsync() system call on its data files.
-Because of how Docker for Windows works, you can't bind mount `/unifi/db/data` on a Docker for Windows container.
-
-_[**IS THIS NEXT SENTENCE TRUE?** -richb]_ You can keep data locally but should use `-v unifi:/unifi` (no leading `~/`) and be sure to create those directories in the right place.
-
-The article [MongoDB on Windows in Minutes with Docker](https://blog.jeremylikness.com/blog/2018-12-27_mongodb-on-windows-in-minutes-with-docker/) also provides guidance for setting up a Docker Volume to work with Mongo database.
-
-## Running with separate mongo container
-
-The `docker-compose.yml` file will bring up mongo and the controller,
-using named volumes for important directories.
-
-Simply clone this repo or copy the `docker-compose.yml` file
-to you host computer's local disk and run:
-
-```bash
-docker-compose up -d
-```
-
-_[Should we simply recommend Windows users use the `docker-compose`? How would they set up options? Would it matter?_
+| [`rc`](https://github.com/jacobalberty/unifi-docker/blob/rc/Dockerfile) | Release Candidate: 7.1.67-rc as of yyyy-mm-dd | [Change Log 7.1.67-rc](https://community.ui.com/releases/UniFi-Network-Application-7-1-67/f85ec723-ae52-405b-8905-077afcc97bb5) |
+| [`stable6`](https://github.com/jacobalberty/unifi-docker/blob/stable-6/Dockerfile) | Final stable version 6 (6.5.55) | [Change Log 6.5.55](https://community.ui.com/releases/UniFi-Network-Application-6-5-55/48c64137-4a4a-41f7-b7e4-3bee505ae16e) |
+| [`stable5`](https://github.com/jacobalberty/unifi-docker/blob/stable-5/Dockerfile) | Final stable version 5 (5.4.23) | [Change Log 5.14.23](https://community.ui.com/releases/UniFi-Network-Controller-5-14-23/daf90732-30ad-48ee-81e7-1dcb374eba2a) |
 
 ## Adopting Access Points/Switches/Security Gateway
 
@@ -234,41 +207,6 @@ If you launch the container using host networking \(With the `--net=host` parame
 It is possible to configure the `macvlan` driver to bridge your container to the host's networking adapter.
 Specific instructions for this container are not yet available but you can read a write-up for docker at
 [collabnix.com/docker-17-06-swarm-mode-now-with-macvlan-support](http://collabnix.com/docker-17-06-swarm-mode-now-with-macvlan-support/).
-
-## Beta Users
-
-The `beta` image has been updated to support package installation at run time.
-With this change you can now install the beta releases on more systems,
-such as Synology.
-This should open up access to the beta program for more users of this docker image.
-
-
-If you would like to submit a new feature for the images,
-the beta branch is probably a good one to apply it against as well.
-I will be cleaing up the Dockerfile under beta and gradually pushing out
-the improvements to the other branches.
-So any major changes should apply cleanly against the `beta` branch.
-
-### Installing Beta Builds On The Command Line
-
-Using the Beta build is pretty easy, just use the `jacobalberty/unifi:beta` image
-and add `-e PKGURL=https://dl.ubnt.com/unifi/5.6.30/unifi_sysvinit_all.deb` to your usual command line.
-
-Simply replace the url to the debian package with the version you prefer.
-
-### Building Beta Using `docker-compose.yml` Version 2
-
-This is just as easy when using version 2 of the docker-compose.yml file format.
-
-Under your containers service definition instead of using `image: jacobalberty/unifi` use the following:
-
-```shell
-        image: jacobalberty/unifi:beta
-         environment:
-          PKGURL: https://dl.ubnt.com/unifi/5.6.40/unifi_sysvinit_all.deb
-```
-
-Once again, simply change PKGURL to point to the package you would like to use.
 
 ## Volumes
 
@@ -391,14 +329,96 @@ This container exposes the following ports. A minimal Unifi Controller requires 
 
 See [UniFi - Ports Used](https://help.ubnt.com/hc/en-us/articles/218506997-UniFi-Ports-Used) for more information.
 
-## Multi-process container
-_[Is this section still true? Relevant?]_
+## Run as non-root User
 
-While micro-service patterns try to avoid running multiple processes in a container, the unifi5 container tries to follow the same process execution model intended by the original debian package and its init script, while trying to avoid needing to run a full init system.
+It is suggested you start running the Unifi Controller as a non-root user.
+The default container runs it as root but if you set the docker run flag `--user` to `unifi`,
+then the image will run as a special unfi user with the uid/gid 999/999.
+You should ideally set your data and logs to owned by the proper gid.
 
-`dumb-init` has now been removed. Instead it is now suggested you include --init in your docker run command line. If you are using docker-compose you can accomplish the same by making sure you use version 2.2 of the yml format and add `init: true` to your service definition.
+Note: If you run as `unifi`, you will not be able to bind to lower ports by default.
+This should not be needed if you are using the default ports.
+If you need this, also pass the `docker run ...` flag `--sysctl` with `net.ipv4.ip_unprivileged_port_start=0`
+to bind to whatever port you wish.
 
-`unifi.sh` executes and waits on the jsvc process which orchestrates running the controller as a service. The wrapper script also traps SIGTERM to issue the appropriate stop command to the unifi java `com.ubnt.ace.Launcher` process in the hopes that it helps keep the shutdown graceful.
+## Unifi-in-Docker on Windows
+Unifi uses the Mongo database to store its data.
+Mongo uses the fsync() system call on its data files.
+Because of how Docker for Windows works, you can't bind mount `/unifi/db/data` on a Docker for Windows container.
+
+The article [MongoDB on Windows in Minutes with Docker](https://blog.jeremylikness.com/blog/2018-12-27_mongodb-on-windows-in-minutes-with-docker/) also provides guidance for setting up a Docker Volume to work with Mongo database.
+
+Alternatively, use the `docker-compose` command as described
+in the next section since it uses a pre-built
+Mongo container that addresses the problem.
+
+### Running with separate Mongo container
+
+The `docker-compose.yml` file in this repository
+provides single command that orchestrates all the actions required
+to bring up Mongo and Unifi Controller in separate containers,
+using named volumes for important directories.
+
+Simply clone this repo or copy the `docker-compose.yml` file
+to your host computer's local disk and run:
+
+```bash
+cd <directory with docker-compose.yml>
+docker-compose up -d 
+```
+
+**Setting Options:**
+
+* The `docker-compose.yml` file contains the options
+passed to Unifi Controller when it starts.
+Edit that file to modify the options.
+* _Optional:_ Add additional `-e <any-environment-variables-you-want>` to the `docker-compose up` line
+
+To change options to Unifi Controller::
+
+```bash
+cd <directory with docker-compose.yml>
+docker-compose down # this stops Unifi Controller and MongoDB
+... edit the options in the docker-compose.yml file ...
+docker-compose up ... # to resume operation
+```
+
+The options in the `docker-compose.yml` file are described in the 
+[Options on the command line](#options-on-the-command-line) section.
+
+## Beta Users
+
+The `beta` image has been updated to support package installation at run time.
+With this change you can now install the beta releases on more systems,
+such as Synology.
+This should open up access to the beta program for more users of this docker image.
+
+If you would like to submit a new feature for the images,
+the beta branch is probably a good one to apply it against as well.
+I will be cleaing up the Dockerfile under beta and gradually pushing out
+the improvements to the other branches.
+So any major changes should apply cleanly against the `beta` branch.
+
+### Installing Beta Builds On The Command Line
+
+Using the Beta build is pretty easy, just use the `jacobalberty/unifi:beta` image
+and pass in the environment variable `-e PKGURL=https://dl.ubnt.com/unifi/5.6.30/unifi_sysvinit_all.deb` to your usual command line.
+
+Simply replace the url to the debian package with the version you prefer.
+
+### Running the Beta Using `docker-compose.yml` 
+
+In the containers service definition of the `docker-compose.yml` file, replace `image: jacobalberty/unifi` with the following:
+
+```shell
+        image: jacobalberty/unifi:beta
+         environment:
+          PKGURL: https://dl.ubnt.com/unifi/5.6.40/unifi_sysvinit_all.deb
+```
+
+Replace the PKGURL: link with a link to the package you want.
+
+_[Earlier versions talked about "Version 2". Is it still relevant to mention it?]_
 
 ## Init scripts
 
@@ -421,6 +441,24 @@ chain.pem # full cert chain
 If your certificate or private key have different names, you can set the environment variables `CERTNAME` and `CERT_PRIVATE_NAME` to the name of your certificate/private key, e.g. `CERTNAME=my-cert.pem` and `CERT_PRIVATE_NAME=my-privkey.pem`.
 
 For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA Cert automatically. In case your letsencrypt cert is already the chained certificate, you can set the `CERT_IS_CHAIN` environment variable to `true`, e.g. `CERT_IS_CHAIN=true`. This option also works together with a custom `CERTNAME`.
+
+### multiarch
+
+_[Is this section still true? Relevant? Do the currently-listed Tags make this section obsolete?]_
+
+All available containers now support multiarch with `amd64`, `armhf`, and `arm64` builds included.
+`armhf` for now uses mongodb 3.4, I do not see much of a path forward for `armhf` due
+to the lack of mongodb support for 32 bit arm, but I will
+support it as long as feasibly possible, for now that date seems to be expiration of support for ubuntu 18.04.
+
+## Multi-process container
+_[Is this section still true? Relevant? Does the `docker-compose`section supercede this?]_
+
+While micro-service patterns try to avoid running multiple processes in a container, the unifi5 container tries to follow the same process execution model intended by the original debian package and its init script, while trying to avoid needing to run a full init system.
+
+`dumb-init` has now been removed. Instead it is now suggested you include --init in your docker run command line. If you are using docker-compose you can accomplish the same by making sure you use version 2.2 of the yml format and add `init: true` to your service definition.
+
+`unifi.sh` executes and waits on the jsvc process which orchestrates running the controller as a service. The wrapper script also traps SIGTERM to issue the appropriate stop command to the unifi java `com.ubnt.ace.Launcher` process in the hopes that it helps keep the shutdown graceful.
 
 ## TODO
 

@@ -2,9 +2,13 @@
 
 This repo contains a Dockerized version of [Ubiqiti Network's](https://www.ubnt.com/) Unifi Controller.
 
-No more hassling with Controller, Java, or OS updates:
-a Docker container simplifies the installation procedure
-and eliminates problems with dependencies and versions.
+**Why bother?** Using Docker, you can stop worrying about version
+hassles with Unifi Controller, Java, _and_ your OS.
+A Docker container wraps everything into one well-tested bundle.
+
+To install, a couple lines on the command-line starts the container.
+To upgrade, just stop the old container, and start up the new.
+It's really that simple.
 
 This container has been tested on Ubuntu, Debian, macOS,
 and even Raspberry Pi hardware.
@@ -12,14 +16,15 @@ For information about running on Windows, see [Unifi-in-Docker on Windows](#unif
 
 ## Current Information
 
-The current version is Unifi Controller 7.1.66.
+The current "latest" version is Unifi Controller 7.1.66.
 There are currently no hot-fix or CVE warnings affecting Unifi Controller.
 
-## Setting up, Running, Stopping, Upgrading Unifi-in-Docker
+## Setting up, Running, Stopping, Upgrading
 
-First, install Docker on the machine that will run the Docker
-and Unifi Controller software (the "Docker host")
-using any of the guides on the internet.
+First, install Docker on the the "Docker host" -
+the machine that will run the Docker
+and Unifi Controller software.
+Use any of the guides on the internet to install on your Docker host.
 Then use the following steps to set up the directories
 and start the Docker container running.
 
@@ -62,10 +67,10 @@ to complete configuration from the web (initial install) or resume using Unifi C
 
 **Important:** Two points to be aware of when you're setting up your Unifi Controller:
 
-* When you initially connect to the link above, you will
+* When your browser initially connects to the link above, you will
 see a warning about an untrusted certificate.
-If you are _sure_ that you have used the address of the host
-running Unifi-in-Docker, agree to the connection.
+If you are _certain_ that you have typed the address of the
+Docker host correctly, agree to the connection.
 * See the note below about **Override "Inform Host" IP** so your
 Unifi devices can "find" the Unifi Controller.
  
@@ -318,28 +323,34 @@ Maps to `unifi.db.name`.
 
 ## Exposed Ports
 
-This container exposes the following ports. A minimal Unifi Controller requires the first three.
+This container exposes the following ports.
+A minimal Unifi Controller installation requires you
+expose the first three with the `-p ...` option.
 
-* 8080/tcp - Device command/control
-* 8443/tcp - Web interface + API
-* 3478/udp - STUN service
-* 8843/tcp - HTTPS portal
-* 8880/tcp - HTTP portal
-* 6789/tcp - Speed Test (unifi5 only)
+* 8080/tcp - Device command/control 
+* 8443/tcp - Web interface + API 
+* 3478/udp - STUN service 
+* 8843/tcp - HTTPS portal _(optional)_
+* 8880/tcp - HTTP portal _(optional)_
+* 6789/tcp - Speed Test (unifi5 only) _(optional)_
 
 See [UniFi - Ports Used](https://help.ubnt.com/hc/en-us/articles/218506997-UniFi-Ports-Used) for more information.
 
 ## Run as non-root User
 
-It is suggested you start running the Unifi Controller as a non-root user.
-The default container runs it as root but if you set the docker run flag `--user` to `unifi`,
-then the image will run as a special unfi user with the uid/gid 999/999.
-You should ideally set your data and logs to owned by the proper gid.
+The default container runs Unifi Controller as root.
+The recommended `docker run...` command above starts
+Unifi Controller so the image runs as `unifi` (non-root)
+user with the uid/gid 999/999.
+You can also set your data and logs directories to be
+owned by the proper gid.
 
-Note: If you run as `unifi`, you will not be able to bind to lower ports by default.
-This should not be needed if you are using the default ports.
-If you need this, also pass the `docker run ...` flag `--sysctl` with `net.ipv4.ip_unprivileged_port_start=0`
-to bind to whatever port you wish.
+_Note:_ When you run as a non-root user,
+you will not be able to bind to lower ports by default.
+(This would not necessary if you are using the default ports.)
+If you must do this, also pass the 
+`--sysctl net.ipv4.ip_unprivileged_port_start=0`
+option on the `docker run...` to bind to whatever port you wish.
 
 ## Unifi-in-Docker on Windows
 Unifi uses the Mongo database to store its data.
@@ -348,16 +359,18 @@ Because of how Docker for Windows works, you can't bind mount `/unifi/db/data` o
 
 The article [MongoDB on Windows in Minutes with Docker](https://blog.jeremylikness.com/blog/2018-12-27_mongodb-on-windows-in-minutes-with-docker/) also provides guidance for setting up a Docker Volume to work with Mongo database.
 
-Alternatively, use the `docker-compose` command as described
+As a simpler alternative,
+use the `docker-compose` command as described
 in the next section since it uses a pre-built
 Mongo container that addresses the problem.
 
 ### Running with separate Mongo container
 
-The `docker-compose.yml` file in this repository
-provides single command that orchestrates all the actions required
+The `docker-compose.yml` file in this repository provides a
+single command that orchestrates all the actions required
 to bring up Mongo and Unifi Controller in separate containers,
 using named volumes for important directories.
+(No need to worry about the fsync() problem described above.)
 
 Simply clone this repo or copy the `docker-compose.yml` file
 to your host computer's local disk and run:
@@ -371,7 +384,8 @@ docker-compose up -d
 
 * The `docker-compose.yml` file contains the options
 passed to Unifi Controller when it starts.
-Edit that file to modify the options.
+Edit the `docker-compose.yml` file setting its values according to the 
+[Options on the command line.](#options-on-the-command-line)
 * _Optional:_ Add additional `-e <any-environment-variables-you-want>` to the `docker-compose up` line
 
 To change options to Unifi Controller::
@@ -379,12 +393,9 @@ To change options to Unifi Controller::
 ```bash
 cd <directory with docker-compose.yml>
 docker-compose down # this stops Unifi Controller and MongoDB
-... edit the options in the docker-compose.yml file ...
+# ... edit the options in the docker-compose.yml file ...
 docker-compose up ... # to resume operation
 ```
-
-The options in the `docker-compose.yml` file are described in the 
-[Options on the command line](#options-on-the-command-line) section.
 
 ## Beta Users
 
@@ -418,11 +429,11 @@ In the containers service definition of the `docker-compose.yml` file, replace `
 
 Replace the PKGURL: link with a link to the package you want.
 
-_[Earlier versions talked about "Version 2". Is it still relevant to mention it?]_
+~~_[Earlier versions talked about "Version 2". Is it still relevant to mention it?]_~~
 
 ## Init scripts
 
-_[Is this section still true? Relevant?]_
+~~_[Is this section still true? Relevant?]_~~
 
 You may now place init scripts to be launched during the unifi startup in /usr/local/unifi/init.d to perform any actions unique to your unifi setup. An example bash script to set up certificates is in `/usr/unifi/init.d/import_cert`.
 
@@ -442,23 +453,24 @@ If your certificate or private key have different names, you can set the environ
 
 For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA Cert automatically. In case your letsencrypt cert is already the chained certificate, you can set the `CERT_IS_CHAIN` environment variable to `true`, e.g. `CERT_IS_CHAIN=true`. This option also works together with a custom `CERTNAME`.
 
-### multiarch
+~~### multiarch~~
 
-_[Is this section still true? Relevant? Do the currently-listed Tags make this section obsolete?]_
+~~_[Is this section still true? Relevant? Do the currently-listed Tags make this section obsolete?]_~~
 
-All available containers now support multiarch with `amd64`, `armhf`, and `arm64` builds included.
+~~All available containers now support multiarch with `amd64`, `armhf`, and `arm64` builds included.
 `armhf` for now uses mongodb 3.4, I do not see much of a path forward for `armhf` due
 to the lack of mongodb support for 32 bit arm, but I will
-support it as long as feasibly possible, for now that date seems to be expiration of support for ubuntu 18.04.
+support it as long as feasibly possible, for now that date seems to be expiration of support for ubuntu 18.04.~~
 
-## Multi-process container
-_[Is this section still true? Relevant? Does the `docker-compose`section supercede this?]_
+~~## Multi-process container~~
 
-While micro-service patterns try to avoid running multiple processes in a container, the unifi5 container tries to follow the same process execution model intended by the original debian package and its init script, while trying to avoid needing to run a full init system.
+~~_[Is this section still true? Relevant? Does the `docker-compose`section supercede this?]_~~
 
-`dumb-init` has now been removed. Instead it is now suggested you include --init in your docker run command line. If you are using docker-compose you can accomplish the same by making sure you use version 2.2 of the yml format and add `init: true` to your service definition.
+~~While micro-service patterns try to avoid running multiple processes in a container, the unifi5 container tries to follow the same process execution model intended by the original debian package and its init script, while trying to avoid needing to run a full init system.~~
 
-`unifi.sh` executes and waits on the jsvc process which orchestrates running the controller as a service. The wrapper script also traps SIGTERM to issue the appropriate stop command to the unifi java `com.ubnt.ace.Launcher` process in the hopes that it helps keep the shutdown graceful.
+~~`dumb-init` has now been removed. Instead it is now suggested you include --init in your docker run command line. If you are using docker-compose you can accomplish the same by making sure you use version 2.2 of the yml format and add `init: true` to your service definition.~~
+
+~~`unifi.sh` executes and waits on the jsvc process which orchestrates running the controller as a service. The wrapper script also traps SIGTERM to issue the appropriate stop command to the unifi java `com.ubnt.ace.Launcher` process in the hopes that it helps keep the shutdown graceful.~~
 
 ## TODO
 

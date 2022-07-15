@@ -162,7 +162,7 @@ with the address of the Docker host computer.
 (By default, the Docker container usually gets the address 172.17.x.x.)
 To do this:
 
-* Find **Settings -> System -> Override Inform Host:** in the Unifi Controller web GUI.
+* Find **Settings -> System -> Other Configuration -> Override Inform Host:** in the Unifi Controller web GUI.
 * Check the "Enable" box, and enter the IP address of the Docker host machine. 
 * Save settings in Unifi Controller
 * Restart UniFi-in-Docker container with `docker stop ...` and `docker run ...` commands.

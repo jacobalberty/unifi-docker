@@ -10,9 +10,8 @@ To install, a couple lines on the command-line starts the container.
 To upgrade, just stop the old container, and start up the new.
 It's really that simple.
 
-This container has been tested on Ubuntu, Debian, macOS,
+This container has been tested on Ubuntu, Debian, macOS, Windows,
 and even Raspberry Pi hardware.
-For information about running on Windows, see [Unifi-in-Docker on Windows](#unifi-in-docker-on-windows) below.
 
 ## Current Information
 
@@ -21,10 +20,12 @@ There are currently no hot-fix or CVE warnings affecting Unifi Controller.
 
 ## Setting up, Running, Stopping, Upgrading
 
-First, install Docker on the the "Docker host" -
+First, install Docker on the "Docker host" -
 the machine that will run the Docker
 and Unifi Controller software.
 Use any of the guides on the internet to install on your Docker host.
+For Windows, see the [Microsoft guide for installing Docker.](https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers)
+
 Then use the following steps to set up the directories
 and start the Docker container running.
 
@@ -159,10 +160,12 @@ For Unifi-in-Docker, this uses the most recent stable version.
 For your Unifi devices to "find" the Unifi Controller running in Docker,
 you _MUST_ override the Inform Host IP
 with the address of the Docker host computer.
-(By default, the Docker container usually gets the address 172.17.x.x.)
+(By default, the Docker container usually gets the internal address 172.17.x.x
+while Unifi devices connect to the (external) address of the Docker host.)
 To do this:
 
 * Find **Settings -> System -> Other Configuration -> Override Inform Host:** in the Unifi Controller web GUI.
+(It's near the bottom of that page.)
 * Check the "Enable" box, and enter the IP address of the Docker host machine. 
 * Save settings in Unifi Controller
 * Restart UniFi-in-Docker container with `docker stop ...` and `docker run ...` commands.
@@ -352,19 +355,24 @@ If you must do this, also pass the
 `--sysctl net.ipv4.ip_unprivileged_port_start=0`
 option on the `docker run...` to bind to whatever port you wish.
 
-## Unifi-in-Docker on Windows
-Unifi uses the Mongo database to store its data.
+~~## Unifi-in-Docker on Windows~~
+
+~~Unifi uses the Mongo database to store its data.
 Mongo uses the fsync() system call on its data files.
-Because of how Docker for Windows works, you can't bind mount `/unifi/db/data` on a Docker for Windows container.
+Because of how Docker for Windows works, you can't bind mount `/unifi/db/data` on a Docker for Windows container.~~
 
-The article [MongoDB on Windows in Minutes with Docker](https://blog.jeremylikness.com/blog/2018-12-27_mongodb-on-windows-in-minutes-with-docker/) also provides guidance for setting up a Docker Volume to work with Mongo database.
+~~The article [MongoDB on Windows in Minutes with Docker](https://blog.jeremylikness.com/blog/2018-12-27_mongodb-on-windows-in-minutes-with-docker/) also provides guidance for setting up a Docker Volume to work with Mongo database.~~
 
-As a simpler alternative,
+~~As a simpler alternative,
 use the `docker-compose` command as described
 in the next section since it uses a pre-built
-Mongo container that addresses the problem.
+Mongo container that addresses the problem.~~
 
-### Running with separate Mongo container
+## Running with separate Mongo container
+
+_[ Should we remove this section?
+The simple all-in-one container above works just fine
+for people who "just want it to work" ]_
 
 The `docker-compose.yml` file in this repository provides a
 single command that orchestrates all the actions required
@@ -412,10 +420,23 @@ So any major changes should apply cleanly against the `beta` branch.
 
 ### Installing Beta Builds On The Command Line
 
-Using the Beta build is pretty easy, just use the `jacobalberty/unifi:beta` image
-and pass in the environment variable `-e PKGURL=https://dl.ubnt.com/unifi/5.6.30/unifi_sysvinit_all.deb` to your usual command line.
+Using the Beta build is pretty easy:
+just substitute the correct URL from the Unifi site
+for the `PKGURL` parameter,
+and use `jacobalberty/unifi:beta` for the image
+like this:
 
-Simply replace the url to the debian package with the version you prefer.
+```bash
+docker run -d --init \
+   --restart=unless-stopped \
+   -p 8080:8080 -p 8443:8443 -p 3478:3478/udp \
+   -e TZ='Africa/Johannesburg' \
+   -v ~/unifi:/unifi \
+   --user unifi \
+   --name unifi \
+   -e PKGURL=https://dl.ubnt.com/unifi/5.6.30/unifi_sysvinit_all.deb \
+   jacobalberty/unifi:beta
+```
 
 ### Running the Beta Using `docker-compose.yml` 
 

@@ -124,7 +124,6 @@ See the [Volumes](#volumes) discussion for other volumes used by Unifi Controlle
 - `jacobalberty/unifi` - the name of the container to use.
 The `jacobalberty...` image is retrieved from [Dockerhub.](https://hub.docker.com/r/jacobalberty/unifi)
 See the discussion about [Supported Tags](#supported-docker-hub-tags-and-respective-dockerfile-links) below.
-- **Windows Users:** For information about running on Windows, see [Unifi-in-Docker on Windows](#unifi-in-docker-on-windows) below.
 
 ## Supported Tags
 
@@ -137,7 +136,7 @@ provides the most recent stable release.
 See the table below for the current version.
 
 The `rc` tag (for example, `jacobalberty/unifi:rc`)
-uses the most recent release candidate from the UniFi APT repository.
+uses the most recent Release Candidate from the UniFi APT repository.
 
 You may also specify a version number (e.g., `jacobalberty/unifi:stable6`)
 to get a specific version number, as shown in the table below.

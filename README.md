@@ -16,7 +16,7 @@ and even Raspberry Pi hardware.
 
 ## Current Information
 
-The current "latest" version is Unifi Controller 7.1.66.
+The current "latest" version is Unifi Controller 7.1.68.
 There are currently no hot-fix or CVE warnings affecting Unifi Controller.
 
 ## Setting up, Running, Stopping, Upgrading
@@ -148,7 +148,7 @@ For Unifi-in-Docker, this uses the most recent stable version.
 
 | Tag | Description | Changelog |
 |-----|-------------|-----------|
-| [`latest`, `7.1.66`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Current Stable: Version 7.1.66 as of 2022-05-18 |[Change Log 7.1.66](https://community.ui.com/releases/UniFi-Network-Application-7-1-66/cf1208d2-3898-418c-b841-699e7b773fd4)|
+| [`latest`, `7.1.68`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Current Stable: Version 7.1.68 as of 2022-07-29 |[Change Log 7.1.68](https://community.ui.com/releases/UniFi-Network-Application-7-1-68/30df65ee-9adf-44da-ba0c-f30766c2d874)|
 | [`rc`](https://github.com/jacobalberty/unifi-docker/blob/rc/Dockerfile) | Release Candidate: 7.1.67-rc as of yyyy-mm-dd | [Change Log 7.1.67-rc](https://community.ui.com/releases/UniFi-Network-Application-7-1-67/f85ec723-ae52-405b-8905-077afcc97bb5) |
 | [`stable6`](https://github.com/jacobalberty/unifi-docker/blob/stable-6/Dockerfile) | Final stable version 6 (6.5.55) | [Change Log 6.5.55](https://community.ui.com/releases/UniFi-Network-Application-6-5-55/48c64137-4a4a-41f7-b7e4-3bee505ae16e) |
 | [`stable5`](https://github.com/jacobalberty/unifi-docker/blob/stable-5/Dockerfile) | Final stable version 5 (5.4.23) | [Change Log 5.14.23](https://community.ui.com/releases/UniFi-Network-Controller-5-14-23/daf90732-30ad-48ee-81e7-1dcb374eba2a) |

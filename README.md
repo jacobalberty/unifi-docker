@@ -1,311 +1,315 @@
-# unifi-docker
+# Unifi-in-Docker (unifi-docker)
 
+This repo contains a Dockerized version of [Ubiqiti Network's](https://www.ubnt.com/) Unifi Controller.
 
-## `latest` tag
+**Why bother?** Using Docker, you can stop worrying about version
+hassles and update notices for
+Unifi Controller, Java, _or_ your OS.
+A Docker container wraps everything into one well-tested bundle.
 
-`latest` is now tracking unifi 7.1.x as of 2022-07-18.
+To install, a couple lines on the command-line starts the container.
+To upgrade, just stop the old container, and start up the new.
+It's really that simple.
 
-## multiarch
+This container has been tested on Ubuntu, Debian, macOS, Windows,
+and even Raspberry Pi hardware.
 
-All tags are now multiarch capable with `amd64`, `armhf`, and `arm64` builds included.
-`armhf` for now uses mongodb 3.4, I do not see much of a path forward for `armhf` due to the lack of mongodb support for 32 bit arm, but I will
-support it as long as feasibly possible, for now that date seems to be expiration of support for ubuntu 18.04.
+## Current Information
 
-## Run as non-root User
+The current "latest" version is Unifi Controller 7.1.68.
+There are currently no hot-fix or CVE warnings affecting Unifi Controller.
 
-It is suggested you start running this as a non root user. The default right now is to run as root but if you set the docker run flag `--user` to `unifi` then the image will run as a special unfi user with the uid/gid 999/999. You should ideally set your data and logs to owned by the proper gid.
-You will not be able to bind to lower ports by default. If you also pass the docker run flag `--sysctl` with `net.ipv4.ip_unprivileged_port_start=0` then you will be able to freely bind to whatever port you wish. This should not be needed if you are using the default ports.
+## Setting up, Running, Stopping, Upgrading
 
-## Mongo and Docker for windows
- Unifi uses mongo store its data. Mongo uses the fsync() system call on its data files. Because of how docker for windows works you can't bind mount `/unifi/db/data` on a docker for windows container. Therefore `-v ~/unifi:/unifi` won't work.
- [Discussion on the issue](https://github.com/docker/for-win/issues/138).
+First, install Docker on the "Docker host" -
+the machine that will run the Docker
+and Unifi Controller software.
+Use any of the guides on the internet to install on your Docker host.
+For Windows, see the [Microsoft guide for installing Docker.](https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers)
 
-## Supported Docker Hub Tags and Respective `Dockerfile` Links
+Then use the following steps to set up the directories
+and start the Docker container running.
 
-| Tag | Description |
-|-----|-------------|
-| [`latest`, `v7`, `v7.1`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 7.1.68 as of 2022-07-18 [Change Log 7.1.68](https://community.ui.com/releases/UniFi-Network-Application-7-1-68/30df65ee-9adf-44da-ba0c-f30766c2d874)|
+### Setting up directories
 
-### Latest Release Candidate tags
-
-| Version | Latest Tag |
-|---------|------------|
-| 7.1.x   | [`v7.1.68`](https://github.com/jacobalberty/unifi-docker/blob/v7.1.68/Dockerfile) |
-
-These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `release candidate` to `stable` instead of waiting for it to hit the repository.
-
-In adition to these tags you may tag specific versions as well, for example `jacobalberty/unifi:v6.2.26` will get you unifi 6.2.26 no matter what the current version is.
-For release candidates it is advised to use the specific versions as the `rc` tag may jump from 5.6.x to 5.8.x then back to 5.6.x as new release candidates come out.
-
-## Description
-
-This is a containerized version of [Ubiqiti Network](https://www.ubnt.com/)'s Unifi Controller.
-
-The following options may be of use:
-
-- Set the timezone with `TZ` ([list of timezones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones))
-- Bind mount the `data` and `log` volumes
-
-It is suggested that you include --init to handle process reaping
-Example to test with
+_One-time setup:_ create the `unifi` directory on the Docker host.
+Within that directory, create two sub-directories: `data` and `log`.
 
 ```bash
+cd # by default, use the home directory
 mkdir -p unifi/data
 mkdir -p unifi/log
-docker run --rm --init -p 8080:8080 -p 8443:8443 -p 3478:3478/udp -e TZ='Africa/Johannesburg' -v ~/unifi:/unifi --name unifi jacobalberty/unifi:v7
 ```
 
-**Note** you must omit `-v ~/unifi:/unifi` on windows, but you can use a local volume e.g. `-v unifi:/unifi` (omit the leading ~/) to persist the data on a local volume.
+_Note:_ By default, this README assumes you will use the home directory
+on Linux, Unix, macOS.
+If you create the directory elsewhere, read the
+[Options section](#options-on-the-command-line)
+below to adjust.)
 
-## Running with separate mongo container
+### Running Unifi-in-Docker
 
-A compose file has been included that will bring up mongo and the controller,
-using named volumes for important directories.
+Each time you want to start Unifi, use this command.
+Each of the options is [described below.](#options-on-the-command-line)
 
-Simply clone this repo or copy the `docker-compose.yml` file and run
 ```bash
-docker-compose up -d
+docker run -d --init \
+   --restart=unless-stopped \
+   -p 8080:8080 -p 8443:8443 -p 3478:3478/udp \
+   -e TZ='Africa/Johannesburg' \
+   -v ~/unifi:/unifi \
+   --user unifi \
+   --name unifi \
+   jacobalberty/unifi
 ```
 
-## Adopting Access Points/Switches/Security Gateway
+In a minute or two, (after Unifi Controller starts up) you can go to
+[https://docker-host-address:8443](https://docker-host-address:8443)
+to complete configuration from the web (initial install) or resume using Unifi Controller.
 
-### Layer 3 Adoption
+**Important:** Two points to be aware of when you're setting up your Unifi Controller:
 
-The default example requires some l3 adoption method. You have a couple options to adopt.
+* When your browser initially connects to the link above, you will
+see a warning about an untrusted certificate.
+If you are _certain_ that you have typed the address of the
+Docker host correctly, agree to the connection.
+* See the note below about **Override "Inform Host" IP** so your
+Unifi devices can "find" the Unifi Controller.
+ 
+### Stopping Unifi-in-Docker
 
-#### Force adoption IP
+To change options, stop the Docker container then re-run the `docker run...` command
+above with the new options.
+_Note:_ The `docker rm unifi` command simply removes the "name" from the previous Docker image.
+No time-consuming rebuild is required.
 
-Run UniFi Docker and open UniFi in browser. Go under Settings -> Controller and then enter the IP address of the Docker host machine in "Controller Hostname/IP", and check the "Override inform host with controller hostname/IP". Save settings and restart UniFi Docker container. 
-
-#### SSH Adoption
-
-The quickest one off method is to ssh into the access point and run the following commands:
-
-```shell
-mca-cli
-set-inform http://<host_ip>:8080/inform
+```bash
+docker stop unifi
+docker rm unifi
 ```
+### Upgrading Unifi Controller
 
-#### Other Options
+All the configuration and other files created by Unifi Controller
+are stored on the Docker host's local disk (`~/unifi` by default.)
+No information is retained within the container.
+An upgrade to a new version of Unifi Controller simply retrieves a new Docker container,
+which then re-uses the configuration from the local disk.
+The upgrade process is:
 
-You can see more options on the [UniFi website](https://help.ubnt.com/hc/en-us/articles/204909754-UniFi-Layer-3-methods-for-UAP-adoption-and-management)
+1. **MAKE A BACKUP** on another computer, not the Docker host _(Always, every time...)_
+2. Stop the current container (see above)
+3. Enter `docker run...` with the newer container tag (see [Supported Tags](#supported-tags) below.)
 
+## Options on the Command Line
 
-### Layer 2 Adoption
+The options for the `docker run...` command are:
 
-You can also enable layer 2 adoption through one of two methods.
+- `-d` - Detached mode: Unifi-in-Docker runs in the background
+- `--init` - Recommended to ensure processes get reaped when they die
+- `--restart=unless-stopped` - If the container should stop for some reason,
+restart it unless you issue a `docker stop ...`
+- `-p ...` - Set the ports to pass through to the container.
+`-p 8080:8080 -p 8443:8443 -p 3478:3478/udp`
+is the minimal set for a working Unifi Controller. 
+- `-e TZ=...` Set an environment variable named `TZ` with the desired time zone.
+Find your time zone in this 
+[list of timezones.](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
+- `-e ...` See the [Environment Variables](#environment-variables)
+section for more environment variables.
+- `-v ...` - Bind the volume `~/unifi` on the Docker host
+to the directory `/unifi`inside the container.
+**These instructions assume you placed the "unifi" directory in your home directory.**
+If you created the directory elsewhere, modify the `~/unifi` part of this option to match.
+See the [Volumes](#volumes) discussion for other volumes used by Unifi Controller.
+- `--user unifi` - Run as a non-root user. See the [Run as non-root User](#run-as-non-root-user) discussion below
+- `jacobalberty/unifi` - the name of the container to use.
+The `jacobalberty...` image is retrieved from [Dockerhub.](https://hub.docker.com/r/jacobalberty/unifi)
+See the discussion about [Supported Tags](#supported-docker-hub-tags-and-respective-dockerfile-links) below.
 
-#### Host Networking
+## Supported Tags
 
-If you launch the container using host networking \(With the `--net=host` parameter on `docker run`\) Layer 2 adoption works as if the controller is installed on the host.
+You can choose the version of Unifi Controller in the `docker run ...` command.
+In Docker terminology, these versions are specified by "tags".
 
-#### Bridge Networking
+For example, in this project the container named `jacobalberty/unifi`
+(with no "tag")
+provides the most recent stable release.
+See the table below for the current version.
 
-It is possible to configure the `macvlan` driver to bridge your container to the host's networking adapter. Specific instructions for this container are not yet available but you can read a write-up for docker at [collabnix.com/docker-17-06-swarm-mode-now-with-macvlan-support](http://collabnix.com/docker-17-06-swarm-mode-now-with-macvlan-support/).
+The `rc` tag (for example, `jacobalberty/unifi:rc`)
+uses the most recent Release Candidate from the UniFi APT repository.
 
-## Beta Users
+You may also specify a version number (e.g., `jacobalberty/unifi:stable6`)
+to get a specific version number, as shown in the table below.
 
-The `beta` image has been updated to support package installation at run time. With this change you can now install the beta releases on more systems, such as Synology. This should open up access to the beta program for more users of this docker image.
+_Note:_ In Docker, specifying an image with no tag 
+(e.g., `jacobalberty/unifi`) gets the "latest" tag.
+For Unifi-in-Docker, this uses the most recent stable version.
 
+| Tag | Description | Changelog |
+|-----|-------------|-----------|
+| [`latest`, `7.1.68`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Current Stable: Version 7.1.68 as of 2022-07-29 |[Change Log 7.1.68](https://community.ui.com/releases/UniFi-Network-Application-7-1-68/30df65ee-9adf-44da-ba0c-f30766c2d874)|
+| [`rc`](https://github.com/jacobalberty/unifi-docker/blob/rc/Dockerfile) | Release Candidate: 7.1.67-rc as of yyyy-mm-dd | [Change Log 7.1.67-rc](https://community.ui.com/releases/UniFi-Network-Application-7-1-67/f85ec723-ae52-405b-8905-077afcc97bb5) |
+| [`stable6`](https://github.com/jacobalberty/unifi-docker/blob/stable-6/Dockerfile) | Final stable version 6 (6.5.55) | [Change Log 6.5.55](https://community.ui.com/releases/UniFi-Network-Application-6-5-55/48c64137-4a4a-41f7-b7e4-3bee505ae16e) |
+| [`stable5`](https://github.com/jacobalberty/unifi-docker/blob/stable-5/Dockerfile) | Final stable version 5 (5.4.23) | [Change Log 5.14.23](https://community.ui.com/releases/UniFi-Network-Controller-5-14-23/daf90732-30ad-48ee-81e7-1dcb374eba2a) |
 
-If you would like to submit a new feature for the images the beta branch is probably a good one to apply it against as well. I will be cleaing up the Dockerfile under beta and gradually pushing out the improvements to the other branches. So any major changes should apply cleanly against the `beta` branch.
+### multiarch
 
-### Installing Beta Builds On The Command Line
+All available containers now support multiarch with `amd64`, `armhf`, and `arm64` builds included.
+`armhf` for now uses mongodb 3.4, I do not see much of a path forward for `armhf` due
+to the lack of mongodb support for 32 bit arm, but I will
+support it as long as feasibly possible, for now that date seems to be expiration of support for ubuntu 18.04.
 
-Using the Beta build is pretty easy, just use the `jacobalberty/unifi:beta` image and add `-e PKGURL=https://dl.ubnt.com/unifi/5.6.30/unifi_sysvinit_all.deb` to your usual command line.
+## Adopting Access Points and Unifi Devices
 
-Simply replace the url to the debian package with the version you prefer.
+#### Override "Inform Host" IP
 
+For your Unifi devices to "find" the Unifi Controller running in Docker,
+you _MUST_ override the Inform Host IP
+with the address of the Docker host computer.
+(By default, the Docker container usually gets the internal address 172.17.x.x
+while Unifi devices connect to the (external) address of the Docker host.)
+To do this:
 
-### Building Beta Using `docker-compose.yml` Version 2
+* Find **Settings -> System -> Other Configuration -> Override Inform Host:** in the Unifi Controller web GUI.
+(It's near the bottom of that page.)
+* Check the "Enable" box, and enter the IP address of the Docker host machine. 
+* Save settings in Unifi Controller
+* Restart UniFi-in-Docker container with `docker stop ...` and `docker run ...` commands.
 
-This is just as easy when using version 2 of the docker-compose.yml file format.
+See [Side Projects](./Side-Projects.md#other-techniques-for-adoption) for
+other techniques to get Unifi devices to adopt your
+new Unifi Controller.
 
-Under your containers service definition instead of using `image: jacobalberty/unifi` use the following:
+## Volumes
 
-```shell
-        image: jacobalberty/unifi:beta
-         environment:
-          PKGURL: https://dl.ubnt.com/unifi/5.6.40/unifi_sysvinit_all.deb
-```
+Unifi looks for the `/unifi` directory (within the container)
+for its special purpose subdirectories:
 
-Once again, simply change PKGURL to point to the package you would like to use.
+* `/unifi/data` This contains your UniFi configuration data. (formerly: `/var/lib/unifi`) 
 
-## Volumes:
+* `/unifi/log` This contains UniFi log files (formerly: `/var/log/unifi`)
 
-### `/unifi`
+* `/unifi/cert` Place custom SSL certs in this directory. 
+For more information regarding the naming of the certificates,
+see [Certificate Support](#certificate-support). (formerly: `/var/cert/unifi`)
 
-This is a single monolithic volume that contains several subdirectories, you can do a single volume for everything or break up your old volumes into the subdirectories
+* `/unifi/init.d`
+You can place scripts you want to launch every time the container starts in here
 
-#### `/unifi/data`
-
-Old: `/var/lib/unifi`
-
-This contains your UniFi configuration data.
-
-#### `/unifi/log`
-
-old: `/var/log/unifi`
-
-This contains UniFi log files
-
-#### `/unifi/cert`
-
-old: `/var/cert/unifi`
-
-To use custom SSL certs, you must map a volume with the certs to /unifi/cert
-
-For more information regarding the naming of the certificates, see [Certificate Support](#certificate-support).
-
-#### `/unifi/init.d`
-
-This is an entirely new volume. You can place scripts you want to launch every time the container starts in here
-
-### `/var/run/unifi`
-
-Run information, in general you will not need to touch this volume. It is there to ensure UniFi has a place to write its PID files
-
+* `/var/run/unifi` 
+Run information, in general you will not need to touch this volume.
+It is there to ensure UniFi has a place to write its PID files
 
 ### Legacy Volumes
 
-These are no longer actually volumes, rather they exist for legacy compatibility. You are urged to move to the new volumes ASAP.
+These are no longer actually volumes, rather they exist for legacy compatibility.
+You are urged to move to the new volumes ASAP.
 
-#### `/var/lib/unifi`
-
-New name: `/unifi/data`
-
-#### `/var/log/unifi`
-
-New name: `/unifi/log`
+* `/var/lib/unifi` New name: `/unifi/data`
+* `/var/log/unifi` New name: `/unifi/log`
 
 ## Environment Variables:
 
-### `UNIFI_HTTP_PORT`
+You can pass in environment variables using the `-e` option when you invoke `docker run...`
+See the `TZ` in the example above.
+Other environment variables:
 
-Default: `8080`
-
+* `UNIFI_HTTP_PORT`
 This is the HTTP port used by the Web interface. Browsers will be redirected to the `UNIFI_HTTPS_PORT`.
+**Default: 8080**
 
-### `UNIFI_HTTPS_PORT`
-
-Default: `8443`
-
+* `UNIFI_HTTPS_PORT`
 This is the HTTPS port used by the Web interface.
+**Default: 8443** 
 
-### `PORTAL_HTTP_PORT`
-
-Default: `80`
-
+* `PORTAL_HTTP_PORT`
 Port used for HTTP portal redirection.
+**Default: 80** 
 
-### `PORTAL_HTTPS_PORT`
-
-Default: `8843`
-
+* `PORTAL_HTTPS_PORT`
 Port used for HTTPS portal redirection.
+**Default: 8843** 
 
-### `UNIFI_STDOUT`
-
-Default: `unset`
-
+* `UNIFI_STDOUT`
 Controller outputs logs to stdout in addition to server.log
+**Default: unset** 
 
-### `TZ`
-
+* `TZ`
 TimeZone. (i.e America/Chicago)
 
-### `JVM_MAX_THREAD_STACK_SIZE`
+* `JVM_MAX_THREAD_STACK_SIZE`
+Used to set max thread stack size for the JVM
+Example:
 
-used to set max thread stack size for the JVM
+   ```
+   --env JVM_MAX_THREAD_STACK_SIZE=1280k
+   ```
 
-Ex:
+   as a fix for [https://community.ubnt.com/t5/UniFi-Routing-Switching/IMPORTANT-Debian-Ubuntu-users-MUST-READ-Updated-06-21/m-p/1968251#M48264](https://community.ubnt.com/t5/UniFi-Routing-Switching/IMPORTANT-Debian-Ubuntu-users-MUST-READ-Updated-06-21/m-p/1968251#M48264)
 
-```
---env JVM_MAX_THREAD_STACK_SIZE=1280k
-```
-
-as a fix for https://community.ubnt.com/t5/UniFi-Routing-Switching/IMPORTANT-Debian-Ubuntu-users-MUST-READ-Updated-06-21/m-p/1968251#M48264
-
-### `LOTSOFDEVICES`
-Enable this with `true` if you run a system with a lot of devices and or with a low powered system (like a Raspberry Pi)
+* `LOTSOFDEVICES`
+Enable this with `true` if you run a system with a lot of devices
+and/or with a low powered system (like a Raspberry Pi).
 This makes a few adjustments to try and improve performance: 
 
-* enable unifi.G1GC.enabled
-* set unifi.xms to JVM_INIT_HEAP_SIZE
-* set unifi.xmx to JVM_MAX_HEAP_SIZE
-* enable unifi.db.nojournal
-* set unifi.dg.extraargs to --quiet
+   * enable unifi.G1GC.enabled
+   * set unifi.xms to JVM\_INIT\_HEAP\_SIZE
+   * set unifi.xmx to JVM\_MAX\_HEAP\_SIZE
+   * enable unifi.db.nojournal
+   * set unifi.dg.extraargs to --quiet
 
-See [This website](https://help.ui.com/hc/en-us/articles/115005159588-UniFi-How-to-Tune-the-Network-Application-for-High-Number-of-UniFi-Devices) for an explanation 
-of some of those options.
+   See [the Unifi support site](https://help.ui.com/hc/en-us/articles/115005159588-UniFi-How-to-Tune-the-Network-Application-for-High-Number-of-UniFi-Devices)
+for an explanation of some of those options.
+**Default: unset** 
 
-Default: `unset`
-
-### `JVM_EXTRA_OPTS`
+* `JVM_EXTRA_OPTS`
 Used to start the JVM with additional arguments.
+**Default: unset** 
 
-Default: `unset`
-
-### `JVM_INIT_HEAP_SIZE`
+* `JVM_INIT_HEAP_SIZE`
 Set the starting size of the javascript engine for example: `1024M`
+**Default: unset** 
 
-Default: `unset`
-
-### `JVM_MAX_HEAP_SIZE`
+* `JVM_MAX_HEAP_SIZE`
 Java Virtual Machine (JVM) allocates available memory. 
 For larger installations a larger value is recommended. For memory constrained system this value can be lowered. 
+**Default: 1024M** 
 
-Default `1024M`
+## Exposed Ports
 
-### External MongoDB environment variables
+The Unifi-in-Docker container exposes the following ports.
+A minimal Unifi Controller installation requires you
+expose the first three with the `-p ...` option.
 
-These variables are used to implement support for an [external MongoDB server](https://community.ubnt.com/t5/UniFi-Wireless/External-MongoDB-Server/td-p/1305297) and must all be set in order for this feature to work. Once all are set then the configuration file value for `db.mongo.local` will automatically be set to `false`.
+* 8080/tcp - Device command/control 
+* 8443/tcp - Web interface + API 
+* 3478/udp - STUN service 
+* 8843/tcp - HTTPS portal _(optional)_
+* 8880/tcp - HTTP portal _(optional)_
+* 6789/tcp - Speed Test (unifi5 only) _(optional)_
 
-### `DB_URI`
+See [UniFi - Ports Used](https://help.ubnt.com/hc/en-us/articles/218506997-UniFi-Ports-Used) for more information.
 
-Maps to `db.mongo.uri`.
+## Run as non-root User
 
-### `STATDB_URI`
+The default container runs Unifi Controller as root.
+The recommended `docker run...` command above starts
+Unifi Controller so the image runs as `unifi` (non-root)
+user with the uid/gid 999/999.
+You can also set your data and logs directories to be
+owned by the proper gid.
 
-Maps to `statdb.mongo.uri`.
-
-### `DB_NAME`
-
-Maps to `unifi.db.name`.
-
-
-## Expose:
-
-### 8080/tcp - Device command/control
-
-### 8443/tcp - Web interface + API
-
-### 8843/tcp - HTTPS portal
-
-### 8880/tcp - HTTP portal
-
-### 3478/udp - STUN service
-
-### 6789/tcp - Speed Test (unifi5 only)
-
-See [UniFi - Ports Used](https://help.ubnt.com/hc/en-us/articles/218506997-UniFi-Ports-Used)
-
-## Multi-process container
-
-While micro-service patterns try to avoid running multiple processes in a container, the unifi5 container tries to follow the same process execution model intended by the original debian package and it's init script, while trying to avoid needing to run a full init system.
-
-`dumb-init` has now been removed. Instead it is now suggested you include --init in your docker run command line. If you are using docker-compose you can accomplish the same by making sure you use version 2.2 of the yml format and add `init: true` to your service definition.
-
-`unifi.sh` executes and waits on the jsvc process which orchestrates running the controller as a service. The wrapper script also traps SIGTERM to issue the appropriate stop command to the unifi java `com.ubnt.ace.Launcher` process in the hopes that it helps keep the shutdown graceful.
-
-
-## Init scripts
-
-You may now place init scripts to be launched during the unifi startup in /usr/local/unifi/init.d to perform any actions unique to your unifi setup. An example bash script to set up certificates is in `/usr/unifi/init.d/import_cert`.
+_Note:_ When you run as a non-root user,
+you will not be able to bind to lower ports by default.
+(This would not necessary if you are using the default ports.)
+If you must do this, also pass the 
+`--sysctl net.ipv4.ip_unprivileged_port_start=0`
+option on the `docker run...` to bind to whatever port you wish.
 
 ## Certificate Support
 
-To use custom SSL certs, you must map a volume with the certs to /unifi/cert
+To use custom SSL certs, you must map a volume with the certs to `/unifi/cert`
 
 They should be named:
 
@@ -318,6 +322,12 @@ chain.pem # full cert chain
 If your certificate or private key have different names, you can set the environment variables `CERTNAME` and `CERT_PRIVATE_NAME` to the name of your certificate/private key, e.g. `CERTNAME=my-cert.pem` and `CERT_PRIVATE_NAME=my-privkey.pem`.
 
 For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA Cert automatically. In case your letsencrypt cert is already the chained certificate, you can set the `CERT_IS_CHAIN` environment variable to `true`, e.g. `CERT_IS_CHAIN=true`. This option also works together with a custom `CERTNAME`.
+
+## Additional Information
+
+This document describes everything you need to get Unifi-in-Docker running.
+The [Side Projects and Background Info](./Side-Projects.md) page
+provides more about what we've learned while developing Unifi-in-Docker.
 
 ## TODO
 

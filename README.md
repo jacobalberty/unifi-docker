@@ -14,10 +14,7 @@ It's really that simple.
 This container has been tested on Ubuntu, Debian, macOS, Windows,
 and even Raspberry Pi hardware.
 
-## Current Information
-
-The current "latest" version is Unifi Controller 7.1.68.
-There are currently no hot-fix or CVE warnings affecting Unifi Controller.
+See the [Current Information](#Current-information) section for the latest versions.
 
 ## Setting up, Running, Stopping, Upgrading
 
@@ -98,7 +95,7 @@ The upgrade process is:
 
 1. **MAKE A BACKUP** on another computer, not the Docker host _(Always, every time...)_
 2. Stop the current container (see above)
-3. Enter `docker run...` with the newer container tag (see [Supported Tags](#supported-tags) below.)
+3. Enter `docker run...` with the newer container tag (see [Current Information](#current-information) section below.)
 
 ## Options on the Command Line
 
@@ -124,9 +121,13 @@ See the [Volumes](#volumes) discussion for other volumes used by Unifi Controlle
 - `--user unifi` - Run as a non-root user. See the [Run as non-root User](#run-as-non-root-user) discussion below
 - `jacobalberty/unifi` - the name of the container to use.
 The `jacobalberty...` image is retrieved from [Dockerhub.](https://hub.docker.com/r/jacobalberty/unifi)
-See the discussion about [Supported Tags](#supported-docker-hub-tags-and-respective-dockerfile-links) below.
+The [Current Information](#current-information) section below discusses the versions/tags that are available.
 
-## Supported Tags
+## Current Information
+
+**The current "latest" version is Unifi Controller 7.2.92.
+There are currently no hot-fix or CVE warnings
+affecting Unifi Controller.**
 
 You can choose the version of Unifi Controller in the `docker run ...` command.
 In Docker terminology, these versions are specified by "tags".
@@ -134,7 +135,7 @@ In Docker terminology, these versions are specified by "tags".
 For example, in this project the container named `jacobalberty/unifi`
 (with no "tag")
 provides the most recent stable release.
-See the table below for the current version.
+The table below lists recent versions.
 
 The `rc` tag (for example, `jacobalberty/unifi:rc`)
 uses the most recent Release Candidate from the UniFi APT repository.
@@ -148,7 +149,7 @@ For Unifi-in-Docker, this uses the most recent stable version.
 
 | Tag | Description | Changelog |
 |-----|-------------|-----------|
-| [`latest`, `v7.2.92`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Current Stable: Version 7.2.92 as of 2022-08-11 |[Change Log 7.2.92](https://community.ui.com/releases/UniFi-Network-Application-7-2-92/f1903cbc-4daa-4695-ac8c-7324bcff529a)|
+| [`latest` `v7.2.92`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Current Stable: Version 7.2.92 as of 2022-08-11 |[Change Log 7.2.92](https://community.ui.com/releases/UniFi-Network-Application-7-2-92/f1903cbc-4daa-4695-ac8c-7324bcff529a)|
 | [`rc`](https://github.com/jacobalberty/unifi-docker/blob/rc/Dockerfile) | Release Candidate: 7.2.92-rc as of 2022-07-29 | [Change Log 7.2.91-rc](https://community.ui.com/releases/UniFi-Network-Application-7-2-91/cdac73f0-7426-4276-ace8-8a96c656ba65) |
 | [`stable6`](https://github.com/jacobalberty/unifi-docker/blob/stable-6/Dockerfile) | Final stable version 6 (6.5.55) | [Change Log 6.5.55](https://community.ui.com/releases/UniFi-Network-Application-6-5-55/48c64137-4a4a-41f7-b7e4-3bee505ae16e) |
 | [`stable5`](https://github.com/jacobalberty/unifi-docker/blob/stable-5/Dockerfile) | Final stable version 5 (5.4.23) | [Change Log 5.14.23](https://community.ui.com/releases/UniFi-Network-Controller-5-14-23/daf90732-30ad-48ee-81e7-1dcb374eba2a) |

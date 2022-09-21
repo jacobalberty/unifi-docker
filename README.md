@@ -178,7 +178,7 @@ To do this:
 * Save settings in Unifi Controller
 * Restart UniFi-in-Docker container with `docker stop ...` and `docker run ...` commands.
 
-See [Side Projects](./Side-Projects.md#other-techniques-for-adoption) for
+See [Side Projects](https://github.com/jacobalberty/unifi-docker/blob/master/Side-Projects.md#other-techniques-for-adoption) for
 other techniques to get Unifi devices to adopt your
 new Unifi Controller.
 
@@ -327,7 +327,7 @@ For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA 
 ## Additional Information
 
 This document describes everything you need to get Unifi-in-Docker running.
-The [Side Projects and Background Info](./Side-Projects.md) page
+The [Side Projects and Background Info](https://github.com/jacobalberty/unifi-docker/blob/master/Side-Projects.md) page
 provides more about what we've learned while developing Unifi-in-Docker.
 
 ## TODO

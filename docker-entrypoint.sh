@@ -192,7 +192,7 @@ if [[ "${@}" == "unifi" ]]; then
         ${UNIFI_CMD} &
     elif [ "${RUNAS_UID0}" == "false" ]; then
         if [ "${BIND_PRIV}" == "true" ]; then
-            if setcap 'cap_net_bind_service=+ep' "${JAVA_HOME}/jre/bin/java"; then
+            if setcap 'cap_net_bind_service=+ep' "${JAVA_HOME}/bin/java"; then
                 sleep 1
             else
                 log "ERROR: setcap failed, can not continue"

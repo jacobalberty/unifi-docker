@@ -125,7 +125,7 @@ The [Current Information](#current-information) section below discusses the vers
 
 ## Current Information
 
-**The current "latest" version is Unifi Controller 7.2.94.
+**The current "latest" version is Unifi Controller 7.3.76.
 There are currently no hot-fix or CVE warnings
 affecting Unifi Controller.**
 
@@ -149,7 +149,7 @@ For Unifi-in-Docker, this uses the most recent stable version.
 
 | Tag | Description | Changelog |
 |-----|-------------|-----------|
-| [`latest` `v7.2.94`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Current Stable: Version 7.2.94 as of 2022-09-21 |[Change Log 7.2.94](https://community.ui.com/releases/UniFi-Network-Application-7-2-94/2ab774d1-0f24-422e-accc-53b8200c10a7)|
+| [`latest` `v7.3.76`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Current Stable: Version 7.3.76 as of 2022-12-06 |[Change Log 7.3.76](https://community.ui.com/releases/UniFi-Network-Application-7-3-76/85c75fc7-3e0f-4e99-aa90-7068af4f1141)|
 | [`rc`](https://github.com/jacobalberty/unifi-docker/blob/rc/Dockerfile) | Release Candidate: 7.2.92-rc as of 2022-07-29 | [Change Log 7.2.91-rc](https://community.ui.com/releases/UniFi-Network-Application-7-2-91/cdac73f0-7426-4276-ace8-8a96c656ba65) |
 | [`stable-6`](https://github.com/jacobalberty/unifi-docker/blob/stable-6/Dockerfile) | Final stable version 6 (6.5.55) | [Change Log 6.5.55](https://community.ui.com/releases/UniFi-Network-Application-6-5-55/48c64137-4a4a-41f7-b7e4-3bee505ae16e) |
 | [`stable-5`](https://github.com/jacobalberty/unifi-docker/blob/stable-5/Dockerfile) | Final stable version 5 (5.4.23) | [Change Log 5.14.23](https://community.ui.com/releases/UniFi-Network-Controller-5-14-23/daf90732-30ad-48ee-81e7-1dcb374eba2a) |

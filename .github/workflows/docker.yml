@@ -50,8 +50,10 @@ jobs:
           docker stop unifitest
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@57396166ad8aefe6098280995947635806a0e6ea
+        uses: docker/metadata-action@v4
         with:
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
           images: |
             jacobalberty/unifi
             ghcr.io/${{ github.repository }}

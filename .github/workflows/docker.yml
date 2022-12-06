@@ -76,6 +76,13 @@ jobs:
           for i in $(seq 1 10); do [ $(docker inspect --format='{{json .State.Health.Status}}' unifitest ) == \"healthy\" ] && break ||  sleep 35; done &&
           [ $(docker inspect --format='{{json .State.Health.Status}}' unifitest ) == \"healthy\" ] &&
           docker stop unifitest
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@57396166ad8aefe6098280995947635806a0e6ea
+        with:
+          images: |
+            jacobalberty/unifi
+            ghcr.io/${{ github.repository }}
       - name: Build container image
         uses: docker/build-push-action@v3
         with:

@@ -47,7 +47,7 @@ jobs:
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v2
       - name: Build and export to Docker
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: .
           load: true
@@ -61,7 +61,7 @@ jobs:
           [ $(docker inspect --format='{{json .State.Health.Status}}' unifitest ) == \"healthy\" ] &&
           docker stop unifitest
       - name: Build Docker image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: .
           platforms: linux/arm/v7,linux/arm64/v8,linux/amd64

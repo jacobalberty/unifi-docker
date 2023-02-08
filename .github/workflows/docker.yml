@@ -53,7 +53,10 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
           images: |
             jacobalberty/unifi
             ghcr.io/${{ github.repository }}

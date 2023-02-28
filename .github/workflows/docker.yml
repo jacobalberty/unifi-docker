@@ -4,6 +4,7 @@ on:
     branches:
       - 'master'
       - 'beta'
+      - 'hotfix/*'
     tags:
       - 'v*.*.*'
 
@@ -57,6 +58,7 @@ jobs:
             type=semver,pattern=v{{version}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
+            type=ref,event=branch
           images: |
             jacobalberty/unifi
             ghcr.io/${{ github.repository }}
@@ -64,6 +66,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
+          provenance: false
           platforms: linux/arm/v7,linux/arm64/v8,linux/amd64
           push: true
           cache-from: type=gha

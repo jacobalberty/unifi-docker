@@ -324,6 +324,24 @@ If your certificate or private key have different names, you can set the environ
 
 For letsencrypt certs, we'll autodetect that and add the needed Identrust X3 CA Cert automatically. In case your letsencrypt cert is already the chained certificate, you can set the `CERT_IS_CHAIN` environment variable to `true`, e.g. `CERT_IS_CHAIN=true`. This option also works together with a custom `CERTNAME`.
 
+### Certificates Using Elliptic Curve Algorithms
+
+If your certs use elliptic curve algorithms, which currently seems to be the default with letsencrypt certs, you might additionally have to set the `UNIFI_ECC_CERT` environment variable to `true`, otherwise clients will fail to establish a secure connection. For example an attempt with `curl` will show:
+
+```shell
+% curl -vvv https://my.server.com:8443
+curl: (35) error:1404B410:SSL routines:ST_CONNECT:sslv3 alert handshake failure
+```
+
+You can check your certificate for this with the following command:
+
+```shell
+% openssl x509 -text < cert.pem | grep 'Public Key Algorithm'
+         Public Key Algorithm: id-ecPublicKey
+```
+
+If the output contains `id-ec` as shown in the example, then your certificate might be affected.
+
 ## Additional Information
 
 This document describes everything you need to get Unifi-in-Docker running.

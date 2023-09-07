@@ -10,7 +10,7 @@ set_java_home() {
         # For some reason readlink failed so lets just make some assumptions instead
         # We're assuming openjdk 8 since thats what we install in Dockerfile
         arch=`dpkg --print-architecture 2>/dev/null`
-        JAVA_HOME=/usr/lib/jvm/java-11-openjdk-${arch}
+        JAVA_HOME=/usr/lib/jvm/java-17-openjdk-${arch}
     fi
 }
 

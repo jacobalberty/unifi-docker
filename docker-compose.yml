@@ -1,4 +1,5 @@
-version: '2.3'
+version: '3'
+name: unifi
 services:
   mongo:
     image: mongo:3.6
@@ -48,6 +49,7 @@ services:
     depends_on:
       - controller
     command: bash -c 'tail -F /unifi/log/*.log'
+    tty: true
     restart: always
     volumes:
       - log:/unifi/log

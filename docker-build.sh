@@ -3,27 +3,6 @@
 # fail on error
 set -e
 
-# Retry 5 times with a wait of 10 seconds between each retry
-tryfail() {
-    for i in $(seq 1 5);
-        do [ $i -gt 1 ] && sleep 10; $* && s=0 && break || s=$?; done;
-    (exit $s)
-}
-
-# Try multiple keyservers in case of failure
-addKey() {
-    for server in $(shuf -e ha.pool.sks-keyservers.net \
-        hkp://p80.pool.sks-keyservers.net:80 \
-        keyserver.ubuntu.com \
-        hkp://keyserver.ubuntu.com:80 \
-        pgp.mit.edu) ; do \
-        if apt-key adv --keyserver "$server" --recv "$1"; then
-            exit 0
-        fi
-    done
-    return 1
-}
-
 if [ "x${1}" == "x" ]; then
     echo please pass PKGURL as an environment variable
     exit 0
@@ -40,13 +19,20 @@ apt-get install -qy --no-install-recommends \
     procps \
     libcap2-bin \
     tzdata
-echo 'deb https://www.ui.com/downloads/unifi/debian stable ubiquiti' | tee /etc/apt/sources.list.d/100-ubnt-unifi.list
-tryfail apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 06E85760C0A52C50
+
+echo 'deb [signed-by=/usr/share/keyrings/unifi-repo.gpg] https://www.ui.com/downloads/unifi/debian stable ubiquiti' | tee /etc/apt/sources.list.d/100-ubnt-unifi.list
+curl -L -o /usr/share/keyrings/unifi-repo.gpg https://dl.ui.com/unifi/unifi-repo.gpg
+echo 'deb [signed-by=/usr/share/keyrings/mongodb-server-3.6.pgp] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/3.6 multiverse' | tee /etc/apt/sources.list.d/100-mongodb-server.list
+curl -s -N https://pgp.mongodb.com/server-3.6.asc | gpg --dearmor > /usr/share/keyrings/mongodb-server-3.6.pgp
+apt-get update
+
+curl -L -o ./libssl.deb http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.20_$(dpkg --print-architecture).deb
+apt -qy install ./libssl.deb
+rm ./libssl.deb
 
 if [ -d "/usr/local/docker/pre_build/$(dpkg --print-architecture)" ]; then
     find "/usr/local/docker/pre_build/$(dpkg --print-architecture)" -type f -exec '{}' \;
 fi
-
 curl -L -o ./unifi.deb "${1}"
 apt -qy install ./unifi.deb
 rm -f ./unifi.deb

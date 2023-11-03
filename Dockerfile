@@ -4,7 +4,7 @@ RUN git clone https://github.com/jacobalberty/permset.git /src && \
     mkdir -p /out && \
     go build -ldflags "-X main.chownDir=/unifi" -o /out/permset
 
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 LABEL maintainer="Jacob Alberty <jacob.alberty@foundigital.com>"
 
@@ -34,9 +34,9 @@ ENV BASEDIR=/usr/lib/unifi \
 # This should be integrated with the main run because it duplicates a lot of the steps there
 # but for now while shoehorning gosu in it is seperate
 RUN set -eux; \
-	apt-get update; \
-	apt-get install -y gosu; \
-	rm -rf /var/lib/apt/lists/*
+    apt-get update; \
+    apt-get install -y gosu; \
+    rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /usr/unifi \
      /usr/local/unifi/init.d \

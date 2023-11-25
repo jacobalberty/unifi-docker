@@ -1,6 +1,6 @@
 services:
   controller:
-    image: jacobalberty/unifi:$TAG_NAME
+    image: serkbugs/unifi-docker:$TAG_NAME
     container_name: unifi
     networks:
       - unifi

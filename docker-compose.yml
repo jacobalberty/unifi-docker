@@ -10,7 +10,7 @@ services:
       - db:/data/db
       - dbcfg:/data/configdb
   controller:
-    image: "jacobalberty/unifi:${TAG:-latest}"
+    image: "serkbugs/unifi-docker:${TAG:-latest}"
     container_name: ${COMPOSE_PROJECT_NAME}_controller
     depends_on:
       - mongo

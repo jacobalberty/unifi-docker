@@ -2,7 +2,7 @@ name: Bug Report
 description: File a bug report
 labels: ["bug"]
 assignees:
-  - jacobalberty
+  - serkbugs
 body:
   - type: markdown
     attributes:
@@ -33,7 +33,7 @@ body:
     attributes:
       label: Docker run
       description: "Please specify the full Docker command or the docker-compose.yml file you use to start the container (omit sensitive values)"
-      placeholder: "docker run --rm --init -p 8080:8080 -p 8443:8443 -p 3478:3478/udp -p 10001:10001/udp -e TZ='Africa/Johannesburg' -v ~/unifi/data:/var/lib/unifi -v ~/unifi/logs:/var/log/unifi --name unifi jacobalberty/unifi:stable"
+      placeholder: "docker run --rm --init -p 8080:8080 -p 8443:8443 -p 3478:3478/udp -p 10001:10001/udp -e TZ='Africa/Johannesburg' -v ~/unifi/data:/var/lib/unifi -v ~/unifi/logs:/var/log/unifi --name unifi serkbugs/unifi-docker:stable"
     validations:
       required: true
   - type: textarea

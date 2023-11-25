@@ -9,7 +9,7 @@ on:
       - 'v*.*.*'
 
 env:
-  TEST_TAG: jacobalberty/unifi:test
+  TEST_TAG: serkbugs/unifi-docker:test
   PKGURL: https://dl.ui.com/unifi/6.5.55/unifi_sysvinit_all.deb
 
 jobs:
@@ -60,7 +60,7 @@ jobs:
             type=semver,pattern=v{{major}}.{{minor}}
             type=ref,event=branch
           images: |
-            jacobalberty/unifi
+            serkbugs/unifi-docker
             ghcr.io/${{ github.repository }}
       - name: Build container image
         uses: docker/build-push-action@v4

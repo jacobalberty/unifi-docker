@@ -7,7 +7,7 @@ This text is about problems relating to backups and downloading of backup files.
 Doing backups of your Unifi configuration is important.  
 Without backups you run the risk of having to re-configure everything if your controller for some reason dies. This can be a massive task for large networks.
 
-This text is an attempt at providing some more context and concrete commands to solve the problems discussed in [this issue](https://github.com/jacobalberty/unifi-docker/issues/512).
+This text is an attempt at providing some more context and concrete commands to solve the problems discussed in [this issue](https://github.com/serkbugs/unifi-docker/issues/512).
 
 ## Problem
 
@@ -49,8 +49,8 @@ services:
       - db:/data/db
       - dbcfg:/data/configdb
   controller:
-    # image: "jacobalberty/unifi:${TAG:-latest}"
-    image: jacobalberty/unifi:latest
+    # image: "serkbugs/unifi:${TAG:-latest}"
+    image: serkbugs/unifi-docker:latest
     # container_name: ${COMPOSE_PROJECT_NAME}_controller
     container_name: unifi_controller
     depends_on:

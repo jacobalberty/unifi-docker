@@ -54,55 +54,6 @@ Maps to `statdb.mongo.uri`.
 * `DB_NAME`
 Maps to `unifi.db.name`.
 
-## Beta Users
-
-The `beta` image has been updated to support package installation at run time.
-With this change you can now install the beta releases on more systems,
-such as Synology.
-This should open up access to the beta program for more users of this docker image.
-
-**NOTE:** This Beta image only works if you run as root.
-It also may need updates to handle permissions to handle the
-`RUNAS_UID0=false` changes.
-If you have questions, look for or create an issue about this.
-
-If you would like to submit a new feature for the images,
-the beta branch is probably a good one to apply it against as well.
-I will be cleaing up the Dockerfile under beta and gradually pushing out
-the improvements to the other branches.
-So any major changes should apply cleanly against the `beta` branch.
-
-### Running Beta Builds from the Command Line
-
-Using the Beta build is pretty easy:
-just substitute the correct URL from the Unifi site
-for the `PKGURL` parameter,
-and use `jacobalberty/unifi:beta` for the image
-like this:
-
-```bash
-docker run -d --init \
-   --restart=unless-stopped \
-   -p 8080:8080 -p 8443:8443 -p 3478:3478/udp \
-   -e TZ='Africa/Johannesburg' \
-   -v ~/unifi:/unifi \
-   --name unifi \
-   -e PKGURL=https://dl.ubnt.com/unifi/5.6.30/unifi_sysvinit_all.deb \
-   jacobalberty/unifi:beta
-```
-
-### Running the Beta Using `docker-compose.yml` 
-
-In the containers service definition of the `docker-compose.yml` file, replace `image: jacobalberty/unifi` with the following:
-
-```shell
-        image: jacobalberty/unifi:beta
-         environment:
-          PKGURL: https://dl.ubnt.com/unifi/5.6.40/unifi_sysvinit_all.deb
-```
-
-Replace the PKGURL: link with a link to the package you want.
-
 ## Init scripts
 
 You may now place init scripts to be launched during the unifi startup in /usr/local/unifi/init.d to perform any actions unique to your unifi setup. An example bash script to set up certificates is in `/usr/unifi/init.d/import_cert`.

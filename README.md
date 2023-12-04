@@ -182,6 +182,22 @@ See [Side Projects](https://github.com/jacobalberty/unifi-docker/blob/master/Sid
 other techniques to get Unifi devices to adopt your
 new Unifi Controller.
 
+#### Configure the Inform endpoint in the AP (optional)
+
+In case the AP is not showing up for adoption after completing the steps described above, you need to configure the inform endpoint within the AP as well. You will have to SSH into the device and run a command:
+* Once the AP is connected to the local network and it's fully booted, check its IP address.
+For the sake of the example let's say it's 192.168.2.102.
+* Using this IP address and the factory default username (`ubnt`) and password (`ubnt`), SSH into the AP:
+   ```bash
+   $ ssh ubnt@192.168.2.102 -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedKeyTypes=+ssh-rsa
+   ```
+  _Note that the username and password may be different in your system. You can check it in the Unifi Controller under Settings > System > Advanced > Device Authentication._
+* Once the SSH connection is successful, configure the inform endpoint inside the AP:
+   ```bash
+   $ set-inform http://ip-of-your-docker-host-computer:8080/inform
+   ```
+* After issuing the `set-inform` command, the AP should show up for adoption. As per this [comment](https://community.ui.com/questions/Controler-unable-to-see-Unifi-devices/11f674cb-9b83-4bdb-bbce-03e86c4dfdfa#answer/53944d82-d469-41da-964b-798482aa5aa6), after adoption the AP may appear to go offline after which the `set-inform` command may need to be run again to make it permanent.
+
 ## Volumes
 
 Unifi looks for the `/unifi` directory (within the container)

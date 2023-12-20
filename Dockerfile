@@ -6,7 +6,7 @@ RUN git clone https://github.com/serkbugs/permset.git /src && \
 
 FROM ubuntu:20.04
 
-LABEL maintainer="Jacob Alberty <jacob.alberty@foundigital.com>"
+LABEL maintainer="serkbugs <serkbugs@gmail.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 

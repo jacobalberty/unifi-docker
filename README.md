@@ -1,6 +1,6 @@
 # Unifi-in-Docker (unifi-docker)
 
-This repo contains a Dockerized version of [Ubiqiti Network's](https://www.ubnt.com/) Unifi Controller.
+This repo contains a Dockerized version of [Ubiquiti Network's](https://www.ubnt.com/) Unifi Controller.
 
 **Why bother?** Using Docker, you can stop worrying about version
 hassles and update notices for
@@ -114,7 +114,7 @@ Find your time zone in this
 - `-e ...` See the [Environment Variables](#environment-variables)
 section for more environment variables.
 - `-v ...` - Bind the volume `~/unifi` on the Docker host
-to the directory `/unifi`inside the container.
+to the directory `/unifi` inside the container.
 **These instructions assume you placed the "unifi" directory in your home directory.**
 If you created the directory elsewhere, modify the `~/unifi` part of this option to match.
 See the [Volumes](#volumes) discussion for other volumes used by Unifi Controller.
@@ -251,7 +251,7 @@ Example:
 
 * `LOTSOFDEVICES`
 Enable this with `true` if you run a system with a lot of devices
-and/or with a low powered system (like a Raspberry Pi).
+and/or with a low-powered system (like a Raspberry Pi).
 This makes a few adjustments to try and improve performance: 
 
    * enable unifi.G1GC.enabled
@@ -274,7 +274,7 @@ Set the starting size of the javascript engine for example: `1024M`
 
 * `JVM_MAX_HEAP_SIZE`
 Java Virtual Machine (JVM) allocates available memory. 
-For larger installations a larger value is recommended. For memory constrained system this value can be lowered. 
+For larger installations, a larger value is recommended. For memory-constrained systems, this value can be lowered. 
 **Default: 1024M** 
 
 ## Exposed Ports
@@ -303,7 +303,7 @@ owned by the proper gid.
 
 _Note:_ When you run as a non-root user,
 you will not be able to bind to lower ports by default.
-(This would not necessary if you are using the default ports.)
+(This would not be necessary if you are using the default ports.)
 If you must do this, also pass the 
 `--sysctl net.ipv4.ip_unprivileged_port_start=0`
 option on the `docker run...` to bind to whatever port you wish.

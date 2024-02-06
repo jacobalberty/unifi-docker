@@ -129,6 +129,8 @@ set-inform http://<docker-host-ip>:8080/inform
 
 Force an AP to migrate using [this Unifi community article.](https://community.ui.com/questions/Migrating-UNIFI-APs-to-new-controller/9ca9d8e9-780d-404d-84df-e7762cb810fd)
 
+In the case the above 'reset to default' command in step 2 does not work for your AP, you could also try this command [from this article](https://blog.linitx.com/factory-reset-ubiquiti-unifi-access-point/): `syswrapper.sh restore-default & set-default &`
+
 #### Older versions of Unifi Controller
 
 Older Unifi Controllers use a different name for the "Override Inform Host option".

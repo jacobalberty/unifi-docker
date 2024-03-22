@@ -21,8 +21,14 @@ to your host computer's local disk
 
 ```bash
 cd <directory with docker-compose.yml>
-docker-compose up -d 
+docker compose up -d 
 ```
+
+Now as long as you don't `docker compose down`, the docker daemon (`sudo systemctl enable docker`) will automatically start the various containers every time the Pi boots.
+
+**Logs:**
+
+Run `docker attach unifi_logs` to tail the various unifi logs files.
 
 **Setting Options:**
 
@@ -30,15 +36,15 @@ docker-compose up -d
 passed to Unifi Controller when it starts.
 Edit the `docker-compose.yml` file setting its values according to the 
 [Options on the command line.](./README.md#options-on-the-command-line)
-* _Optional:_ Add additional `-e <any-environment-variables-you-want>` to the `docker-compose up` line
+* _Optional:_ Add additional `-e <any-environment-variables-you-want>` to the `docker compose up` line
 
 To change options to Unifi Controller::
 
 ```bash
 cd <directory with docker-compose.yml>
-docker-compose down # this stops Unifi Controller and MongoDB
+docker compose down # this stops Unifi Controller and MongoDB
 # ... edit the options in the docker-compose.yml file ...
-docker-compose up ... # to resume operation
+docker compose up ... # to resume operation
 ```
 
 ### External MongoDB environment variables

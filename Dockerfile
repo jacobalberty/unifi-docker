@@ -11,7 +11,7 @@ LABEL maintainer="serkbugs <serkbugs@gmail.com>"
 ARG DEBIAN_FRONTEND=noninteractive
 
 #ARG PKGURL=https://dl.ui.com/unifi/7.5.176/unifi_sysvinit_all.deb
-ARG PKGURL=https://dl.ui.com/unifi/8.0.24/unifi_sysvinit_all.deb
+ARG PKGURL=https://dl.ui.com/unifi/8.1.113/unifi_sysvinit_all.deb
 
 ENV BASEDIR=/usr/lib/unifi \
     DATADIR=/unifi/data \

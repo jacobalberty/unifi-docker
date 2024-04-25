@@ -3,15 +3,17 @@ WORKDIR /src
 RUN git clone https://github.com/jacobalberty/permset.git /src && \
     mkdir -p /out && \
     go build -ldflags "-X main.chownDir=/unifi" -o /out/permset
-
-FROM ubuntu:20.04
+	
+#Update from 20.04 to 22.04 test
+FROM ubuntu:22.04
 
 LABEL maintainer="Jacob Alberty <jacob.alberty@foundigital.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ARG PKGURL=https://dl.ui.com/unifi/8.1.113/unifi_sysvinit_all.deb
-
+#Add PKGURL for 8.1.127 RC Release
+#ARG PKGURL=https://dl.ui.com/unifi/8.1.113/unifi_sysvinit_all.deb
+ARG PKGURL=https://dl.ui.com/unifi/8.1.127-810cd1e59a/unifi_sysvinit_all.deb
 ENV BASEDIR=/usr/lib/unifi \
     DATADIR=/unifi/data \
     LOGDIR=/unifi/log \

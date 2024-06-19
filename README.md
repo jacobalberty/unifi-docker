@@ -14,7 +14,8 @@ It's really that simple.
 This container has been tested on Ubuntu, Debian, macOS, Windows,
 and even Raspberry Pi hardware.
 
-See the [Current Information](#Current-information) section for the latest versions.
+**Latest Version:** The latest version is shown in the first line
+of the [Current Information](#current-information) table on this page.
 
 ## Setting up, Running, Stopping, Upgrading
 
@@ -125,10 +126,7 @@ The [Current Information](#current-information) section below discusses the vers
 
 ## Current Information
 
-**The current "latest" version is Unifi Controller 7.5.176.
-There are currently no hot-fix or CVE warnings
-affecting Unifi Controller.**
-
+The current tested version of unifi-docker is listed in the table below. 
 You can choose the version of Unifi Controller in the `docker run ...` command.
 In Docker terminology, these versions are specified by "tags".
 

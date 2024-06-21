@@ -71,10 +71,14 @@ _EOF
         awk 1 "${CERTTEMPFILE}" "${CERTDIR}/${CERTNAME}" >> "${CHAIN}"
     elif [[ "${CERTURI}" == *"lencr.org"* ]]; then
         awk 1 "${CERTTEMPFILE}" "${CERTDIR}/chain.pem" "${CERTDIR}/${CERTNAME}" >> "${CHAIN}"
+    elif [[ "$CERT_IS_CHAIN" == "true" ]]; then
+        cat "${CERTDIR}/${CERTNAME}" >> "${CHAIN}"
     elif [[ -f "${CERTDIR}/ca.pem" ]]; then
         awk 1 "${CERTDIR}/ca.pem" "${CERTDIR}/chain.pem" "${CERTDIR}/${CERTNAME}" >> "${CHAIN}"
-    else
+    elif [[ -f "${CERTDIR}/chain.pem" ]]; then
         awk 1 "${CERTDIR}/chain.pem" "${CERTDIR}/${CERTNAME}" >> "${CHAIN}"
+    else
+        cat "${CERTDIR}/${CERTNAME}" >> "${CHAIN}"
     fi
    openssl pkcs12 -export  -passout pass:aircontrolenterprise \
         -in "${CHAIN}" \

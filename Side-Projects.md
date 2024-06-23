@@ -24,7 +24,7 @@ cd <directory with docker-compose.yml>
 docker compose up -d 
 ```
 
-Now as long as you don't `docker compose down`, the docker daemon (`sudo systemctl enable docker`) will automatically start the various containers every time the Pi boots.
+Now as long as you don't `docker compose down`, the docker daemon (`sudo systemctl enable docker`) will automatically start the various containers every time the host boots.
 
 **Logs:**
 

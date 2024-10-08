@@ -176,6 +176,8 @@ To do this:
 * Save settings in Unifi Controller
 * Restart UniFi-in-Docker container with `docker stop ...` and `docker run ...` commands.
 
+_Hint: Port 10001 should be forwareded to make it work._
+
 See [Side Projects](https://github.com/jacobalberty/unifi-docker/blob/master/Side-Projects.md#other-techniques-for-adoption) for
 other techniques to get Unifi devices to adopt your
 new Unifi Controller.
@@ -287,6 +289,7 @@ expose the first three with the `-p ...` option.
 * 8843/tcp - HTTPS portal _(optional)_
 * 8880/tcp - HTTP portal _(optional)_
 * 6789/tcp - Speed Test (unifi5 only) _(optional)_
+* 10001/udp - Used for device discovery _(optional)_
 
 See [UniFi - Ports Used](https://help.ubnt.com/hc/en-us/articles/218506997-UniFi-Ports-Used) for more information.
 

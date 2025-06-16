@@ -147,7 +147,7 @@ For Unifi-in-Docker, this uses the most recent stable version.
 
 | Tag                                                                                       | Description                                     | Changelog                                                                                                                       |
 |-------------------------------------------------------------------------------------------|-------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
-| [`latest` `v9.2.86`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Current Stable: Version 9.2.86 as of 2025-06-08 | [Change Log 9.2.86](https://community.ui.com/releases/UniFi-Network-Application-9-2-86/2de05d5a-4f8d-4a1d-a38b-1d9fc9e0e263) |
+| [`latest` `v9.2.87`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Current Stable: Version 9.2.87 as of 2025-06-08 | [Change Log 9.2.87](https://community.ui.com/releases/UniFi-Network-Application-9-2-87/81a6a594-e925-4100-b1d7-351d2b91a7fd) |
 | [`stable-6`](https://github.com/jacobalberty/unifi-docker/blob/stable-6/Dockerfile)       | Final stable version 6 (6.5.55)                 | [Change Log 6.5.55](https://community.ui.com/releases/UniFi-Network-Application-6-5-55/48c64137-4a4a-41f7-b7e4-3bee505ae16e)    |
 | [`stable-5`](https://github.com/jacobalberty/unifi-docker/blob/stable-5/Dockerfile)       | Final stable version 5 (5.4.23)                 | [Change Log 5.14.23](https://community.ui.com/releases/UniFi-Network-Controller-5-14-23/daf90732-30ad-48ee-81e7-1dcb374eba2a)   |
 

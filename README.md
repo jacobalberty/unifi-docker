@@ -232,6 +232,10 @@ Port used for HTTPS portal redirection.
 
 * `UNIFI_STDOUT`
 Controller outputs logs to stdout in addition to server.log
+**Default: unset**
+
+* `SMTP_SLARTTLS_ENABLED`
+Disable SlartTLS for SMTP. Required when the SMTP server do not support encryption
 **Default: unset** 
 
 * `TZ`

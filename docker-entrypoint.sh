@@ -134,6 +134,10 @@ if ! [[ -z "$DB_URI" || -z "$STATDB_URI" || -z "$DB_NAME" ]]; then
   settings["unifi.db.name"]="$DB_NAME"
 fi
 
+if ! [[ -z "$SYSTEM_IP"  ]]; then
+  settings["system_ip"]="$SYSTEM_IP"
+fi
+
 if ! [[ -z "$PORTAL_HTTP_PORT"  ]]; then
   settings["portal.http.port"]="$PORTAL_HTTP_PORT"
 fi

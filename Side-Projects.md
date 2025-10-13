@@ -83,7 +83,7 @@ like this:
 ```bash
 docker run -d --init \
    --restart=unless-stopped \
-   -p 8080:8080 -p 8443:8443 -p 3478:3478/udp \
+   -p 8080:8080 -p 8443:8443 -p 3478:3478/udp -p 10001:10001/udp \
    -e TZ='Africa/Johannesburg' \
    -v ~/unifi:/unifi \
    --name unifi \

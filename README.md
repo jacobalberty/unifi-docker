@@ -53,7 +53,7 @@ Each of the options is [described below.](#options-on-the-command-line)
 ```bash
 docker run -d --init \
    --restart=unless-stopped \
-   -p 8080:8080 -p 8443:8443 -p 3478:3478/udp \
+   -p 8080:8080 -p 8443:8443 -p 3478:3478/udp -p 10001:10001/udp \
    -e SYSTEM_IP='<your docker host ip>' \
    -e TZ='Africa/Johannesburg' \
    -v ~/unifi:/unifi \
@@ -108,7 +108,7 @@ The options for the `docker run...` command are:
 - `--restart=unless-stopped` - If the container should stop for some reason,
 restart it unless you issue a `docker stop ...`
 - `-p ...` - Set the ports to pass through to the container.
-`-p 8080:8080 -p 8443:8443 -p 3478:3478/udp`
+`-p 8080:8080 -p 8443:8443 -p 3478:3478/udp -p 10001:10001/udp`
 is the minimal set for a working Unifi Controller. 
 - `-e SYSTEM_IP=...` - Set ip address that devices will use to reach controller. See [Adopting
 Access Points and Unifi Devices](#adopting-access-points-and-unifi-devices) for details.
@@ -299,15 +299,15 @@ For larger installations a larger value is recommended. For memory constrained s
 
 The Unifi-in-Docker container exposes the following ports.
 A minimal Unifi Controller installation requires you
-expose the first three with the `-p ...` option.
+expose the first four with the `-p ...` option.
 
 * 8080/tcp - Device command/control 
 * 8443/tcp - Web interface + API 
 * 3478/udp - STUN service 
+* 10001/udp - Device discovery
 * 8843/tcp - HTTPS portal _(optional)_
 * 8880/tcp - HTTP portal _(optional)_
 * 6789/tcp - Speed Test (unifi5 only) _(optional)_
-* 10001/udp - Used for device discovery _(optional)_
 
 See [UniFi - Ports Used](https://help.ubnt.com/hc/en-us/articles/218506997-UniFi-Ports-Used) for more information.
 

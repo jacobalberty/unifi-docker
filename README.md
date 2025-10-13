@@ -54,6 +54,7 @@ Each of the options is [described below.](#options-on-the-command-line)
 docker run -d --init \
    --restart=unless-stopped \
    -p 8080:8080 -p 8443:8443 -p 3478:3478/udp \
+   -e SYSTEM_IP='<your docker host ip>' \
    -e TZ='Africa/Johannesburg' \
    -v ~/unifi:/unifi \
    --user unifi \
@@ -109,10 +110,12 @@ restart it unless you issue a `docker stop ...`
 - `-p ...` - Set the ports to pass through to the container.
 `-p 8080:8080 -p 8443:8443 -p 3478:3478/udp`
 is the minimal set for a working Unifi Controller. 
-- `-e TZ=...` Set an environment variable named `TZ` with the desired time zone.
+- `-e SYSTEM_IP=...` - Set ip address that devices will use to reach controller. See [Adopting
+Access Points and Unifi Devices](#adopting-access-points-and-unifi-devices) for details.
+- `-e TZ=...` - Set an environment variable named `TZ` with the desired time zone.
 Find your time zone in this 
 [list of timezones.](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
-- `-e ...` See the [Environment Variables](#environment-variables)
+- `-e ...` - See the [Environment Variables](#environment-variables)
 section for more environment variables.
 - `-v ...` - Bind the volume `~/unifi` on the Docker host
 to the directory `/unifi`inside the container.
@@ -160,14 +163,19 @@ support it as long as feasibly possible, for now that date seems to be expiratio
 
 ## Adopting Access Points and Unifi Devices
 
-#### Override "Inform Host" IP
-
-For your Unifi devices to "find" the Unifi Controller running in Docker,
-you _MUST_ override the Inform Host IP
-with the address of the Docker host computer.
+For your Unifi devices to "find" the Unifi Controller running in Docker, you _MUST_ override the
+Inform Host IP with the address of the Docker host computer.
 (By default, the Docker container usually gets the internal address 172.17.x.x
 while Unifi devices connect to the (external) address of the Docker host.)
-To do this:
+
+There are a few ways to do this:
+
+### By setting `SYSTEM_IP` environment variable
+Set `SYSTEM_IP` environment variable on the container to the IP devices may use
+to reach the controller, eg. your local address. This IP will be used as inform
+host during adopting process and used for following communication.
+
+### By overriding Inform Host on device level
 
 * Find **UniFi Devices -> Device Updates and Settings -> Device Settings -> Inform Host Override** in the UniFi Controller web GUI (it's in the middle of that page).
 * Check the "Enable" box, and enter the IP address of the Docker host machine. 
@@ -175,6 +183,8 @@ To do this:
 * Restart UniFi-in-Docker container with `docker stop ...` and `docker run ...` commands.
 
 _Hint: Port 10001 should be forwareded to make it work._
+
+### Other
 
 See [Side Projects](https://github.com/jacobalberty/unifi-docker/blob/master/Side-Projects.md#other-techniques-for-adoption) for
 other techniques to get Unifi devices to adopt your
@@ -213,6 +223,12 @@ You are urged to move to the new volumes ASAP.
 You can pass in environment variables using the `-e` option when you invoke `docker run...`
 See the `TZ` in the example above.
 Other environment variables:
+
+* `SYSTEM_IP`
+This is the IP address the controller will use for inform host during adoption.
+This should match IP address of the host, reachable from devices (eg. local, not
+docker address). If not set, internal docker IP will be used and devices will
+most likely to adopt.
 
 * `UNIFI_HTTP_PORT`
 This is the HTTP port used by the Web interface. Browsers will be redirected to the `UNIFI_HTTPS_PORT`.

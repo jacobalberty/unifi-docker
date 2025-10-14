@@ -250,8 +250,8 @@ Port used for HTTPS portal redirection.
 Controller outputs logs to stdout in addition to server.log
 **Default: unset**
 
-* `SMTP_SLARTTLS_ENABLED`
-Disable SlartTLS for SMTP. Required when the SMTP server do not support encryption
+* `SMTP_STARTTLS_ENABLED`
+Disable StartTLS for SMTP. Required when the SMTP server do not support encryption
 **Default: unset** 
 
 * `TZ`

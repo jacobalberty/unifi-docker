@@ -154,8 +154,8 @@ if ! [[ -z "$UNIFI_HTTPS_PORT"  ]]; then
   settings["unifi.https.port"]="$UNIFI_HTTPS_PORT"
 fi
 
-if ! [[ -z "$SMTP_SLARTTLS_ENABLED"  ]]; then
-  settings["smtp.starttls_enabled"]="SMTP_SLARTTLS_ENABLED"
+if ! [[ -z "$SMTP_STARTTLS_ENABLED"  ]]; then
+  settings["smtp.starttls_enabled"]="$SMTP_STARTTLS_ENABLED"
 fi
 
 if [[ "$UNIFI_ECC_CERT" == "true" ]]; then

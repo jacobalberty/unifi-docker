@@ -51,7 +51,7 @@ jobs:
           docker stop unifitest
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}

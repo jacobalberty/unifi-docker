@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Start the ucore manifest server in the background
+if [ -f /usr/local/bin/ucore-manifest-server.py ]; then
+    /usr/local/bin/ucore-manifest-server.py > /dev/null 2>&1 &
+    echo "Started ucore manifest server on 127.0.0.1:9080"
+fi

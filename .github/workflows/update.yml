@@ -1,0 +1,65 @@
+name: Update UniFi Network Application from RSS
+
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: update-unifi-network-application
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-unifi:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run update script
+        id: update
+        run: |
+          set -euo pipefail
+          VERSION=$(./.github/scripts/unifi-updater.py)
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Check for changes
+        id: git_diff
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Configure git
+        if: steps.git_diff.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Create Pull Request
+        if: steps.git_diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: update-${{ steps.update.outputs.version }}
+          title: "Update UniFi Network Application to v${{ steps.update.outputs.version }}"
+          commit-message: "Update UniFi Network Application to v${{ steps.update.outputs.version }}"
+          body: |
+            Automated update of UniFi Network Application.
+
+            - Version: **${{ steps.update.outputs.version }}**
+            - Updated:
+              - `Dockerfile` (`ARG PKGURL`)
+              - `README.md` Current Information table
+          labels: |
+            automated
+            dependencies

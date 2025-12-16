@@ -29,13 +29,13 @@ ENV BASEDIR=/usr/lib/unifi \
     UNIFI_GID=999 \
     UNIFI_UID=999
 
-# Install gosu
+# Install gosu and python3
 # https://github.com/tianon/gosu/blob/master/INSTALL.md
 # This should be integrated with the main run because it duplicates a lot of the steps there
 # but for now while shoehorning gosu in it is seperate
 RUN set -eux; \
 	apt-get update; \
-	apt-get install -y gosu; \
+	apt-get install -y gosu python3; \
 	rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /usr/unifi \
@@ -45,13 +45,17 @@ RUN mkdir -p /usr/unifi \
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY docker-healthcheck.sh /usr/local/bin/
 COPY docker-build.sh /usr/local/bin/
+COPY ucore-manifest-server.py /usr/local/bin/
 COPY functions /usr/unifi/functions
 COPY import_cert /usr/unifi/init.d/
+COPY start_ucore_server /usr/unifi/init.d/
 COPY pre_build /usr/local/docker/pre_build
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
  && chmod +x /usr/unifi/init.d/import_cert \
  && chmod +x /usr/local/bin/docker-healthcheck.sh \
  && chmod +x /usr/local/bin/docker-build.sh \
+ && chmod +x /usr/local/bin/ucore-manifest-server.py \
+ && chmod +x /usr/unifi/init.d/start_ucore_server \
  && chmod -R +x /usr/local/docker/pre_build
 
 # Push installing openjdk-8-jre first, so that the unifi package doesn't pull in openjdk-7-jre as a dependency? Else uncomment and just go with openjdk-7.

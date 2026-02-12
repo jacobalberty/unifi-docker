@@ -49,7 +49,7 @@ jobs:
         if: steps.git_diff.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT }}
           branch: update-${{ steps.update.outputs.version }}
           title: "Update UniFi Network Application to v${{ steps.update.outputs.version }}"
           commit-message: "Update UniFi Network Application to v${{ steps.update.outputs.version }}"

@@ -58,7 +58,6 @@ Ob8VZRzI9neWagqNdwvYkQsEjgfbKbYK7p2CNTUQ
 _EOF
 
     log "Cert has changed, updating controller..."
-    md5sum "${CERTDIR}/${CERTNAME}" > "${CERTDIR}/${CERTNAME}.md5"
     log "Using openssl to prepare certificate..."
     CHAIN=$(mktemp)
     TMPLIST+=" ${CHAIN}"
@@ -95,6 +94,7 @@ _EOF
         -srckeystore "${TEMPFILE}" -srcstoretype PKCS12 \
         -srcstorepass aircontrolenterprise \
         -alias unifi
+    md5sum "${CERTDIR}/${CERTNAME}" > "${CERTDIR}/${CERTNAME}.md5"
     log "Cleaning up temp files"
     for file in ${TMPLIST}; do
         rm -f "${file}"

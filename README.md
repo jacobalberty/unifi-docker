@@ -17,6 +17,41 @@ and even Raspberry Pi hardware.
 **Latest Version:** The latest version is shown in the first line
 of the [Current Information](#current-information) table on this page.
 
+## Breaking Changes beyond 10.0.162
+
+To be able to install 10.1.84 or later, there is a new requirement of Java 25.
+To install Java 25 via package, it means we need to move to Ubuntu 22.04 or later.
+Doing that also means we need to upgrade MongoDB to at least version 6 as there is 
+no way to install 3.6, 4.x, 5.x with packages from MongoDB cleanly, as the Unifi package will check for dependencies.
+
+This also means there is no clean upgrade path here now, as there is no simple way to do the DB upgrade in place.
+It will mean the process needs to be:
+ - Backup
+ - New install
+ - Restore
+
+To upgrade to this new image means you need to take a backup from the Unifi Network Application
+and save the `network_backup_<date>_v<version>.unf` file before you upgrade.
+
+It is also a good idea you take a full backup of the current `./unifi` mount too. 
+
+Once you have taken the "backups", you will now need to stop the current Network Application and 
+remove all data from your `unifi/` mount so that it is empty to start a new install
+
+Then you can pull the new image that has been built with:
+ - Ubuntu 24.04
+ - Java 25
+ - MongoDB 6.0
+
+On starting the new container, it will be a new install that you will need to select `Restore Server from a Backup` then `Upload Backup File`
+
+### MongoDB support
+
+With this image from now on, MongoDB has been pushed to version 6.0 which now has a requirement
+ for AVX support in the host cpu(s). This may be an issue for older systems. In this case 
+you will be best off splitting out the Network Application and MongoDB into two separate 
+containers and thus can continue to run MongoDB 4.4
+
 ## Setting up, Running, Stopping, Upgrading
 
 First, install Docker on the "Docker host" -

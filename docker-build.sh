@@ -31,15 +31,26 @@ fi
 
 apt-get update
 apt-get install -qy --no-install-recommends \
-    apt-transport-https \
+    binutils \
+    ca-certificates \
     curl \
     dirmngr \
     gpg \
     gpg-agent \
-    openjdk-17-jre-headless \
-    procps \
     libcap2-bin \
+    logrotate \
+    openjdk-25-jre-headless \
+    procps \
+    software-properties-common \
     tzdata
+
+# Install MongoDB 6 - as the Unifi deb package will check
+
+curl -Ls https://www.mongodb.org/static/pgp/server-6.0.asc | gpg --dearmor -o /usr/share/keyrings/mongo.gpg
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongo.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-5.0.list
+apt update
+apt install -qy mongodb-org-server
+
 echo 'deb https://www.ui.com/downloads/unifi/debian stable ubiquiti' | tee /etc/apt/sources.list.d/100-ubnt-unifi.list
 tryfail apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 06E85760C0A52C50
 

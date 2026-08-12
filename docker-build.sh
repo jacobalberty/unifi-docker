@@ -36,10 +36,17 @@ apt-get install -qy --no-install-recommends \
     dirmngr \
     gpg \
     gpg-agent \
-    openjdk-17-jre-headless \
+    ca-certificates \
     procps \
     libcap2-bin \
     tzdata
+
+# UniFi Network 10.4.57 requires Java 25.
+curl -fsSL "https://packages.adoptium.net/artifactory/api/gpg/key/public" | gpg --dearmor -o /etc/apt/trusted.gpg.d/adoptium.gpg
+. /etc/os-release
+echo "deb https://packages.adoptium.net/artifactory/deb ${VERSION_CODENAME} main" > /etc/apt/sources.list.d/adoptium.list
+apt-get update
+apt-get install -qy --no-install-recommends temurin-25-jre
 echo 'deb https://www.ui.com/downloads/unifi/debian stable ubiquiti' | tee /etc/apt/sources.list.d/100-ubnt-unifi.list
 tryfail apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 06E85760C0A52C50
 
@@ -48,6 +55,7 @@ if [ -d "/usr/local/docker/pre_build/$(dpkg --print-architecture)" ]; then
 fi
 
 curl -L -o ./unifi.deb "${1}"
+echo "fc378cf8cd2bec3d334bf7b72eabfcd1861e5fae67b9c16735471132105b2072  ./unifi.deb" | sha256sum -c -
 apt -qy install ./unifi.deb
 rm -f ./unifi.deb
 chown -R unifi:unifi /usr/lib/unifi

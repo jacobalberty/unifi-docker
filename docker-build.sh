@@ -32,14 +32,24 @@ fi
 apt-get update
 apt-get install -qy --no-install-recommends \
     apt-transport-https \
+    ca-certificates \
     curl \
     dirmngr \
     gpg \
     gpg-agent \
-    openjdk-17-jre-headless \
     procps \
     libcap2-bin \
     tzdata
+
+# Ubuntu 20.04's own archives don't ship a JRE new enough for current UniFi
+# releases (10.6.x requires Java 25), so pull it from Eclipse Adoptium instead.
+mkdir -p /etc/apt/keyrings
+curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor -o /etc/apt/keyrings/adoptium.gpg
+echo "deb [signed-by=/etc/apt/keyrings/adoptium.gpg] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print $2}' /etc/os-release) main" \
+    | tee /etc/apt/sources.list.d/adoptium.list
+apt-get update
+apt-get install -qy --no-install-recommends temurin-25-jre
+
 echo 'deb https://www.ui.com/downloads/unifi/debian stable ubiquiti' | tee /etc/apt/sources.list.d/100-ubnt-unifi.list
 tryfail apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 06E85760C0A52C50
 
